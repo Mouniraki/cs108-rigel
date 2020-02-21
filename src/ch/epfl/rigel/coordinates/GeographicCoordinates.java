@@ -4,9 +4,6 @@ import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.math.*;
 
 final public class GeographicCoordinates extends SphericalCoordinates{
-    final private double lon;
-    final private double lat;
-
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
     }
