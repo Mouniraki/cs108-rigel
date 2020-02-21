@@ -6,8 +6,7 @@ package ch.epfl.rigel.math;
  * @author Mounir Raki (310287)
  */
 public abstract class Interval {
-    private final double low;
-    private final double high;
+    private final double low, high;
     protected Interval(double l, double h){
         low = l;
         high = h;
