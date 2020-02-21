@@ -12,14 +12,14 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
         super(az, alt);
     }
 
-    public static HorizontalCoordinates of(double az, double alt){
+    public static HorizontalCoordinates of(double az, double alt) {
         Preconditions.checkInInterval(RightOpenInterval.of(0, Angle.TAU), az);
         Preconditions.checkInInterval(ClosedInterval.symmetric(Angle.TAU/2), alt);
         return new HorizontalCoordinates(az, alt);
     }
 
     //A TESTER !!
-    public static HorizontalCoordinates ofDeg(double azDeg, double altDeg){
+    public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
         Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg);
         Preconditions.checkInInterval(ClosedInterval.symmetric(180), altDeg);
         return new HorizontalCoordinates(Angle.ofDeg(azDeg), Angle.ofDeg(altDeg));
@@ -30,7 +30,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     public double azDeg() {return lonDeg();}
 
     //A REVOIR
-    public String azOctantName(String n, String e, String s, String w){
+    public String azOctantName(String n, String e, String s, String w) {
         String cardinality = "";
         if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) {cardinality = n+e;}
         else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) {cardinality = e;}
@@ -51,6 +51,6 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "(az=%.4f, alt=%.4f)", azDeg(), altDeg());
+        return String.format(Locale.ROOT, "(az=%.4f°, alt=%.4f°)", azDeg(), altDeg());
     }
 }

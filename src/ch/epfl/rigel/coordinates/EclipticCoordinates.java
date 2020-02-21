@@ -25,6 +25,6 @@ public final class EclipticCoordinates extends SphericalCoordinates {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "(λ=%.4f, β=%.4f)", lonDeg(), latDeg());
+        return String.format(Locale.ROOT, "(λ=%.4f°, β=%.4f°)", lonDeg(), latDeg());
     }
 }
