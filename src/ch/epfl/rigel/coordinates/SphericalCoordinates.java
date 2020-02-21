@@ -8,28 +8,28 @@ import ch.epfl.rigel.math.Angle;
  * @author Nicolas Szwajcok (315213)
  */
 abstract class SphericalCoordinates {
-    private double longitude;
-    private double latitude;
+    private double lon;
+    private double lat;
 
     SphericalCoordinates(double longitude, double latitude) {
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.lon = longitude;
+        this.lat = latitude;
     }
 
-    private double lon() {
-        return longitude;
+    double lon() {
+        return lon;
     }
 
-    private double lonDeg(){
-        return Angle.toDeg(longitude);
+    double lonDeg(){
+        return Angle.toDeg(lon);
     }
 
-    private double lat(){
-        return latitude;
+    double lat(){
+        return lat;
     }
 
-    private double latDeg(){
-        return Angle.toDeg(latitude);
+    double latDeg(){
+        return Angle.toDeg(lat);
     }
 
     /**
@@ -46,6 +46,7 @@ abstract class SphericalCoordinates {
      *
      * @throws UnsupportedOperationException
      */
+    @Override
     final public int hashCode(){
         throw new UnsupportedOperationException("This operation is not supported.");
     }
