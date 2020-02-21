@@ -28,7 +28,7 @@ abstract class SphericalCoordinates {
     /**
      * Returns the longitude in degrees.
      *
-     * @return the longitude in degrees
+     * @return the longitude (in degrees)
      */
     double lonDeg(){
         return Angle.toDeg(lon);
@@ -46,7 +46,7 @@ abstract class SphericalCoordinates {
     /**
      * Returns the latitude in degrees.
      *
-     * @return the latitude in degrees
+     * @return the latitude (in degrees)
      */
     double latDeg(){
         return Angle.toDeg(lat);

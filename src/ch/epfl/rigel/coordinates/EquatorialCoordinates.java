@@ -76,7 +76,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Prints the equatorial coordinates
+     * Prints the equatorial coordinates.
      * @return print of the equatorial coordinates
      */
     @Override

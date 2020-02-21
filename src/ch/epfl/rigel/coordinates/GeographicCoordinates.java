@@ -91,7 +91,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Prints the geographic coordinates
+     * Prints the geographic coordinates.
      * @return print of the geographic coordinates
      */
     @Override
