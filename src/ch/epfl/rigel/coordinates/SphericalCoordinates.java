@@ -57,8 +57,8 @@ abstract class SphericalCoordinates {
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(){
-        throw new UnsupportedOperationException("The equals operation is not supported.");
+    final public boolean equals(Object obj){
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -68,6 +68,6 @@ abstract class SphericalCoordinates {
      */
     @Override
     final public int hashCode(){
-        throw new UnsupportedOperationException("The hashCode operation is not supported.");
+        throw new UnsupportedOperationException();
     }
 }

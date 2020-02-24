@@ -13,14 +13,11 @@ import java.util.Locale;
  * @author Nicolas Szwajcok (315213)
  */
 final public class GeographicCoordinates extends SphericalCoordinates{
-    final private double lon;
-    final private double lat;
 
-    //TODO I am not entirely sure that this constructor has been defined correctly
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
-        this.lon = lon;
-        this.lat = lat;
+        Preconditions.checkInInterval(RightOpenInterval.of(-180, 180), Angle.toDeg(lon));
+        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), Angle.toDeg(lat));
     }
 
     /**
@@ -30,10 +27,10 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      * @return Geographic coordinates
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg){
-        Preconditions.checkInInterval(RightOpenInterval.of(-180, 180), lonDeg);
-        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), latDeg);
+        Preconditions.checkInInterval(RightOpenInterval.symmetric(360), lonDeg);
+        Preconditions.checkInInterval(ClosedInterval.symmetric(180), latDeg);
 
-        return new GeographicCoordinates(Angle.ofDeg(latDeg), Angle.ofDeg(latDeg));
+        return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }
 
     /**
@@ -60,7 +57,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      */
     @Override
     public double lon(){
-        return lon;
+        return super.lon();
     }
 
     /**
@@ -69,7 +66,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      */
     @Override
     public double lonDeg(){
-        return Angle.toDeg(lon);
+        return super.lonDeg();
     }
 
     /**
@@ -78,7 +75,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      */
     @Override
     public double lat(){
-        return lat;
+        return super.lat();
     }
 
     /**
@@ -87,7 +84,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      */
     @Override
     public double latDeg(){
-        return Angle.toDeg(lat);
+        return super.latDeg();
     }
 
     /**
@@ -96,6 +93,6 @@ final public class GeographicCoordinates extends SphericalCoordinates{
      */
     @Override
     public String toString(){
-        return String.format(Locale.ROOT, "(lon=%.4f, lat=%.4f°)", lon, lat);
+        return String.format(Locale.ROOT, "(lon=%.4f°, lat=%.4f°)", lonDeg(), latDeg());
     }
 }
