@@ -59,7 +59,7 @@ public final class Polynomial {
                 else if (i < coefficientsTable.length - 1) string.append("x");
             }
         }
-        return string.substring(0);
+        return string.toString();
     }
 
     /**
