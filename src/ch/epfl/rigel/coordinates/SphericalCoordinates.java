@@ -16,19 +16,19 @@ abstract class SphericalCoordinates {
         this.latitude = latitude;
     }
 
-    private double lon() {
+    double lon() {
         return longitude;
     }
 
-    private double lonDeg(){
+    double lonDeg(){
         return Angle.toDeg(longitude);
     }
 
-    private double lat(){
+    double lat(){
         return latitude;
     }
 
-    private double latDeg(){
+    double latDeg(){
         return Angle.toDeg(latitude);
     }
 
@@ -37,16 +37,14 @@ abstract class SphericalCoordinates {
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(){
-        throw new UnsupportedOperationException("This operation is not supported.");
-    }
+    @Override
+    public final boolean equals(Object obj) {throw new UnsupportedOperationException();}
 
     /**
      * Throws an error, is defined to prevent the user from using the hashCode() method.
      *
      * @throws UnsupportedOperationException
      */
-    final public int hashCode(){
-        throw new UnsupportedOperationException("This operation is not supported.");
-    }
+    @Override
+    public final int hashCode() {throw new UnsupportedOperationException();}
 }
