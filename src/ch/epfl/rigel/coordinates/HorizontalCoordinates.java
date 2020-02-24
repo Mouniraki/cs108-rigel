@@ -99,18 +99,15 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the textual representation of the octant in which the azimuth value is localized.
      */
-    //A REVOIR
     public String azOctantName(String n, String e, String s, String w) {
-        String cardinality = "";
-        if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) {cardinality = n+e;}
-        else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) {cardinality = e;}
-        else if(RightOpenInterval.of(112.5, 157.5).contains(azDeg())) {cardinality = s+e;}
-        else if(RightOpenInterval.of(157.5, 202.5).contains(azDeg())) {cardinality = s;}
-        else if(RightOpenInterval.of(202.5, 247.5).contains(azDeg())) {cardinality = s+w;}
-        else if(RightOpenInterval.of(247.5, 292.5).contains(azDeg())) {cardinality = w;}
-        else if(RightOpenInterval.of(292.5, 337.5).contains(azDeg())) {cardinality = n+w;}
-        else cardinality = n;
-        return cardinality;
+        if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) return n+e;
+        else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) return e;
+        else if(RightOpenInterval.of(112.5, 157.5).contains(azDeg())) return s+e;
+        else if(RightOpenInterval.of(157.5, 202.5).contains(azDeg())) return s;
+        else if(RightOpenInterval.of(202.5, 247.5).contains(azDeg())) return s+w;
+        else if(RightOpenInterval.of(247.5, 292.5).contains(azDeg())) return w;
+        else if(RightOpenInterval.of(292.5, 337.5).contains(azDeg())) return n+w;
+        else return n;
     }
 
     /**
