@@ -16,8 +16,6 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
-        Preconditions.checkInInterval(RightOpenInterval.of(-180, 180), Angle.toDeg(lon));
-        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), Angle.toDeg(lat));
     }
 
     /**
@@ -33,7 +31,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
         return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }
 
-    /**
+    /**https://cs108.epfl.ch/p/02_spherical-coords.html
      * Verifies if the angle (expressed in degrees) represents a valid longitude.
      * @param lonDeg the longitude expressed in degrees
      * @return true if the longitude is valid, false otherwise

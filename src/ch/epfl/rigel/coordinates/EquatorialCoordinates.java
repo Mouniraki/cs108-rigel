@@ -30,9 +30,9 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      */
     public static EquatorialCoordinates of(double ra, double dec){
         Preconditions.checkInInterval(RightOpenInterval.of(0, 24), Angle.toHr(ra));
-        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), dec);
+        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), Angle.toDeg(dec));
 
-        return new EquatorialCoordinates(Angle.toHr(Angle.toDeg(ra)), dec);
+        return new EquatorialCoordinates(ra, dec);
     }
 
     /**
@@ -81,6 +81,6 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      */
     @Override
     public String toString(){
-        return String.format(Locale.ROOT, "(ra=%.4f, dec=%.4f°)", Angle.toHr(ra), Angle.toDeg(dec));
+        return String.format(Locale.ROOT, "(ra=%.4fh, dec=%.4f°)", Angle.toHr(ra), Angle.toDeg(dec));
     }
 }
