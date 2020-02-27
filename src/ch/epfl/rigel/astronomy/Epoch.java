@@ -14,14 +14,16 @@ public enum Epoch {
         date = epochDate;
     }
 
-    //A REVOIR
     public double daysUntil(ZonedDateTime when){
-        when.until(this., ChronoUnit.MILLIS);
+       double msSplit =  when.until(this.date, ChronoUnit.MILLIS);
+       return msSplit;
+       //return msSplit/(1000.0 * 60.0 * 60.0 * 24.0);
     }
 
-    //A REVOIR
     public double julianCenturiesUntil(ZonedDateTime when){
-        when.until(this., ChronoUnit.MILLIS);
+        double msSplit = when.until(this.date, ChronoUnit.MILLIS);
+        return msSplit;
+        //return msSplit/(1000.0 * 60.0 * 60.0 * 24.0);
     }
 
 }
