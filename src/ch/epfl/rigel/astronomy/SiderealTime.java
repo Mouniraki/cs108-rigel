@@ -1,23 +1,31 @@
 package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
-
+import ch.epfl.rigel.math.Angle;
+import ch.epfl.rigel.math.Polynomial;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public final class SiderealTime {
     private SiderealTime(){}
-    static double greenwich(ZonedDateTime when){
-        double T = Epoch.J2000.julianCenturiesUntil(when);
-        //double t = ;
-        //T = nbr de siècles juliens séparant l'époque J2000 et le début du jour contenant l'instant
-        //t = nbr d'heures séparant le début du jour contenant l'instant et l'instant lui-même
 
-    /*
-        double sidereal1 = 0.000025862*(T*T)+2400.051336*T+6.697374558;
-        double sidereal2 = 1.002737909*t;
-        return sidereal1 + sidereal2;
-    */
-    return 0.0;
+    private final static double MIN_PER_HR = 60.0;
+    private final static double SEC_PER_HR = 3600.0;
+
+    static double greenwich(ZonedDateTime when){
+        ZonedDateTime whenInGreenwich = when.withZoneSameInstant(ZoneOffset.UTC);
+        double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInGreenwich.truncatedTo(ChronoUnit.DAYS));
+        ZonedDateTime decHrInMs = whenInGreenwich.truncatedTo(ChronoUnit.MILLIS);
+
+        double decimalHours = decHrInMs.getHour() + decHrInMs.getMinute()/MIN_PER_HR + decHrInMs.getSecond()/SEC_PER_HR;
+        Polynomial sidereal1 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
+        Polynomial sidereal2 = Polynomial.of(1.002737909);
+        double siderealGreenwichInHours = sidereal1.at(julianCenturies) + sidereal2.at(decimalHours);
+        return Angle.normalizePositive(Angle.ofHr(siderealGreenwichInHours));
     }
-    static double local(ZonedDateTime when, GeographicCoordinates where){return 0.0;}
+    static double local(ZonedDateTime when, GeographicCoordinates where){
+        double siderealLocal = greenwich(when)+where.lon();
+        return Angle.normalizePositive(siderealLocal);
+    }
 }
