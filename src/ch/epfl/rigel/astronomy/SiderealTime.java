@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit;
 public final class SiderealTime {
     private SiderealTime(){}
 
-    static double greenwich(ZonedDateTime when){
+    public static double greenwich(ZonedDateTime when){
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
         double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
         double decimalMillis = whenInUTC.truncatedTo(ChronoUnit.DAYS)
@@ -24,7 +24,7 @@ public final class SiderealTime {
         return Angle.normalizePositive(Angle.ofHr(siderealGreenwichInHours));
     }
 
-    static double local(ZonedDateTime when, GeographicCoordinates where){
+    public static double local(ZonedDateTime when, GeographicCoordinates where){
         double siderealLocal = greenwich(when)+where.lon();
         return Angle.normalizePositive(siderealLocal);
     }
