@@ -157,7 +157,7 @@ class HorizontalCoordinatesTest {
         var first3 = HorizontalCoordinates.ofDeg(6.07675, 46.177101);
         var second3 = HorizontalCoordinates.ofDeg(6.632273, 46.519653);
 
-        assertEquals(0.0279, first1.angularDistanceTo(second1), 1e-4);
+        assertEquals(0.02793574, first1.angularDistanceTo(second1), 1e-6);
         assertEquals(0.0361440235, first2.angularDistanceTo(second2), 1e-6);
         assertEquals(0.00897448301, first3.angularDistanceTo(second3), 1e-6);
     }
