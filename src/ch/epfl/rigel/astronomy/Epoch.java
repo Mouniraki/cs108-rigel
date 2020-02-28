@@ -4,7 +4,7 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 
 /**
- * Comment
+ * Comment to this one
  */
 public enum Epoch {
     J2000(ZonedDateTime.of(
