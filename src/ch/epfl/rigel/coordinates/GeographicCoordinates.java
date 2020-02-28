@@ -31,7 +31,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
         return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }
 
-    /**https://cs108.epfl.ch/p/02_spherical-coords.html
+    /**
      * Verifies if the angle (expressed in degrees) represents a valid longitude.
      * @param lonDeg the longitude expressed in degrees
      * @return true if the longitude is valid, false otherwise
