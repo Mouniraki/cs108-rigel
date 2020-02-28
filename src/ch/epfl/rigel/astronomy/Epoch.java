@@ -3,9 +3,6 @@ package ch.epfl.rigel.astronomy;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Comment
- */
 public enum Epoch {
     J2000(ZonedDateTime.of(
             LocalDate.of(2000, Month.JANUARY, 1),

@@ -13,13 +13,8 @@ import java.util.Locale;
  * @author Nicolas Szwajcok (315213)
  */
 final public class EquatorialCoordinates extends SphericalCoordinates{
-    final private double ra;
-    final private double dec;
-
     private EquatorialCoordinates(double ra, double dec) {
         super(ra, dec);
-        this.ra = ra;
-        this.dec = dec;
     }
 
     /**
@@ -40,7 +35,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      * @return the right ascension
      */
     public double ra(){
-        return ra;
+        return super.lon();
     }
 
     /**
@@ -48,15 +43,14 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      * @return the right ascension (in degrees)
      */
     public double raDeg(){
-        return Angle.toDeg(ra);
+        return super.lonDeg();
     }
 
     /**
      * Returns the right ascension expressed in hours.
      * @return the right ascension (in hours)
      */
-    public double raHr(){
-        return Angle.toHr(ra);
+    public double raHr(){return Angle.toHr(super.lon());
     }
 
     /**
@@ -64,7 +58,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      * @return the declination
      */
     public double dec(){
-        return dec;
+        return super.lat();
     }
 
     /**
@@ -72,7 +66,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      * @return the declination (in degrees)
      */
     public double decDeg(){
-        return Angle.toDeg(dec);
+        return super.latDeg();
     }
 
     /**
@@ -81,6 +75,6 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      */
     @Override
     public String toString(){
-        return String.format(Locale.ROOT, "(ra=%.4fh, dec=%.4f°)", Angle.toHr(ra), Angle.toDeg(dec));
+        return String.format(Locale.ROOT, "(ra=%.4fh, dec=%.4f°)", raHr(), decDeg());
     }
 }
