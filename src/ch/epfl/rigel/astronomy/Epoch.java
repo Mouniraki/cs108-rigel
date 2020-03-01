@@ -25,7 +25,7 @@ public enum Epoch {
     private static final double MS_PER_DAY = 1000 * 60 * 60 * 24;
     private static final double MS_PER_CENTURY = MS_PER_DAY * 365.25 * 100;
 
-    Epoch(ZonedDateTime epochDate){
+    private Epoch(ZonedDateTime epochDate){
         date = epochDate;
     }
 
