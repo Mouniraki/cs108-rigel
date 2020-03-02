@@ -41,6 +41,7 @@ public final class SiderealTime {
 
         double S0 = hoursInterval.reduce(forJulianCenturies.at(julianCenturies));
         double S1 = forHoursInWhen.at(decimalHours);
+
         return Angle.ofHr(hoursInterval.reduce(S0 + S1));
     }
 
@@ -56,7 +57,7 @@ public final class SiderealTime {
      * @return the local sidereal time, in radians and normalized to the interval [0, TAU[
      */
     public static double local(ZonedDateTime when, GeographicCoordinates where){
-        double siderealLocal = greenwich(when)+where.lon();
+        double siderealLocal = greenwich(when) + where.lon();
         return Angle.normalizePositive(siderealLocal);
     }
 }
