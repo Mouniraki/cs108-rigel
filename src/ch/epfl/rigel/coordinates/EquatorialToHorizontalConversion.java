@@ -13,7 +13,7 @@ import java.util.function.Function;
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
-    final private double localSideralTime;
+    final private double localSiderealTime;
     final private GeographicCoordinates place;
 
     /**
@@ -23,7 +23,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where){
         this.place = where;
-        this.localSideralTime = SiderealTime.local(when, where);
+        this.localSiderealTime = SiderealTime.local(when, where);
     }
 
     /**
@@ -32,17 +32,17 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @return Converted horizontal coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-        double hrAngle = this.localSideralTime - equ.ra();
+        final double hrAngle = this.localSiderealTime - equ.ra();
 
         System.out.println("HourAngle : " + Angle.ofDeg(hrAngle));
 
-        double sinDelta = Math.sin(equ.dec());
-        double cosDelta = Math.cos(equ.dec());
+        final double sinDelta = Math.sin(equ.dec());
+        final double cosDelta = Math.cos(equ.dec());
 
-        double sinPhi = Math.sin(place.lat());
-        double cosPhi = Math.cos(place.lat());
+        final double sinPhi = Math.sin(place.lat());
+        final double cosPhi = Math.cos(place.lat());
 
-        double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
+        final double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
 
 //        height = Angle.normalizePositive(height);
         System.out.println("Height deg : " + Angle.toDeg(height));
