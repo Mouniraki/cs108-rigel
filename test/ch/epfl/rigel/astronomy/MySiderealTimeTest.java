@@ -4,16 +4,16 @@ import org.junit.jupiter.api.Test;
 
 import java.time.*;
 
+import static ch.epfl.rigel.astronomy.SiderealTime.greenwich;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MySiderealTimeTest {
     @Test
     void greenwichTest(){
-        var time = SiderealTime.greenwich(ZonedDateTime.of(
-                LocalDate.of(2000, Month.JANUARY, 3),
-                LocalTime.of(23, 59, 59),
-                ZoneOffset.UTC));
-
-        assertEquals(23.9997, time);
+        var time = ZonedDateTime.of(
+                LocalDate.of(1980, Month.APRIL, 22),
+                LocalTime.of(14, 36, 51).plusNanos((long) 6.7e+8),
+                ZoneOffset.UTC);
+        assertEquals(1.222110958172966, greenwich(time));
     }
 }
