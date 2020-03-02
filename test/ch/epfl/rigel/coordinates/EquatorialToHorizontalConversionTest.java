@@ -23,7 +23,7 @@ class EquatorialToHorizontalConversionTest {
         EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofDeg(29), Angle.ofDeg(87));
 //        EquatorialCoordinates ec3 = EquatorialCoordinates.of(Angle.ofDeg(345), Angle.ofDeg(-54));
 
-        HorizontalCoordinates result1 = theConversion.apply(ec1);
+//        HorizontalCoordinates result1 = theConversion.apply(ec1);
         HorizontalCoordinates result2 = theConversion.apply(ec2);
 //        HorizontalCoordinates result3 = theConversion.apply(ec3);
 
