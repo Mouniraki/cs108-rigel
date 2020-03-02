@@ -6,7 +6,7 @@ import java.time.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EpochTest {
+class MyEpochTest {
     @Test
     void daysUntilTest(){
         var d1 = ZonedDateTime.of(
