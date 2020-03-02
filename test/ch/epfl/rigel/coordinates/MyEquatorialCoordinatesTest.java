@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static ch.epfl.rigel.coordinates.EquatorialCoordinates.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EquatorialCoordinatesTest {
+class MyEquatorialCoordinatesTest {
 
     @Test
     void testAngleOutOfBounds(){
