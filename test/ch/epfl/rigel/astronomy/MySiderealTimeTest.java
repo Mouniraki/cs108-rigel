@@ -14,6 +14,6 @@ class MySiderealTimeTest {
                 LocalDate.of(1980, Month.APRIL, 22),
                 LocalTime.of(14, 36, 51).plusNanos((long) 6.7e+8),
                 ZoneOffset.UTC);
-        assertEquals(1.222110958172966, greenwich(time));
+        assertEquals(1.2221107819819774, greenwich(time), 1e-10);
     }
 }

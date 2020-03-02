@@ -5,6 +5,7 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.Polynomial;
 import ch.epfl.rigel.math.RightOpenInterval;
 
+import java.awt.image.renderable.RenderableImage;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -27,34 +28,20 @@ public final class SiderealTime {
      */
     public static double greenwich(ZonedDateTime when){
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
-        double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.MILLIS));
+        RightOpenInterval hoursInterval = RightOpenInterval.of(0, 24);
+
+        double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
 
         double decimalMillis = whenInUTC.truncatedTo(ChronoUnit.DAYS)
                 .until(whenInUTC, ChronoUnit.MILLIS);
         double decimalHours = decimalMillis/(3600.0*1000.0);
 
-        Polynomial sidereal1 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
-        Polynomial sidereal2 = Polynomial.of(1.002737909, 0);
+        Polynomial forJulianCenturies = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
+        Polynomial forHoursInWhen = Polynomial.of(1.002737909, 0);
 
-        //TEST OK
-        //System.out.println(-0.1969306247 + " " + julianCenturies);
-
-        //TEST OK
-        //System.out.println(52611670 + " " + decimalMillis);
-
-
-        //TEST OK
-        //System.out.println(14.6143527778 + " " + decimalHours);
-
-        //TEST OK
-        //System.out.println(0.000025862*Math.pow(-0.1969306247, 2) + 2400.051336*(-0.1969306247) + 6.697374558);
-        //System.out.println(sidereal1.at(julianCenturies));
-
-        //TEST OK
-        //System.out.println(1.002737909*(52611670) + " " + sidereal2.at(decimalMillis));
-
-        double siderealGreenwichInHours = sidereal1.at(julianCenturies) + sidereal2.at(decimalHours);
-        return Angle.normalizePositive(Angle.ofHr(siderealGreenwichInHours));
+        double S0 = hoursInterval.reduce(forJulianCenturies.at(julianCenturies));
+        double S1 = forHoursInWhen.at(decimalHours);
+        return Angle.ofHr(hoursInterval.reduce(S0 + S1));
     }
 
     /**
