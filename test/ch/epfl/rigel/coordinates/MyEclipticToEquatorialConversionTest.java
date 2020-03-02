@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import static ch.epfl.rigel.coordinates.EquatorialCoordinates.of;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EclipticToEquatorialConversionTest {
+class MyEclipticToEquatorialConversionTest {
 
     @Test
     void isConversionCorrect(){

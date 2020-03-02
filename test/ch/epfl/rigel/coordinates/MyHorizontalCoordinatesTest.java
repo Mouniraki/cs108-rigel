@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import ch.epfl.rigel.math.Angle;
 import org.junit.jupiter.api.Test;
 
-class HorizontalCoordinatesTest {
+class MyHorizontalCoordinatesTest {
     @Test
     void ofWorksWithValidValues(){
         for(int i=0; i<1000; ++i) {
