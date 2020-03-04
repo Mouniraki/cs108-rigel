@@ -20,7 +20,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     final private double sinEpsilon;
 
     /**
-     * Constructs a conversion from ecliptic to equatorial coordinates
+     * Constructs a conversion from ecliptic to equatorial coordinates.
      * @param when The date and time of the conversion
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
@@ -31,7 +31,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     }
 
     /**
-     * Applies the conversion from ecliptic to equatorial coordinates
+     * Applies the conversion from ecliptic to equatorial coordinates.
      * @param ecl The ecliptic coordinates to convert
      * @return The converted equatorial coordinates
      */

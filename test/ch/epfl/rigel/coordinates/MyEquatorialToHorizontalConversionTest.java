@@ -16,11 +16,11 @@ class MyEquatorialToHorizontalConversionTest {
 
         LocalDateTime ldt = LocalDateTime.of(2020, Month.FEBRUARY, 28, 20, 33);
         ZonedDateTime klDateTime = ldt.atZone(ZoneId.of("Europe/Paris"));
-        GeographicCoordinates where = GeographicCoordinates.ofDeg(48.8566762, 2.3522147);
+        GeographicCoordinates where = GeographicCoordinates.ofDeg(48.8566762, 52);
         EquatorialToHorizontalConversion theConversion = new EquatorialToHorizontalConversion(klDateTime, where);
 
-        EquatorialCoordinates ec1 = EquatorialCoordinates.of(Angle.ofDeg(6), Angle.ofDeg(55));
-        EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofDeg(29), Angle.ofDeg(87));
+//        EquatorialCoordinates ec1 = EquatorialCoordinates.of(Angle.ofDeg(6), Angle.ofDeg(55));
+        EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofDeg(5.862222), Angle.ofDeg(23.219444)); //from Cambridge sheet
 //        EquatorialCoordinates ec3 = EquatorialCoordinates.of(Angle.ofDeg(345), Angle.ofDeg(-54));
 
 //        HorizontalCoordinates result1 = theConversion.apply(ec1);
@@ -32,8 +32,8 @@ class MyEquatorialToHorizontalConversionTest {
 //Altitude 	-22.11° 	-22.15°
 //Azimuth 	272.70° 	272.70°
 
-        assertEquals(304.21, result2.azDeg(), 0.0001);
-        assertEquals(-45.07, result2.altDeg(), 0.00001);
+        assertEquals(357.4127249, result2.azDeg(), 0.0001);
+        assertEquals(19.334345, result2.altDeg(), 0.00001);
 //        Altitude 	-45.07° 	-45.09°
 //        Azimuth 	304.21° 	304.21°
 

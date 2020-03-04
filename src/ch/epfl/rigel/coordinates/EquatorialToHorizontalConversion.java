@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 /**
  * Class allowing the conversion from equatorial to horizontal coordinates.
- *alpha
+ *
  * @author Nicolas Szwajcok (315213)
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
@@ -32,15 +32,23 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @return Converted horizontal coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-        final double hrAngle = this.localSiderealTime - equ.ra();
+         double hrAngle = (this.localSiderealTime) - equ.ra();
+         System.out.println(Angle.toHr(this.localSiderealTime));
+         System.out.println(Angle.toHr(equ.dec()));
+
+//        double hrAngle = Angle.ofHr(5.862222); //DEBUG variable
+        System.out.println("HourAngle in HR: " + Angle.toHr(hrAngle));
+
 
         System.out.println("HourAngle : " + Angle.ofDeg(hrAngle));
+        System.out.println("HourAngle : (in degrees)" + Angle.ofDeg(hrAngle));
 
         final double sinDelta = Math.sin(equ.dec());
         final double cosDelta = Math.cos(equ.dec());
 
         final double sinPhi = Math.sin(place.lat());
         final double cosPhi = Math.cos(place.lat());
+        System.out.println("HrAngle cos : " + Math.cos(hrAngle));
 
         final double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
 

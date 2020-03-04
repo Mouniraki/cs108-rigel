@@ -20,7 +20,7 @@ public final class CartesianCoordinates {
      * Allows to create cartesian coordinates.
      * @param x x coordinate (abscissa)
      * @param y y coordinate (ordinate)
-     * @return A point expressed in the cartesian coordinates.
+     * @return A point expressed using the cartesian coordinates.
      */
     public static CartesianCoordinates of(double x, double y){
         return new CartesianCoordinates(x, y);
