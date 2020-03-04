@@ -33,32 +33,18 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
          double hrAngle = (this.localSiderealTime) - equ.ra();
-         System.out.println(Angle.toHr(this.localSiderealTime));
-         System.out.println(Angle.toHr(equ.dec()));
 
-//        double hrAngle = Angle.ofHr(5.862222); //DEBUG variable
-        System.out.println("HourAngle in HR: " + Angle.toHr(hrAngle));
-
-
-        System.out.println("HourAngle : " + Angle.ofDeg(hrAngle));
-        System.out.println("HourAngle : (in degrees)" + Angle.ofDeg(hrAngle));
+         if(hrAngle < 0) {
+             hrAngle = Angle.TAU + hrAngle;
+         }
 
         final double sinDelta = Math.sin(equ.dec());
         final double cosDelta = Math.cos(equ.dec());
-
         final double sinPhi = Math.sin(place.lat());
         final double cosPhi = Math.cos(place.lat());
-        System.out.println("HrAngle cos : " + Math.cos(hrAngle));
 
         final double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
-
-//        height = Angle.normalizePositive(height);
-        System.out.println("Height deg : " + Angle.toDeg(height));
-
         double azimuth = Math.atan2( (-1 *cosDelta * cosPhi * Math.sin(hrAngle) ), (sinDelta - ( sinPhi * Math.sin(height))) );
-
-        System.out.println("Azimuth : " + Angle.toDeg(azimuth));
-
         azimuth = Angle.normalizePositive(azimuth);
 
         return HorizontalCoordinates.of(azimuth, height);

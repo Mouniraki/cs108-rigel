@@ -14,31 +14,16 @@ class MyEquatorialToHorizontalConversionTest {
     @Test
     void isConversionCorrect(){
 
-        LocalDateTime ldt = LocalDateTime.of(2020, Month.FEBRUARY, 28, 20, 33);
-        ZonedDateTime klDateTime = ldt.atZone(ZoneId.of("Europe/Paris"));
-        GeographicCoordinates where = GeographicCoordinates.ofDeg(48.8566762, 52);
+        LocalDateTime ldt = LocalDateTime.of(1980, Month.APRIL, 22, 14, 37);
+        ZonedDateTime klDateTime = ldt.atZone(ZoneId.of("America/Tortola"));
+        GeographicCoordinates where = GeographicCoordinates.ofDeg(-64, 52);
         EquatorialToHorizontalConversion theConversion = new EquatorialToHorizontalConversion(klDateTime, where);
 
-//        EquatorialCoordinates ec1 = EquatorialCoordinates.of(Angle.ofDeg(6), Angle.ofDeg(55));
-        EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofDeg(5.862222), Angle.ofDeg(23.219444)); //from Cambridge sheet
-//        EquatorialCoordinates ec3 = EquatorialCoordinates.of(Angle.ofDeg(345), Angle.ofDeg(-54));
+        EquatorialCoordinates ec1 = EquatorialCoordinates.of(Angle.ofHr(18.5391667), 0.9735253);
 
-//        HorizontalCoordinates result1 = theConversion.apply(ec1);
-        HorizontalCoordinates result2 = theConversion.apply(ec2);
-//        HorizontalCoordinates result3 = theConversion.apply(ec3);
+        HorizontalCoordinates result1 = theConversion.apply(ec1);
 
-//        assertEquals(272.70, result1.azDeg(), 0.01);
-//        assertEquals(-22.11, result1.altDeg(), 0.01);
-//Altitude 	-22.11° 	-22.15°
-//Azimuth 	272.70° 	272.70°
-
-        assertEquals(357.4127249, result2.azDeg(), 0.0001);
-        assertEquals(19.334345, result2.altDeg(), 0.00001);
-//        Altitude 	-45.07° 	-45.09°
-//        Azimuth 	304.21° 	304.21°
-
-//        assertEquals(329.58721040, result3.azDeg(), 0.01);
-//        assertEquals(49.42188763, result3.altDeg(), 0.01);
-
+        assertEquals(341.4626034, result1.azDeg(), Math.pow(10, -5));
+        assertEquals(20.9485886, result1.altDeg(), Math.pow(10, -5));
     }
 }
