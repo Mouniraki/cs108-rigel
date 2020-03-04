@@ -29,7 +29,7 @@ class MySiderealTimeTest {
                 LocalTime.of(10, 51, 26).plusNanos((long) 7.2e+8),
                 ZoneOffset.UTC);
 
-        var may5_1999 = ZonedDateTime.of(
+        var may14_1999 = ZonedDateTime.of(
                 LocalDate.of(1999, Month.MAY, 14),
                 LocalTime.of(7, 35, 48).plusNanos((long) 1.4e+8),
                 ZoneOffset.UTC);
@@ -44,6 +44,11 @@ class MySiderealTimeTest {
                 LocalTime.of(17, 55, 48).plusNanos((long) 7.4e+8),
                 ZoneOffset.UTC);
 
+        var march8_2017 = ZonedDateTime.of(
+                LocalDate.of(2017, Month.MARCH, 8),
+                LocalTime.of(12, 0, 0),
+                ZoneOffset.UTC);
+
         var jan1_2000 = ZonedDateTime.of(
                 LocalDate.of(2000, Month.JANUARY, 1),
                 LocalTime.of(12, 0, 0),
@@ -54,10 +59,12 @@ class MySiderealTimeTest {
                 LocalTime.of(0, 0, 0),
                 ZoneOffset.UTC);
 
+        //System.out.println(Angle.ofHr(23.0922332) + " " + greenwich(march8_2017));
         assertEquals(1.2221107819819774, greenwich(april22_1980), 1e-8);
         assertEquals(6.106200001522218, greenwich(jan1_1970), 1e-8);
+        assertEquals(6.045532514675193, greenwich(march8_2017), 1e-8);
         assertEquals(2.677173579861608, greenwich(september11_2001), 1e-8);
-        assertEquals(6.031162825371777, greenwich(may5_1999), 1e-8);
+        assertEquals(6.031162825371777, greenwich(may14_1999), 1e-8);
         assertEquals(4.437556520056533, greenwich(jan24_2000), 1e-8);
         assertEquals(3.0785108030466, greenwich(june18_2020), 1e-8);
 

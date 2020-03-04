@@ -23,7 +23,7 @@ class MyEquatorialToHorizontalConversionTest {
 
         HorizontalCoordinates result1 = theConversion.apply(ec1);
 
-        assertEquals(341.4626034, result1.azDeg(), Math.pow(10, -5));
-        assertEquals(20.9485886, result1.altDeg(), Math.pow(10, -5));
+        assertEquals(341.4626034, result1.azDeg(), 1e-5);
+        assertEquals(20.9485886, result1.altDeg(), 1e-5);
     }
 }

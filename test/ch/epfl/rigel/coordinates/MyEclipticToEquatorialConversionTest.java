@@ -37,16 +37,16 @@ class MyEclipticToEquatorialConversionTest {
         EquatorialCoordinates result3 = theConversion.apply(ecl3);
 
 //        assertEquals(9.581477778, result1Book.raHr(), 0.0000001);     // 9h 34m 53.32s
-        assertEquals(19.535002778, result1Book.decDeg(), 0.0000001);//     19 ◦ 32 ' 6. 01''
+        assertEquals(19.535002778, result1Book.decDeg(), 1e-7);//     19 ◦ 32 ' 6. 01''
 
-        assertEquals(45.71539997, result1.raDeg(), 0.0001);
-        assertEquals(19.69151561, result1.decDeg(), 0.01); //19.00631°
+        assertEquals(45.71539997, result1.raDeg(), 1e-4);
+        assertEquals(19.69151561, result1.decDeg(), 1e-2); //19.00631°
 
-        assertEquals(1.00836393, result2.raDeg(), 0.01);
-        assertEquals(68.58082816, result2.decDeg(), 0.01);
+        assertEquals(1.00836393, result2.raDeg(), 1e-2);
+        assertEquals(68.58082816, result2.decDeg(), 1e-2);
 
-        assertEquals(329.58721040, result3.raDeg(), 0.01);
-        assertEquals(49.42188763, result3.decDeg(), 0.01);
+        assertEquals(329.58721040, result3.raDeg(), 1e-2);
+        assertEquals(49.42188763, result3.decDeg(), 1e-2);
 
     }
 
