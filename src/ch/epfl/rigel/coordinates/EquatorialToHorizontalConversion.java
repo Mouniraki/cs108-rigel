@@ -32,12 +32,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @return Converted horizontal coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-         double hrAngle = (this.localSiderealTime) - equ.ra();
-
-         if(hrAngle < 0) {
-             hrAngle = Angle.TAU + hrAngle;
-         }
-
+        double hrAngle = Angle.normalizePositive((this.localSiderealTime) - equ.ra());
         final double sinDelta = Math.sin(equ.dec());
         final double cosDelta = Math.cos(equ.dec());
         final double sinPhi = Math.sin(place.lat());
