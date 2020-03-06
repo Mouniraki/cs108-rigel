@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * An astronomical epoch.
  *
- * @author Mounir Raki
+ * @author Mounir Raki (310287)
  */
 
 public enum Epoch {

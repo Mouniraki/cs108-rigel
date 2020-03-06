@@ -59,7 +59,6 @@ class MySiderealTimeTest {
                 LocalTime.of(0, 0, 0),
                 ZoneOffset.UTC);
 
-        //System.out.println(Angle.ofHr(23.0922332) + " " + greenwich(march8_2017));
         assertEquals(1.2221107819819774, greenwich(april22_1980), 1e-8);
         assertEquals(6.106200001522218, greenwich(jan1_1970), 1e-8);
         assertEquals(6.045532514675193, greenwich(march8_2017), 1e-8);
