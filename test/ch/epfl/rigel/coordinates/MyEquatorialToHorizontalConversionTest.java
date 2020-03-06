@@ -24,15 +24,26 @@ class MyEquatorialToHorizontalConversionTest {
         ZonedDateTime klDateTime2 = ldt2.atZone(ZoneId.of("Europe/Madrid"));
         GeographicCoordinates where2 = GeographicCoordinates.ofDeg(0, 89);
         EquatorialToHorizontalConversion theConversion2 = new EquatorialToHorizontalConversion(klDateTime2, where2);
-        EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofHr(21.762222222), -1.545465524); //Hr: 21h, 45m, 44s
+        EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofHr(21.762222222), 0.4052558); //Hr: 21h, 45m, 44s
         HorizontalCoordinates result2 = theConversion2.apply(ec2);
+
+        LocalDateTime ldt3 = LocalDateTime.of(1984, Month.MAY, 19, 3, 14);
+        ZonedDateTime klDateTime3 = ldt3.atZone(ZoneId.of("Europe/Madrid"));
+        GeographicCoordinates where3 = GeographicCoordinates.ofDeg(-155, 47);
+        EquatorialToHorizontalConversion theConversion3 = new EquatorialToHorizontalConversion(klDateTime3, where3);
+        EquatorialCoordinates ec3 = EquatorialCoordinates.of(Angle.ofHr(4.534444444), -1.3844125622); //Hr: 4, 32m, 04s
+        HorizontalCoordinates result3 = theConversion3.apply(ec3);
 
         assertEquals(341.4626034, result1.azDeg(), 1e-5);
         assertEquals(20.9485886, result1.altDeg(), 1e-5);
 
-        System.out.println(ec2.ra() + " should be 5.5754106");
-        assertEquals(182.3336418, result2.azDeg(), 1e-5);
-        assertEquals(-51.8158734, result2.altDeg(), 1e-5);
+        assertEquals(264.0588098, result2.azDeg(), 1e-5);
+        assertEquals(23.3266666, result2.altDeg(), 1e-5);
+
+        assertEquals(190.1349444, result3.azDeg(), 1e-6);
+        assertEquals(-39.2726373, result3.altDeg(), 1e-6);
+
+
 
     }
 }

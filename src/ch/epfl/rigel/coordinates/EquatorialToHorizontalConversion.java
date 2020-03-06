@@ -33,15 +33,20 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
         double hrAngle = Angle.normalizePositive((this.localSiderealTime) - equ.ra());
-        System.out.println(equ.ra());
+        System.out.println("Right ascension " + Angle.toHr(equ.ra()));
+        System.out.println("Local sidereal time " + Angle.toHr(localSiderealTime));
+        System.out.println("HrAngle " + Angle.toHr(hrAngle));
+
         final double sinDelta = Math.sin(equ.dec());
         final double cosDelta = Math.cos(equ.dec());
         final double sinPhi = Math.sin(place.lat());
         final double cosPhi = Math.cos(place.lat());
 
+//        System.out.println(equ.dec());
+//        System.out.println(place.lat());
+
         final double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
-        double azimuth = Math.atan2( (-1 *cosDelta * cosPhi * Math.sin(hrAngle) ), (sinDelta - ( sinPhi * Math.sin(height))) );
-        azimuth = Angle.normalizePositive(azimuth);
+        double azimuth = Angle.normalizePositive(Math.atan2( (-1 *cosDelta * cosPhi * Math.sin(hrAngle) ), (sinDelta - ( sinPhi * Math.sin(height))) ));
 
         return HorizontalCoordinates.of(azimuth, height);
     }
