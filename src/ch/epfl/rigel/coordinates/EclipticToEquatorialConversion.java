@@ -24,10 +24,10 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @param when The date and time of the conversion
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
-        final double julianCenturies = Epoch.J2000.julianCenturiesUntil(when);
-        this.epsilon = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006), -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(julianCenturies);
-        this.cosEpsilon = Math.cos(this.epsilon);
-        this.sinEpsilon = Math.sin(this.epsilon);
+        final double T = Epoch.J2000.julianCenturiesUntil(when);
+        epsilon = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006), -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(T);
+        cosEpsilon = Math.cos(epsilon);
+        sinEpsilon = Math.sin(epsilon);
     }
 
     /**
@@ -40,9 +40,8 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
         double beta = ecl.lat();
         double sinLambda = Math.sin(lambda);
 
-        double alpha = Math.atan2( (( sinLambda * this.cosEpsilon) - (Math.tan(beta) * this.sinEpsilon)), Math.cos(lambda));
-        double delta = Math.asin( (Math.sin(beta) * this.cosEpsilon) + ( Math.cos(beta) * this.sinEpsilon * sinLambda ) );
-        alpha = Angle.normalizePositive(alpha);
+        double alpha = Angle.normalizePositive(Math.atan2(sinLambda * cosEpsilon - Math.tan(beta) * sinEpsilon, Math.cos(lambda)));
+        double delta = Math.asin(Math.sin(beta) * cosEpsilon + Math.cos(beta) * sinEpsilon * sinLambda);
 
         return EquatorialCoordinates.of(alpha, delta);
     }
@@ -52,7 +51,9 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(Object obj){ throw new UnsupportedOperationException(); }
+    final public boolean equals(Object obj){
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.

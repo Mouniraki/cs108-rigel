@@ -40,9 +40,9 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
         final double cosPhi = Math.cos(place.lat());
 
         double h = Math.asin(sinDelta * sinPhi + cosDelta * cosPhi * Math.cos(H));
-        double A = Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h));
+        double A = Angle.normalizePositive(Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h)));
 
-        return HorizontalCoordinates.of(Angle.normalizePositive(A), h);
+        return HorizontalCoordinates.of(A, h);
     }
 
     /**
