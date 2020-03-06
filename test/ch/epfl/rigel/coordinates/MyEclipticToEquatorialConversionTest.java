@@ -36,7 +36,7 @@ class MyEclipticToEquatorialConversionTest {
         EquatorialCoordinates result2 = theConversion.apply(ecl2);
         EquatorialCoordinates result3 = theConversion.apply(ecl3);
 
-//        assertEquals(9.581477778, result1Book.raHr(), 0.0000001);     // 9h 34m 53.32s
+        assertEquals(9.581477778, result1Book.raHr(), 0.0000001);     // 9h 34m 53.32s
         assertEquals(19.535002778, result1Book.decDeg(), 1e-7);//     19 ◦ 32 ' 6. 01''
 
         assertEquals(45.71539997, result1.raDeg(), 1e-4);
