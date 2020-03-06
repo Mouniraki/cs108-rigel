@@ -61,7 +61,6 @@ class MySiderealTimeTest {
 
         assertEquals(1.2221107819819774, greenwich(april22_1980), 1e-8);
         assertEquals(6.106200001522218, greenwich(jan1_1970), 1e-8);
-        assertEquals(6.045532514675193, greenwich(march8_2017), 1e-8);
         assertEquals(2.677173579861608, greenwich(september11_2001), 1e-8);
         assertEquals(6.031162825371777, greenwich(may14_1999), 1e-8);
         assertEquals(4.437556520056533, greenwich(jan24_2000), 1e-8);
@@ -69,6 +68,7 @@ class MySiderealTimeTest {
 
         assertEquals(4.894961210641396, greenwich(jan1_2000), 1e-8);
         assertEquals(1.7375098083318568, greenwich(dec31_2009), 1e-8);
+        assertEquals(6.045532514675193, greenwich(march8_2017), 1e-8);
     }
 
     @Test
@@ -113,14 +113,14 @@ class MySiderealTimeTest {
                 LocalTime.of(0, 0, 0),
                 ZoneOffset.UTC);
 
-        assertEquals(0.10510009151066783, local(april22_1980, GeographicCoordinates.ofDeg(-64, 0)), 1e-8);
-        assertEquals(0.34661366288708034, local(jan1_1970, GeographicCoordinates.ofDeg(30, 0)), 1e-8);
-        assertEquals(4.247969956398388, local(september11_2001, GeographicCoordinates.ofDeg(90, 0)), 1e-8);
-        assertEquals(6.031162670910138, local(may5_1999, GeographicCoordinates.ofDeg(0, 0)), 1e-8);
-        assertEquals(2.168628318803644, local(jan24_2000, GeographicCoordinates.ofDeg(-130, 0)), 1e-8);
-        assertEquals(2.7294447859687905, local(june18_2020, GeographicCoordinates.ofDeg(-20, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(1.2221107819819774+Angle.ofDeg(-64)), local(april22_1980, GeographicCoordinates.ofDeg(-64, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(6.106200001522218+Angle.ofDeg(30)), local(jan1_1970, GeographicCoordinates.ofDeg(30, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(2.677173579861608+Angle.ofDeg(90)), local(september11_2001, GeographicCoordinates.ofDeg(90, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(6.031162825371777+Angle.ofDeg(0)), local(may5_1999, GeographicCoordinates.ofDeg(0, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(4.437556520056533+Angle.ofDeg(-130)), local(jan24_2000, GeographicCoordinates.ofDeg(-130, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(3.0785108030466+Angle.ofDeg(-20)), local(june18_2020, GeographicCoordinates.ofDeg(-20, 0)), 1e-8);
 
-        assertEquals(1.770821967468538, local(jan1_2000, GeographicCoordinates.ofDeg(-179, 0)), 1e-8);
-        assertEquals(4.8616488119582755, local(dec31_2009, GeographicCoordinates.ofDeg(179, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(4.894961210641396+Angle.ofDeg(-179)), local(jan1_2000, GeographicCoordinates.ofDeg(-179, 0)), 1e-8);
+        assertEquals(Angle.normalizePositive(1.7375098083318568+Angle.ofDeg(179)), local(dec31_2009, GeographicCoordinates.ofDeg(179, 0)), 1e-8);
     }
 }
