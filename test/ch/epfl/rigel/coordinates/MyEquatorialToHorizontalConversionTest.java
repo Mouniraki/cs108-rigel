@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class MyEquatorialToHorizontalConversionTest {
     @Test
     void isConversionCorrect(){
-
         LocalDateTime ldt1 = LocalDateTime.of(1980, Month.APRIL, 22, 14, 37);
         ZonedDateTime klDateTime1 = ldt1.atZone(ZoneId.of("America/Tortola"));
         GeographicCoordinates where1 = GeographicCoordinates.ofDeg(-64, 52);
@@ -26,7 +25,7 @@ class MyEquatorialToHorizontalConversionTest {
         GeographicCoordinates where2 = GeographicCoordinates.ofDeg(0, 89);
         EquatorialToHorizontalConversion theConversion2 = new EquatorialToHorizontalConversion(klDateTime2, where2);
         EquatorialCoordinates ec2 = EquatorialCoordinates.of(Angle.ofHr(21.762222222), -1.545465524); //Hr: 21h, 45m, 44s
-        HorizontalCoordinates result2 = theConversion1.apply(ec2);
+        HorizontalCoordinates result2 = theConversion2.apply(ec2);
 
         assertEquals(341.4626034, result1.azDeg(), 1e-5);
         assertEquals(20.9485886, result1.altDeg(), 1e-5);

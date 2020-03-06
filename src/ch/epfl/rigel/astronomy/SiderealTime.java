@@ -28,8 +28,6 @@ public final class SiderealTime {
      */
     public static double greenwich(ZonedDateTime when){
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
-        RightOpenInterval hoursInterval = RightOpenInterval.of(0, 24);
-
         double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
 
         double decimalMillis = whenInUTC.truncatedTo(ChronoUnit.DAYS)
@@ -39,10 +37,10 @@ public final class SiderealTime {
         Polynomial forJulianCenturies = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
         Polynomial forHoursInWhen = Polynomial.of(1.002737909, 0);
 
-        double S0 = hoursInterval.reduce(forJulianCenturies.at(julianCenturies));
+        double S0 = forJulianCenturies.at(julianCenturies);
         double S1 = forHoursInWhen.at(decimalHours);
 
-        return Angle.ofHr(hoursInterval.reduce(S0 + S1));
+        return Angle.normalizePositive(Angle.ofHr(S0 + S1));
     }
 
     /**
@@ -57,7 +55,6 @@ public final class SiderealTime {
      * @return the local sidereal time, in radians and normalized to the interval [0, TAU[
      */
     public static double local(ZonedDateTime when, GeographicCoordinates where){
-        double siderealLocal = greenwich(when) + where.lon();
-        return Angle.normalizePositive(siderealLocal);
+        return Angle.normalizePositive(greenwich(when) + where.lon());
     }
 }
