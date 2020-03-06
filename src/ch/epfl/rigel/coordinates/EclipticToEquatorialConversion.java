@@ -24,7 +24,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @param when The date and time of the conversion
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
-        final double T = Epoch.J2000.julianCenturiesUntil(when);
+        double T = Epoch.J2000.julianCenturiesUntil(when);
         epsilon = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006), -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(T);
         cosEpsilon = Math.cos(epsilon);
         sinEpsilon = Math.sin(epsilon);
