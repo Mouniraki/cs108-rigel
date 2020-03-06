@@ -34,10 +34,10 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
         double H = localSiderealTime - equ.ra();
 
-        final double sinDelta = Math.sin(equ.dec());
-        final double cosDelta = Math.cos(equ.dec());
-        final double sinPhi = Math.sin(place.lat());
-        final double cosPhi = Math.cos(place.lat());
+        double sinDelta = Math.sin(equ.dec());
+        double cosDelta = Math.cos(equ.dec());
+        double sinPhi = Math.sin(place.lat());
+        double cosPhi = Math.cos(place.lat());
 
         double h = Math.asin(sinDelta * sinPhi + cosDelta * cosPhi * Math.cos(H));
         double A = Angle.normalizePositive(Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h)));
