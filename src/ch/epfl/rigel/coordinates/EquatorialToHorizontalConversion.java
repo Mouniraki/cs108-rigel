@@ -1,6 +1,7 @@
 package ch.epfl.rigel.coordinates;
 
 import ch.epfl.rigel.astronomy.SiderealTime;
+import ch.epfl.rigel.math.Angle;
 
 import java.time.ZonedDateTime;
 import java.util.function.Function;
@@ -12,7 +13,7 @@ import java.util.function.Function;
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
 
-    final private double localSideralTime;
+    final private double localSiderealTime;
     final private GeographicCoordinates place;
 
     /**
@@ -21,8 +22,8 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @param where the place
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where){
-        this.place = where;
-        this.localSideralTime = SiderealTime.local(when, where);
+        localSiderealTime = SiderealTime.local(when, where);
+        place = where;
     }
 
     /**
@@ -31,19 +32,17 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @return Converted horizontal coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-        double hrAngle = this.localSideralTime - equ.ra();
+        double H = localSiderealTime - equ.ra();
 
         double sinDelta = Math.sin(equ.dec());
         double cosDelta = Math.cos(equ.dec());
-
         double sinPhi = Math.sin(place.lat());
         double cosPhi = Math.cos(place.lat());
 
-        double height = Math.asin( (sinDelta * sinPhi) + ( cosDelta * cosPhi * Math.cos(hrAngle)) );
+        double h = Math.asin(sinDelta * sinPhi + cosDelta * cosPhi * Math.cos(H));
+        double A = Angle.normalizePositive(Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h)));
 
-        double azimuth = Math.atan2( (-1 *cosDelta * cosPhi * Math.sin(hrAngle) ), (sinDelta - ( sinPhi * Math.sin(height))) );
-
-        return HorizontalCoordinates.of(azimuth, height);
+        return HorizontalCoordinates.of(A, h);
     }
 
     /**

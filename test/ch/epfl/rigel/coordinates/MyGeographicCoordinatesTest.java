@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static ch.epfl.rigel.coordinates.GeographicCoordinates.*;
 
-class GeographicCoordinatesTest {
+class MyGeographicCoordinatesTest {
     @Test
     void testAngleOutOfBounds(){
         assertThrows(IllegalArgumentException.class, () -> {ofDeg(20, 215);});

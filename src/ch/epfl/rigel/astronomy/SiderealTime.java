@@ -3,7 +3,9 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.Polynomial;
+import ch.epfl.rigel.math.RightOpenInterval;
 
+import java.awt.image.renderable.RenderableImage;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -11,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * A sidereal time.
  *
- * @author Mounir Raki
+ * @author Mounir Raki (310287)
  */
 public final class SiderealTime {
     private SiderealTime(){}
@@ -24,17 +26,22 @@ public final class SiderealTime {
      *
      * @return the greenwich sidereal time, in radians and normalized to the interval [0, TAU[
      */
+    private final static double MS_PER_HR = 3600.0*1000.0;
+
     public static double greenwich(ZonedDateTime when){
         ZonedDateTime whenInUTC = when.withZoneSameInstant(ZoneOffset.UTC);
-        double julianCenturies = Epoch.J2000.julianCenturiesUntil(whenInUTC.truncatedTo(ChronoUnit.DAYS));
-        double decimalMillis = whenInUTC.truncatedTo(ChronoUnit.DAYS)
-                .until(whenInUTC, ChronoUnit.MILLIS);
-        double decimalHours = decimalMillis/(3600.0*1000.0);
+        ZonedDateTime whenInDaysOnly = whenInUTC.truncatedTo(ChronoUnit.DAYS);
 
-        Polynomial sidereal1 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
-        Polynomial sidereal2 = Polynomial.of(1.002737909);
-        double siderealGreenwichInHours = sidereal1.at(julianCenturies) + sidereal2.at(decimalHours);
-        return Angle.normalizePositive(Angle.ofHr(siderealGreenwichInHours));
+        double T = Epoch.J2000.julianCenturiesUntil(whenInDaysOnly);
+        double t = whenInDaysOnly.until(whenInUTC, ChronoUnit.MILLIS)/MS_PER_HR;
+
+        Polynomial p1 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
+        Polynomial p2 = Polynomial.of(1.002737909, 0);
+
+        double S0 = p1.at(T);
+        double S1 = p2.at(t);
+
+        return Angle.normalizePositive(Angle.ofHr(S0 + S1));
     }
 
     /**
@@ -49,7 +56,6 @@ public final class SiderealTime {
      * @return the local sidereal time, in radians and normalized to the interval [0, TAU[
      */
     public static double local(ZonedDateTime when, GeographicCoordinates where){
-        double siderealLocal = greenwich(when)+where.lon();
-        return Angle.normalizePositive(siderealLocal);
+        return Angle.normalizePositive(greenwich(when) + where.lon());
     }
 }

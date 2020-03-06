@@ -19,8 +19,8 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
 
     /**
      * Constructs equatorial coordinates.
-     * @param ra the right ascension
-     * @param dec the declination
+     * @param ra the right ascension (in radians)
+     * @param dec the declination (in radians)
      * @return Equatorial coordinates
      */
     public static EquatorialCoordinates of(double ra, double dec){
