@@ -56,8 +56,6 @@ public final class SiderealTime {
      * @return the local sidereal time, in radians and normalized to the interval [0, TAU[
      */
     public static double local(ZonedDateTime when, GeographicCoordinates where){
-        double greenwich = greenwich(when);
-        double lon = where.lon();
-        return Angle.normalizePositive(greenwich + lon);
+        return Angle.normalizePositive(greenwich(when) + where.lon());
     }
 }
