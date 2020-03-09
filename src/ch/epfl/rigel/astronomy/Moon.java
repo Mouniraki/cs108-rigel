@@ -1,6 +1,7 @@
-package ch.epfl.rigel.coordinates;
+package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.Preconditions;
+import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
 /**
