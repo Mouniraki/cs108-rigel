@@ -47,7 +47,8 @@ public final class CartesianCoordinates {
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(Object obj){
+    @Override
+    public final boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
 
@@ -57,7 +58,7 @@ public final class CartesianCoordinates {
      * @throws UnsupportedOperationException
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 

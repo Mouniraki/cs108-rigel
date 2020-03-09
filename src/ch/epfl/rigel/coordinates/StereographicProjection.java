@@ -9,9 +9,9 @@ import java.util.function.Function;
  * @author Nicolas Szwajcok (315213)
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
-    final private HorizontalCoordinates center;
-    final private double sinLambda1;
-    final private double cosLambda1;
+    private final HorizontalCoordinates center;
+    private final double sinLambda1;
+    private final double cosLambda1;
 
     /**
      * Constructor of the stereographic projection.
@@ -19,9 +19,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     public StereographicProjection(HorizontalCoordinates center){
         this.center = center;
-
-        this.sinLambda1 = Math.sin(center.az());
-        this.cosLambda1 = Math.cos(center.az());
+        this.sinLambda1 = Math.sin(center.alt());
+        this.cosLambda1 = Math.cos(center.alt());
     }
 
     /**
