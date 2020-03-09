@@ -1,4 +1,6 @@
-package ch.epfl.rigel.coordinates;
+package ch.epfl.rigel.astronomy;
+
+import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 /**
  * Class allowing a construction of a planet.
