@@ -3,6 +3,8 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
+import java.util.Objects;
+
 /**
  * Class allowing a construction of a Sun.
  *
@@ -18,11 +20,11 @@ public final class Sun extends CelestialObject {
      * @param equatorialPos The equatorial position of the Sun
      * @param angularSize The angular size of the Sun
      * @param meanAnomaly The mean anomaly of the Sun
+     * @return A new Sun.
      */
     public Sun(EclipticCoordinates eclipticPos, EquatorialCoordinates equatorialPos, float angularSize, float meanAnomaly){
         super("Sun", equatorialPos, angularSize,-26.7f);
-        if(eclipticPos == null){ throw new NullPointerException("Ecliptic position is null."); }
-        this.eclipticPos = eclipticPos;
+        this.eclipticPos = Objects.requireNonNull(eclipticPos);
         this.meanAnomaly = meanAnomaly;
     }
 

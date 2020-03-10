@@ -4,13 +4,15 @@ import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
+import java.util.Locale;
+
 /**
  * Class allowing a construction of a Moon.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class Moon extends CelestialObject {
-    private float phase;
+    private final float phase;
 
     /**
      * Constructor of an instance of moon.
@@ -32,6 +34,6 @@ public final class Moon extends CelestialObject {
      */
     @Override
     public String info(){
-        return "Lune (" + String.format("%.1f", phase * 100.0) + "%)";
+        return String.format(Locale.ROOT,"Lune (%.1f%%)", phase * 100.0);
     }
 }
