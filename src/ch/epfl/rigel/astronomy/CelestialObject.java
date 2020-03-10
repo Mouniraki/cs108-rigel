@@ -1,21 +1,21 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public abstract class CelestialObject {
-    final private String name;
-    final private EquatorialCoordinates equatorialPos;
-    final private float angularSize;
-    final private float magnitude;
+    private final String name;
+    private final EquatorialCoordinates equatorialPos;
+    private final float angularSize;
+    private final float magnitude;
 
     CelestialObject(String name, EquatorialCoordinates equatorialPos, float angularSize, float magnitude){
-        if(angularSize < 0){ throw new IllegalArgumentException("A negative angular size is not allowed."); }
-        if(name == null || equatorialPos == null){ throw new NullPointerException("The name or the equatorial position is null."); }
-
-        this.name = name;
-        this.equatorialPos = equatorialPos;
+        Preconditions.checkArgument(angularSize >= 0);
+        this.name = Objects.requireNonNull(name);
+        this.equatorialPos = Objects.requireNonNull(equatorialPos);
         this.angularSize = angularSize;
         this.magnitude = magnitude;
     }
@@ -59,7 +59,8 @@ public abstract class CelestialObject {
      * @return the textual representation of a celestial object
      */
     public String info(){
-        return String.format(Locale.ROOT, "A celestial object of name: %., of the equatorial position: %., of angular size: %., and of magnitude: %..", name(), equatorialPos(), magnitude(), angularSize());
+        //return String.format(Locale.ROOT, "A celestial object of name: %., of the equatorial position: %., of angular size: %., and of magnitude: %..", name(), equatorialPos(), magnitude(), angularSize());
+        return name();
     }
 
     /**

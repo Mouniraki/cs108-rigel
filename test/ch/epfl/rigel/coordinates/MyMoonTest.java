@@ -19,7 +19,7 @@ class MyMoonTest {
     }
 
     @Test
-    void constructorWorkssWithIncorrectValues(){
+    void constructorWorksWithIncorrectValues(){
         for(float i = 1; i < 1001; ++i){
         EquatorialCoordinates ec = EquatorialCoordinates.of(1, 1);
         Moon testMoon1 = new Moon(ec, 1.2f, 1.3f,0.001f * i);
