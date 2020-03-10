@@ -1,5 +1,7 @@
 package ch.epfl.rigel.coordinates;
 
+import ch.epfl.rigel.math.Angle;
+
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -79,7 +81,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return The horizontal coordinates of the point of the projection
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy){
-
+        //TODO Check if we need to normalize the lambda value, because it can be higher than TAU sometimes
         double x = xy.x();
         double y = xy.y();
 
@@ -87,10 +89,9 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double sinc = 2 * rho / (rho * rho + 1);
         double cosc = (1 - rho * rho) / (rho * rho + 1);
 
-        double lambda = Math.atan2( (x * sinc), ( (rho * Math.cos(this.center.alt()) * cosc) - (y * Math.sin(this.center.alt()) * sinc) ) ) + this.center.az();
+        double lambda = Angle.normalizePositive(Math.atan2(x * sinc, rho * Math.cos(center.alt()) * cosc - y * Math.sin(center.alt()) * sinc) + center.az());
 
-
-        double phi = Math.asin( (cosc * Math.sin(this.center.alt()) + (y * sinc * Math.cos(this.center.alt())) / rho) );
+        double phi = Math.asin((cosc * Math.sin(center.alt()) + (y * sinc * Math.cos(center.alt())) / rho));
 
         return HorizontalCoordinates.of(lambda, phi);
     }
