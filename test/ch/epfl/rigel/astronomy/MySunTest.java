@@ -25,7 +25,7 @@ class MySunTest {
 
             var sun = new Sun(eclPos, equPos, angularSize, meanAnomaly);
             assertEquals("Sun", sun.name());
-            assertEquals(-26.7f, sun.magnitude());
+            assertEquals(-26.7, sun.magnitude());
             assertEquals(eclPos.toString(), sun.eclipticPos().toString());
             assertEquals(equPos.toString(), sun.equatorialPos().toString());
             assertEquals(angularSize, sun.angularSize());
