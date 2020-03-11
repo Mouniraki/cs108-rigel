@@ -24,13 +24,13 @@ class MySunTest {
             var meanAnomaly = (float) rng.nextDouble(1000);
 
             var sun = new Sun(eclPos, equPos, angularSize, meanAnomaly);
-            assertEquals("Sun", sun.name());
+            assertEquals("Soleil", sun.name());
             assertEquals(-26.7, sun.magnitude());
             assertEquals(eclPos.toString(), sun.eclipticPos().toString());
             assertEquals(equPos.toString(), sun.equatorialPos().toString());
             assertEquals(angularSize, sun.angularSize());
             assertEquals(meanAnomaly, sun.meanAnomaly());
-            assertEquals("Sun", sun.toString());
+            assertEquals("Soleil", sun.toString());
         }
     }
 
