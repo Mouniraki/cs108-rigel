@@ -80,25 +80,6 @@ class MyMoonTest {
         }
     }
 
-    /*
-    @Test
-    void constructorFailsWithIncorrectValues(){
-        for(float i = 1; i < 10; ++i) {
-            EquatorialCoordinates ec = EquatorialCoordinates.of(1, 1);
-            float finalI = i;
-            assertThrows(IllegalArgumentException.class, () -> {
-                Moon testMoon1 = new Moon(ec, 1.2f, 1.3f, 1.0f + 0.0000001f * finalI);
-            });
-        }
-    }
-
-    @Test
-    void constructorWorksWithIncorrectValues(){
-        for(float i = 1; i < 1001; ++i){
-        EquatorialCoordinates ec = EquatorialCoordinates.of(1, 1);
-        Moon testMoon1 = new Moon(ec, 1.2f, 1.3f,0.001f * i);
-    }
-}
 
     @Test
     void toStringTest(){
@@ -117,6 +98,4 @@ class MyMoonTest {
         assertEquals("Lune (21.4%)", h5.toString());
 
     }
-
-     */
 }

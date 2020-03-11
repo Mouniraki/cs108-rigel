@@ -125,8 +125,6 @@ class MyStereographicProjectionTest {
                 double lambda = Angle.normalizePositive(Math.atan2(c.x() * sinc, rho * Math.cos(h_center.lat()) * cosc - c.y() * Math.sin(h_center.lat()) * sinc) + h_center.lon());
                 double fi = Math.asin(cosc * Math.sin(h_center.lat()) + ((c.y() * sinc * Math.cos(h_center.lat())) / rho));
 
-                //System.out.println(lambda + " " + fi);
-
                 var result = s.inverseApply(c);
                 assertEquals(lambda, result.lon());
                 assertEquals(fi, result.lat());
