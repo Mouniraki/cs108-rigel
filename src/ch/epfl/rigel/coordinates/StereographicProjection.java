@@ -12,8 +12,8 @@ import java.util.function.Function;
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
     private final HorizontalCoordinates center;
-    private final double sinLambda1;
-    private final double cosLambda1;
+    private final double sinPhi1;
+    private final double cosPhi1;
 
     /**
      * Constructor of the stereographic projection.
@@ -21,8 +21,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     public StereographicProjection(HorizontalCoordinates center){
         this.center = center;
-        this.sinLambda1 = Math.sin(center.alt());
-        this.cosLambda1 = Math.cos(center.alt());
+        this.sinPhi1 = Math.sin(center.lat());
+        this.cosPhi1 = Math.cos(center.lat());
     }
 
     /**
@@ -31,17 +31,17 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return The coordinates of the circle corresponding to the projection of the parallel passing by the point hor
      */
     public CartesianCoordinates circleCenterForParallel(HorizontalCoordinates hor){
-        double centerY = ( this.cosLambda1 / ( Math.sin(hor.lat()) + this.sinLambda1 ) );
+        double centerY = cosPhi1 / (Math.sin(hor.lat()) + sinPhi1);
         return CartesianCoordinates.of(0, centerY);
     }
 
     /**
-     * Returns the radious of the circle corresponding to the projection of the parallel passing by the point of coordinates hor.
+     * Returns the radius of the circle corresponding to the projection of the parallel passing by the point of coordinates hor.
      * @param parallel The point by which the parallel projection passes by
-     * @return The radious of the circle corresponding to the projection of the parallel passing by the point hor
+     * @return The radius of the circle corresponding to the projection of the parallel passing by the point hor
      */
     public double circleRadiusForParallel(HorizontalCoordinates parallel){
-        return ( Math.cos(parallel.lat()) / ( ( Math.sin(parallel.lat()) + this.sinLambda1 ) )  );
+        return Math.cos(parallel.lat()) / (Math.sin(parallel.lat()) + sinPhi1);
     }
 
     /**
@@ -50,7 +50,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return Projected diameter of the sphere
      */
     public double applyToAngle(double rad){
-        return (2 * Math.tan(rad / 4));
+        return 2 * Math.tan(rad / 4);
     }
 
     /**
@@ -60,17 +60,14 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
-        //TODO Obviously the way of calculating by defining so many variable is bad, but for now we need to
-        //have an easy view why things work/not work, and when they'll work we'll optimize the code
+        double lambda = azAlt.lon();
+        double phi = azAlt.lat();
+        double deltaLambda = lambda - center.lon();
 
-        final double lambda = azAlt.az();
-        final double phi = azAlt.alt();
-        final double deltaLambda = lambda - this.center.az();
-
-        double d = 1 / (1 + Math.sin(phi) * Math.sin(this.center.alt()) + Math.cos(phi) * Math.cos(this.center.alt()) * Math.cos(deltaLambda) );
+        double d = 1 / (1 + Math.sin(phi) * Math.sin(center.lat()) + Math.cos(phi) * Math.cos(center.lat()) * Math.cos(deltaLambda));
 
         double x = d * Math.cos(phi) * Math.sin(deltaLambda);
-        double y = d * (Math.sin(phi) * Math.cos(this.center.alt()) - Math.cos(phi) * Math.sin(center.alt()) * Math.cos(deltaLambda));
+        double y = d * (Math.sin(phi) * Math.cos(center.lat()) - Math.cos(phi) * Math.sin(center.lat()) * Math.cos(deltaLambda));
 
         return CartesianCoordinates.of(x, y);
     }
@@ -81,17 +78,16 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return The horizontal coordinates of the point of the projection
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy){
-        //TODO Check if we need to normalize the lambda value, because it can be higher than TAU sometimes
         double x = xy.x();
         double y = xy.y();
 
         double rho = Math.sqrt(x * x + y * y);
-        double sinc = 2 * rho / (rho * rho + 1);
-        double cosc = (1 - rho * rho) / (rho * rho + 1);
+        double sinC = 2 * rho / (rho * rho + 1);
+        double cosC = (1 - rho * rho) / (rho * rho + 1);
 
-        double lambda = Angle.normalizePositive(Math.atan2(x * sinc, rho * Math.cos(center.alt()) * cosc - y * Math.sin(center.alt()) * sinc) + center.az());
+        double lambda = Angle.normalizePositive(Math.atan2(x * sinC, rho * Math.cos(center.lat()) * cosC - y * Math.sin(center.lat()) * sinC) + center.lon());
 
-        double phi = Math.asin((cosc * Math.sin(center.alt()) + (y * sinc * Math.cos(center.alt())) / rho));
+        double phi = Math.asin(cosC * Math.sin(center.lat()) + (y * sinC * Math.cos(center.lat())) / rho);
 
         return HorizontalCoordinates.of(lambda, phi);
     }
@@ -123,6 +119,6 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "StereographicProjection with center at (x=0, y=%.4f)", center.alt() );
+        return String.format(Locale.ROOT, "StereographicProjection with center at (x=0, y=%.4f)", center.lat() );
     }
 }

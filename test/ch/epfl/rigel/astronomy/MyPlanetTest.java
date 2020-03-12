@@ -15,7 +15,7 @@ class MyPlanetTest {
             var ra = rng.nextDouble(0, Angle.ofHr(24));
             var dec = rng.nextDouble(-Angle.TAU/4, Angle.TAU/4);
 
-            var name = "Planet";
+            var name = "Earth";
             var equPos = EquatorialCoordinates.of(ra, dec);
             var angularSize = (float) rng.nextDouble(0, 100000);
             var magnitude = (float) rng.nextDouble(1000);
@@ -34,7 +34,7 @@ class MyPlanetTest {
     void constructorFailsOnNegativeAngularSize(){
         var rng = TestRandomizer.newRandom();
         for(int i=0; i<1000; ++i) {
-            var name = "Planet";
+            var name = "Venus";
             var equPos = EquatorialCoordinates.of(0, 0);
             var angularSize = (float) rng.nextDouble(-100000.0, 0);
             var magnitude = 0.f;
@@ -63,7 +63,7 @@ class MyPlanetTest {
     void constructorFailsOnNullEquatorialPosition(){
         var rng = TestRandomizer.newRandom();
         for(int i=0; i<1000; ++i) {
-            var name = "Planet";
+            var name = "Jupiter";
             var angularSize = (float) rng.nextDouble(-100000.0, 0);
             var magnitude = 0.f;
 
