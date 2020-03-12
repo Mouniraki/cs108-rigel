@@ -35,7 +35,7 @@ public final class CartesianCoordinates {
     }
 
     /**
-     * Getter of the y value (ordinate)
+     * Getter of the y value (ordinate).
      * @return the y value of the coordinates (ordinate)
      */
     public double y(){

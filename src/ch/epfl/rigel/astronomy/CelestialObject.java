@@ -53,11 +53,10 @@ public abstract class CelestialObject {
     }
 
     /**
-     * Redefines the toString method in java.lang.Object to construct the textual representation of a celestial object.
+     * Defines the textual representation of a celestial object.
      * @return the textual representation of a celestial object
      */
     public String info(){
-        //return String.format(Locale.ROOT, "A celestial object of name: %., of the equatorial position: %., of angular size: %., and of magnitude: %..", name(), equatorialPos(), magnitude(), angularSize());
         return name();
     }
 
