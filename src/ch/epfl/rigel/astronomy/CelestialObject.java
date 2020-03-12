@@ -52,8 +52,6 @@ public abstract class CelestialObject {
         return this.equatorialPos;
     }
 
-    //TODO PROBABLY IT IS WRONG, TO BE TESTED
-
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a celestial object.
      * @return the textual representation of a celestial object
