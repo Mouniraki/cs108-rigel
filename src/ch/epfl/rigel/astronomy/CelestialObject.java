@@ -6,6 +6,11 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Mother class for all types of Celestial objects.
+ *
+ * @author Nicolas Szwajcok (315213)
+ */
 public abstract class CelestialObject {
     private final String name;
     private final EquatorialCoordinates equatorialPos;

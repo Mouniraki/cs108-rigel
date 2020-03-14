@@ -7,7 +7,6 @@ import ch.epfl.rigel.math.Angle;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Models of the eight planets of the solar system.
  *
