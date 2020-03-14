@@ -1,5 +1,6 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
@@ -33,9 +34,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
     /**
      * Immutable list of all of the planet models, in order of declaration.
      */
-    public static List<PlanetModel> ALL = new ArrayList<>(List.of(
-            MERCURY, VENUS, EARTH, MARS, JUPITER, SATURN, URANUS, NEPTUNE
-    ));
+    public static List<PlanetModel> ALL = new ArrayList<>(List.of(values()));
 
     private final String frenchName;
     private final double revPeriod;
@@ -48,6 +47,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
     private final double angularSizeAt1UA;
     private final double magnitudeAt1UA;
 
+    private final static double DAYS_IN_TROPICAL_YEAR = 365.242191;
 
     PlanetModel(String frenchName, double revPeriod, double lonAtJ2010, double lonAtPerigee, double orbitEccentricity,
                 double orbitSMAxis, double orbitEclipticInclination, double lonOrbitalNode, double angularSizeAt1UA,
@@ -66,8 +66,65 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
 
     }
 
+    /**
+     * Generates the models of the planets.
+     * @param daysSinceJ2010
+     *          Number of days after the epoch J2010
+     * @param eclipticToEquatorialConversion
+     *          Conversion from ecliptic to equatorial coordinates
+     *
+     * @return a new Planet with the corresponding model
+     */
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        return null;
+        double meanAngularSpeed = (Angle.TAU / DAYS_IN_TROPICAL_YEAR);
+
+        double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
+        double realAnomaly = realAnomaly(meanAnomaly, this);
+
+        double radius = radius(realAnomaly, this);
+        double planetLon = lon(realAnomaly, this);
+        double latEclHelio = Math.asin(Math.sin(planetLon - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
+
+        double rPrime = radius * Math.cos(latEclHelio);
+        double lPrime = Math.atan2(Math.sin(planetLon - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
+                Math.cos(planetLon - lonOrbitalNode)) + lonOrbitalNode;
+
+        //FROM EARTH
+        double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
+        double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH);
+        double L = lon(earthRealAnomaly, EARTH);
+        double R = radius(earthRealAnomaly, EARTH);
+
+        double lambda = lambda(L, R, lPrime, rPrime, planetLon, latEclHelio, this);
+        double beta = Math.atan((rPrime * Math.tan(latEclHelio) * Math.sin(lambda - lPrime) / R * Math.sin(latEclHelio - L)));
+
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lambda, beta)), (float) angularSizeAt1UA, (float) magnitudeAt1UA);
+    }
+
+
+    private double meanAnomaly(double meanAngularSpeed, double daysSinceJ2010, PlanetModel p){
+        return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
+    }
+
+    private double realAnomaly(double meanAnomaly, PlanetModel p){
+        return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
+    }
+
+    private double radius(double realAnomaly, PlanetModel p){
+        return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(realAnomaly));
+    }
+
+    private double lon(double realAnomaly, PlanetModel p){
+        return realAnomaly + p.lonAtPerigee;
+    }
+
+    private double lambda(double earthLon, double earthRadius, double lPrime, double rPrime, double planetLon, double latEclHelio, PlanetModel p){
+        if(p == MERCURY || p == VENUS){
+            return Angle.TAU/2 + earthLon + Math.atan2(rPrime * Math.sin(earthLon - planetLon), earthRadius - rPrime * Math.cos(earthLon - planetLon));
+        }
+        else {
+            return latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon));
+        }
     }
 }
