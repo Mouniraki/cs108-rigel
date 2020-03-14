@@ -8,6 +8,7 @@ import ch.epfl.rigel.math.Angle;
  * Model of the Sun.
  *
  * @author Nicolas Szwajcok (315213)
+ * @author Mounir Raki (310287)
  */
 public enum SunModel implements CelestialObjectModel<Sun> {
     SUN;

@@ -3,7 +3,6 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import java.util.List;
  *
  * @author Mounir Raki (310287)
  */
+
 public enum PlanetModel implements CelestialObjectModel<Planet>{
     MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
             0.387098, 7.0051, 48.449, 6.74, -0.42),
