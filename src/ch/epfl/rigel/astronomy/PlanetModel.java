@@ -59,7 +59,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         this.orbitEccentricity = orbitEccentricity; //NONE
         this.orbitSMAxis = orbitSMAxis; //UA
         this.orbitEclipticInclination = Angle.ofDeg(orbitEclipticInclination); // DEG
-        this.lonOrbitalNode = Angle.ofDeg(lonOrbitalNode); // DEG/RAD
+        this.lonOrbitalNode = Angle.ofDeg(lonOrbitalNode); // DEG
         this.angularSizeAt1UA = Angle.ofArcsec(angularSizeAt1UA); //ARCSEC
         this.magnitudeAt1UA = magnitudeAt1UA; //NONE
 
@@ -82,23 +82,24 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double realAnomaly = realAnomaly(meanAnomaly, this);
 
         double radius = radius(realAnomaly, this);
-        double planetLon = lon(realAnomaly, this);
-        double latEclHelio = Math.asin(Math.sin(planetLon - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
+        double lonPlanetHelio = lonHelio(realAnomaly, this);
 
-        double rPrime = radius * Math.cos(latEclHelio);
-        double lPrime = Math.atan2(Math.sin(planetLon - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
-                Math.cos(planetLon - lonOrbitalNode)) + lonOrbitalNode;
+        double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
+
+        double eclRadius = radius * Math.cos(latEclHelio);
+        double lonEclHelio = Math.atan2(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
+                Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
 
         //FROM EARTH
         double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
         double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH);
-        double L = lon(earthRealAnomaly, EARTH);
-        double R = radius(earthRealAnomaly, EARTH);
+        double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH);
+        double earthRadius = radius(earthRealAnomaly, EARTH);
 
-        double lambda = lambda(L, R, lPrime, rPrime, planetLon, latEclHelio, this);
-        double beta = Math.atan((rPrime * Math.tan(latEclHelio) * Math.sin(lambda - lPrime) / R * Math.sin(latEclHelio - L)));
+        double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, lonPlanetHelio, latEclHelio, this);
+        double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio) / earthRadius * Math.sin(latEclHelio - lonEarthHelio)));
 
-        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lambda, beta)), (float) angularSizeAt1UA, (float) magnitudeAt1UA);
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSizeAt1UA, (float) magnitudeAt1UA);
     }
 
 
@@ -114,16 +115,18 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(realAnomaly));
     }
 
-    private double lon(double realAnomaly, PlanetModel p){
+    private double lonHelio(double realAnomaly, PlanetModel p){
         return realAnomaly + p.lonAtPerigee;
     }
 
-    private double lambda(double earthLon, double earthRadius, double lPrime, double rPrime, double planetLon, double latEclHelio, PlanetModel p){
+    private double lonEclGeo(double earthLon, double earthRadius, double lPrime, double rPrime, double planetLon, double latEclHelio, PlanetModel p){
         if(p == MERCURY || p == VENUS){
-            return Angle.TAU/2 + earthLon + Math.atan2(rPrime * Math.sin(earthLon - planetLon), earthRadius - rPrime * Math.cos(earthLon - planetLon));
+            return Angle.normalizePositive(Angle.TAU/2 + earthLon + Math.atan2(rPrime * Math.sin(earthLon - planetLon), earthRadius - rPrime * Math.cos(earthLon - planetLon)));
         }
         else {
-            return latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon));
+            double r = Angle.normalizePositive(latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon)));
+            System.out.println(Angle.toDeg(r));
+            return Angle.normalizePositive(latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon)));
         }
     }
 }
