@@ -51,7 +51,6 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
     PlanetModel(String frenchName, double revPeriod, double lonAtJ2010, double lonAtPerigee, double orbitEccentricity,
                 double orbitSMAxis, double orbitEclipticInclination, double lonOrbitalNode, double angularSizeAt1UA,
                 double magnitudeAt1UA){
-
         this.frenchName = frenchName;
         this.revPeriod = revPeriod;
         this.lonAtJ2010 = Angle.ofDeg(lonAtJ2010);
@@ -62,7 +61,6 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         this.lonOrbitalNode = Angle.ofDeg(lonOrbitalNode);
         this.angularSizeAt1UA = Angle.ofArcsec(angularSizeAt1UA);
         this.magnitudeAt1UA = magnitudeAt1UA;
-
     }
 
     /**
@@ -81,7 +79,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
         double realAnomaly = realAnomaly(meanAnomaly, this);
 
-        double radius = radius(realAnomaly, this); //OK
+        double radius = radius(realAnomaly, this);
         double lonPlanetHelio = lonHelio(realAnomaly, this);
 
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
@@ -96,11 +94,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH);
         double earthRadius = radius(earthRealAnomaly, EARTH);
 
-        double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this); //MUST BE NORMALIZED ?
+        double lonEclGeo = Angle.normalizePositive(lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this)); //MUST BE NORMALIZED ?
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
-
-        System.out.println(Angle.toDeg(lonEclGeo));
-        System.out.println(Angle.toDeg(latEclGeo));
 
         return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSizeAt1UA, (float) magnitudeAt1UA);
     }
@@ -124,8 +119,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
 
     private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p){
         if(p == MERCURY || p == VENUS){
-            //return Angle.TAU/2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
-            return Angle.normalizePositive(Angle.TAU/2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio)));
+            return Angle.TAU/2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
         }
         else {
             return lonEclHelio + Math.atan2(earthRadius * Math.sin(lonEclHelio - lonEarthHelio), eclRadius - earthRadius * Math.cos(lonEclHelio - lonEarthHelio));
