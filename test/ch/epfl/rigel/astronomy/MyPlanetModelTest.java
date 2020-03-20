@@ -24,7 +24,6 @@ class MyPlanetModelTest {
         var j = PlanetModel.JUPITER.at(numberOfDays, eclEqu);
         var equJ = j.equatorialPos();
 
-        System.out.println(166.310510);
         assertEquals(eclEqu.apply(ecl).ra(), equJ.ra());
         assertEquals(eclEqu.apply(ecl).dec(), equJ.dec());
     }

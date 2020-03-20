@@ -78,11 +78,11 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         double meanAngularSpeed = (Angle.TAU / DAYS_IN_TROPICAL_YEAR);
 
-        double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
-        double realAnomaly = realAnomaly(meanAnomaly, this);
+        double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this); //OK IF NORMALIZED
+        double realAnomaly = realAnomaly(meanAnomaly, this); //OK IF NORMALIZED
 
-        double radius = radius(realAnomaly, this);
-        double lonPlanetHelio = lonHelio(realAnomaly, this);
+        double radius = radius(realAnomaly, this); //OK
+        double lonPlanetHelio = lonHelio(realAnomaly, this); //OK IF NORMALIZED
 
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
 
@@ -91,10 +91,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
                 Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
 
         //FROM EARTH
-        double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
-        double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH);
-        double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH);
-        double earthRadius = radius(earthRealAnomaly, EARTH);
+        double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH); //OK IF NORMALIZED
+        double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH); //OK IF NORMALIZED
+        double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH); //OK IF NORMALIZED
+        double earthRadius = radius(earthRealAnomaly, EARTH); //OK
 
         double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, lonPlanetHelio, latEclHelio, this);
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio) / earthRadius * Math.sin(latEclHelio - lonEarthHelio)));
@@ -104,28 +104,39 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
 
 
     private double meanAnomaly(double meanAngularSpeed, double daysSinceJ2010, PlanetModel p){
-        return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
+        double c = Angle.normalizePositive(meanAngularSpeed * (daysSinceJ2010 / p.revPeriod)) + p.lonAtJ2010 - p.lonAtPerigee;
+        //System.out.println(Angle.toDeg(c)); //BOOK VALUE JUPITER & EARTH CHECK
+        //return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
+        return c;
     }
 
     private double realAnomaly(double meanAnomaly, PlanetModel p){
-        return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
+        double c = Angle.normalizePositive(meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly));
+        //System.out.println(Angle.toDeg(c)); //BOOK VALUE JUPITER & EARTH CHECK
+        //return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
+        return c;
     }
 
-    private double radius(double realAnomaly, PlanetModel p){
+    private double radius(double realAnomaly, PlanetModel p){ //BOOK VALUE JUPITER & EARTH OK
         return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(realAnomaly));
     }
 
     private double lonHelio(double realAnomaly, PlanetModel p){
-        return realAnomaly + p.lonAtPerigee;
+        double c = Angle.normalizePositive(realAnomaly + p.lonAtPerigee);
+        //System.out.println(Angle.toDeg(c)); //BOOK VALUE JUPITER & EARTH CHECK
+        //return realAnomaly + p.lonAtPerigee;
+        return c;
     }
 
     private double lonEclGeo(double earthLon, double earthRadius, double lPrime, double rPrime, double planetLon, double latEclHelio, PlanetModel p){
         if(p == MERCURY || p == VENUS){
+            double c = Angle.normalizePositive(Angle.TAU/2 + earthLon + Math.atan2(rPrime * Math.sin(earthLon - planetLon), earthRadius - rPrime * Math.cos(earthLon - planetLon)));
+            //System.out.println(Angle.toDeg(c));
             return Angle.normalizePositive(Angle.TAU/2 + earthLon + Math.atan2(rPrime * Math.sin(earthLon - planetLon), earthRadius - rPrime * Math.cos(earthLon - planetLon)));
         }
         else {
             double r = Angle.normalizePositive(latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon)));
-            System.out.println(Angle.toDeg(r));
+            //System.out.println(Angle.toDeg(r));
             return Angle.normalizePositive(latEclHelio + Math.atan2(earthRadius * Math.sin(lPrime - earthLon), rPrime - earthRadius * Math.cos(lPrime - earthLon)));
         }
     }
