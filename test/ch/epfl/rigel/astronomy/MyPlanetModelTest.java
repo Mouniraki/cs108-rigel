@@ -24,8 +24,8 @@ class MyPlanetModelTest {
         var j = PlanetModel.JUPITER.at(numberOfDays, eclEqu);
         var equJ = j.equatorialPos();
 
-        assertEquals(eclEqu.apply(ecl).ra(), equJ.ra());
-        assertEquals(eclEqu.apply(ecl).dec(), equJ.dec());
+        assertEquals(eclEqu.apply(ecl).ra(), equJ.ra(), 1e-8);
+        assertEquals(eclEqu.apply(ecl).dec(), equJ.dec(), 1e-8);
     }
 
     @Test
@@ -42,8 +42,8 @@ class MyPlanetModelTest {
         var m = PlanetModel.MERCURY.at(numberOfDays, eclEqu);
         var equM = m.equatorialPos();
 
-        assertEquals(eclEqu.apply(ecl).ra(), equM.ra());
-        assertEquals(eclEqu.apply(ecl).dec(), equM.dec());
+        assertEquals(eclEqu.apply(ecl).ra(), equM.ra(), 1e-8);
+        assertEquals(eclEqu.apply(ecl).dec(), equM.dec(), 1e-8);
     }
 
 }
