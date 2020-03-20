@@ -53,6 +53,7 @@ class MySunModelTest {
         var eclCoords = EclipticCoordinates.of(lonEclGeo, latEclGeo);
         var eclConverted = eclEqu.apply(eclCoords);
 
+        System.out.println(Angle.toDeg(eclConverted.ra()));
         var sun = SunModel.SUN.at(numberOfDays, eclEqu);
         assertEquals(eclConverted.ra(), sun.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), sun.equatorialPos().dec(), 1e-8);
