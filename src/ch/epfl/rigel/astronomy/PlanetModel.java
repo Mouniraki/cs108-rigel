@@ -88,7 +88,6 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double lonEclHelio = Math.atan2(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
                 Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
 
-        //FROM EARTH
         double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
         double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH);
         double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH);
