@@ -4,6 +4,8 @@ import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
+import java.util.Locale;
+
 /**
  * Model of the Sun.
  *
@@ -30,7 +32,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         double daysInTropicalYear = 365.242191;
         double thetaZero = Angle.ofDeg(0.533128);
 
-        double meanAnomaly = (Angle.TAU / daysInTropicalYear) * daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerigee;
+        double meanAnomaly = (Angle.TAU / daysInTropicalYear) * daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerigee; //IMPRECISE
         double realAnomaly = meanAnomaly + 2 * orbitalEccentricity * Math.sin(meanAnomaly);
         double eclipticLon = Angle.normalizePositive(realAnomaly + sunLonAtPerigee);
 
@@ -38,5 +40,14 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         EclipticCoordinates eclSun = EclipticCoordinates.of(eclipticLon, 0);
 
         return new Sun(eclSun, eclipticToEquatorialConversion.apply(eclSun), (float) angularSize, (float) meanAnomaly);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }
