@@ -32,22 +32,15 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         double daysInTropicalYear = 365.242191;
         double thetaZero = Angle.ofDeg(0.533128);
 
-        double meanAnomaly = (Angle.TAU / daysInTropicalYear) * daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerigee; //IMPRECISE
-        double realAnomaly = meanAnomaly + 2 * orbitalEccentricity * Math.sin(meanAnomaly);
-        double eclipticLon = Angle.normalizePositive(realAnomaly + sunLonAtPerigee);
+        double meanAnomaly = (Angle.TAU / daysInTropicalYear) * daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerigee;
+        double trueAnomaly = meanAnomaly + 2 * orbitalEccentricity * Math.sin(meanAnomaly);
+        double eclipticLon = trueAnomaly + sunLonAtPerigee;
 
-        double angularSize = thetaZero * ((1 + orbitalEccentricity * Math.cos(realAnomaly) / 1 - orbitalEccentricity * orbitalEccentricity));
-        EclipticCoordinates eclSun = EclipticCoordinates.of(eclipticLon, 0);
+        EclipticCoordinates eclCoords = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), 0);
 
-        return new Sun(eclSun, eclipticToEquatorialConversion.apply(eclSun), (float) angularSize, (float) meanAnomaly);
-    }
+        double angularSize = thetaZero * ((1 + orbitalEccentricity * Math.cos(trueAnomaly)) / (1 - orbitalEccentricity * orbitalEccentricity));
 
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
+        return new Sun(eclCoords, eclipticToEquatorialConversion.apply(eclCoords), (float) angularSize, (float) meanAnomaly);
 
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
     }
 }

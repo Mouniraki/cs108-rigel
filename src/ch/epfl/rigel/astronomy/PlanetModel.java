@@ -77,10 +77,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double meanAngularSpeed = (Angle.TAU / DAYS_IN_TROPICAL_YEAR);
 
         double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
-        double realAnomaly = realAnomaly(meanAnomaly, this);
+        double trueAnomaly = trueAnomaly(meanAnomaly, this);
 
-        double radius = radius(realAnomaly, this);
-        double lonPlanetHelio = lonHelio(realAnomaly, this);
+        double radius = radius(trueAnomaly, this);
+        double lonPlanetHelio = lonHelio(trueAnomaly, this);
 
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
 
@@ -89,9 +89,9 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
                 Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
 
         double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
-        double earthRealAnomaly = realAnomaly(earthMeanAnomaly, EARTH);
-        double lonEarthHelio = lonHelio(earthRealAnomaly, EARTH);
-        double earthRadius = radius(earthRealAnomaly, EARTH);
+        double earthTrueAnomaly = trueAnomaly(earthMeanAnomaly, EARTH);
+        double lonEarthHelio = lonHelio(earthTrueAnomaly, EARTH);
+        double earthRadius = radius(earthTrueAnomaly, EARTH);
 
         double lonEclGeo = Angle.normalizePositive(lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this)); //MUST BE NORMALIZED ?
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
@@ -104,16 +104,16 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
     }
 
-    private double realAnomaly(double meanAnomaly, PlanetModel p){
+    private double trueAnomaly(double meanAnomaly, PlanetModel p){
         return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
     }
 
-    private double radius(double realAnomaly, PlanetModel p){
-        return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(realAnomaly));
+    private double radius(double trueAnomaly, PlanetModel p){
+        return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(trueAnomaly));
     }
 
-    private double lonHelio(double realAnomaly, PlanetModel p){
-        return realAnomaly + p.lonAtPerigee;
+    private double lonHelio(double trueAnomaly, PlanetModel p){
+        return trueAnomaly + p.lonAtPerigee;
     }
 
     private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p){

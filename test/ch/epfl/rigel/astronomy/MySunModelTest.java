@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MySunModelTest {
     private final static ZonedDateTime ZDT_BOOKEXAMPLE = ZonedDateTime.of(
-            LocalDate.of(2003, Month.JULY, 23),
+            LocalDate.of(2003, Month.JULY, 27),
             LocalTime.of(0, 0, 0),
             ZoneOffset.UTC
             );
@@ -50,11 +50,11 @@ class MySunModelTest {
 
         double latEclGeo = Angle.ofDeg(0);
 
-        var numberOfDays1 = Epoch.J2010.daysUntil(ZDT_BOOKEXAMPLE);
-        var numberOfDays2 = Epoch.J2010.daysUntil(ZDT_STARTSEMESTER);
-        var numberOfDays3 = Epoch.J2010.daysUntil(ZDT_ENDSEMESTER);
-        var numberOfDays4 = Epoch.J2010.daysUntil(ZDT_BERLIN_WALL);
-        var numberOfDays5 = Epoch.J2010.daysUntil(ZDT_NEW_CENTURY);
+        double numberOfDays1 = Epoch.J2010.daysUntil(ZDT_BOOKEXAMPLE);
+        double numberOfDays2 = Epoch.J2010.daysUntil(ZDT_STARTSEMESTER);
+        double numberOfDays3 = Epoch.J2010.daysUntil(ZDT_ENDSEMESTER);
+        double numberOfDays4 = Epoch.J2010.daysUntil(ZDT_BERLIN_WALL);
+        double numberOfDays5 = Epoch.J2010.daysUntil(ZDT_NEW_CENTURY);
 
         var eclEqu1 = new EclipticToEquatorialConversion(ZDT_BOOKEXAMPLE);
         var eclEqu2 = new EclipticToEquatorialConversion(ZDT_STARTSEMESTER);
@@ -80,19 +80,22 @@ class MySunModelTest {
         var sun4 = SunModel.SUN.at(numberOfDays4, eclEqu4);
         var sun5 = SunModel.SUN.at(numberOfDays5, eclEqu5);
 
-        assertEquals(eclConverted1.ra(), sun1.equatorialPos().ra(), 1e-8);
-        assertEquals(eclConverted1.dec(), sun1.equatorialPos().dec(), 1e-8);
+        System.out.println(numberOfDays2);
 
-        assertEquals(eclConverted2.ra(), sun2.equatorialPos().ra(), 1e-8);
-        assertEquals(eclConverted2.dec(), sun2.equatorialPos().dec(), 1e-8);
+        assertEquals(eclConverted1.ra(), sun1.equatorialPos().ra(), 1e-7);
+        assertEquals(eclConverted1.dec(), sun1.equatorialPos().dec(), 1e-7);
 
-        assertEquals(eclConverted3.ra(), sun3.equatorialPos().ra(), 1e-8);
-        assertEquals(eclConverted3.dec(), sun3.equatorialPos().dec(), 1e-8);
+        assertEquals(eclConverted2.ra(), sun2.equatorialPos().ra(), 1e-7);
+        assertEquals(eclConverted2.dec(), sun2.equatorialPos().dec(), 1e-7);
 
-        assertEquals(eclConverted4.ra(), sun4.equatorialPos().ra(), 1e-8);
-        assertEquals(eclConverted4.dec(), sun4.equatorialPos().dec(), 1e-8);
+        assertEquals(eclConverted3.ra(), sun3.equatorialPos().ra(), 1e-7);
+        assertEquals(eclConverted3.dec(), sun3.equatorialPos().dec(), 1e-7);
 
-        assertEquals(eclConverted5.ra(), sun5.equatorialPos().ra(), 1e-8);
-        assertEquals(eclConverted5.dec(), sun5.equatorialPos().dec(), 1e-8);
+        assertEquals(eclConverted4.ra(), sun4.equatorialPos().ra(), 1e-7);
+        assertEquals(eclConverted4.dec(), sun4.equatorialPos().dec(), 1e-7);
+
+        assertEquals(eclConverted5.ra(), sun5.equatorialPos().ra(), 1e-7);
+        assertEquals(eclConverted5.dec(), sun5.equatorialPos().dec(), 1e-7);
+
     }
 }
