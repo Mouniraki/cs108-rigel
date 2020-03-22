@@ -32,7 +32,7 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         double daysInTropicalYear = 365.242191;
         double thetaZero = Angle.ofDeg(0.533128);
 
-        double meanAnomaly = (Angle.TAU / daysInTropicalYear) * daysSinceJ2010 + sunLonAtJ2010 - sunLonAtPerigee;
+        double meanAnomaly = Angle.normalizePositive((Angle.TAU / daysInTropicalYear) * daysSinceJ2010) + sunLonAtJ2010 - sunLonAtPerigee;
         double trueAnomaly = meanAnomaly + 2 * orbitalEccentricity * Math.sin(meanAnomaly);
         double eclipticLon = Angle.normalizePositive(trueAnomaly + sunLonAtPerigee);
 

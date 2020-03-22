@@ -19,12 +19,12 @@ class MyPlanetModelTest {
                                 LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC)))
                 .equatorialPos();
 
-        assertEquals(11.187154934709682, equJupiter.raHr(), 1e-14); //THIS ONE
-        assertEquals(11.187154934709678, equJupiter.raHr(), 1e-14);
+        assertEquals(11.187154934709682, equJupiter.raHr(), 1e-14); //THIS ONE (1person)
+        assertEquals(11.187154934709678, equJupiter.raHr(), 1e-14); //8persons
         //assertEquals(11.18675858733765, equJupiter.raHr(), 1e-14);
 
-        assertEquals(6.3566355066857465, equJupiter.decDeg()); //THIS ONE
-        assertEquals(6.356635506685756, equJupiter.decDeg(), 1e-14);
+        assertEquals(6.3566355066857465, equJupiter.decDeg()); //THIS ONE (1person)
+        assertEquals(6.356635506685756, equJupiter.decDeg(), 1e-14); //7persons
         //assertEquals(6.3426361553333095, equJupiter.decDeg(), 1e-14);
 
         var angJupiter = Angle.toDeg(PlanetModel.JUPITER
@@ -54,13 +54,13 @@ class MyPlanetModelTest {
                                 ZoneOffset.UTC)))
                 .equatorialPos();
 
-        assertEquals(16.820074565897148, equMercury.raHr()); //THIS ONE
-        assertEquals(16.820074565897194, equMercury.raHr(), 1e-13);
+        assertEquals(16.820074565897148, equMercury.raHr()); //THIS ONE (4persons)
+        assertEquals(16.820074565897194, equMercury.raHr(), 1e-13); //4persons
         assertEquals(16.82007456589712, equMercury.raHr(), 1e-13);
         //assertEquals(16.8279572540347, equMercury.raHr(), 1e-13);
 
-        assertEquals(-24.500872462861224, equMercury.decDeg()); //THIS ONE
-        assertEquals(-24.500872462861274, equMercury.decDeg(), 1e-13);
+        assertEquals(-24.500872462861224, equMercury.decDeg()); //THIS ONE (2persons)
+        assertEquals(-24.500872462861274, equMercury.decDeg(), 1e-13); //2persons
         assertEquals(-24.500872462861143, equMercury.decDeg(), 1e-13);
         assertEquals(-24.500872462861228, equMercury.decDeg(), 1e-13);
         assertEquals(-24.500872462861217, equMercury.decDeg(), 1e-13);

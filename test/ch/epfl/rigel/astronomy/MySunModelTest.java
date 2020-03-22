@@ -78,9 +78,20 @@ class MySunModelTest {
         double e1 = Angle.ofDeg(0.524936145);
 
         double lonEclGeo2 = Angle.ofDeg(328.1137963);
+        double mA2 = Angle.ofDeg(43.67934189);
+        double e2 = Angle.ofDeg(0.539591543);
+
         double lonEclGeo3 = Angle.ofDeg(68.78687837);
+        double mA3 = Angle.ofDeg(144.5645926);
+        double e3 = Angle.ofDeg(0.525938715);
+
         double lonEclGeo4 = Angle.ofDeg(227.3815892);
+        double mA4 = Angle.ofDeg(305.8213071);
+        double e4 = Angle.ofDeg(0.538338401);
+
         double lonEclGeo5 = Angle.ofDeg(280.0148554);
+        double mA5 = Angle.ofDeg(357.0025174);
+        double e5 = Angle.ofDeg(0.542175889);
 
         double latEclGeo = 0;
 
@@ -114,24 +125,29 @@ class MySunModelTest {
         var sun4 = SunModel.SUN.at(numberOfDays4, eclEqu4);
         var sun5 = SunModel.SUN.at(numberOfDays5, eclEqu5);
 
-        System.out.println(Angle.toDeg(eclConverted1.ra()) + " " + Angle.toDeg(sun1.equatorialPos().ra()));
-
-        //assertEquals(eclConverted1.ra(), sun1.equatorialPos().ra(), 1e-8); //7 DECIMALS
-        //assertEquals(eclConverted1.dec(), sun1.equatorialPos().dec(), 1e-8); //7 DECIMALS
-        assertEquals(e1, sun1.angularSize(), 1e-8); //
-        assertEquals(mA1, sun1.meanAnomaly(), 1e-8); //
+        assertEquals(eclConverted1.ra(), sun1.equatorialPos().ra(), 1e-8); //7 DECIMALS
+        assertEquals(eclConverted1.dec(), sun1.equatorialPos().dec(), 1e-8); //7 DECIMALS
+        assertEquals(mA1, sun1.meanAnomaly(), 1e-8); //6 DECIMALS
+        assertEquals(e1, sun1.angularSize(), 1e-6); //6 DECIMALS
 
         assertEquals(eclConverted2.ra(), sun2.equatorialPos().ra(), 1e-8); //5 DECIMALS
         assertEquals(eclConverted2.dec(), sun2.equatorialPos().dec(), 1e-8); //4 DECIMALS
+        assertEquals(mA2, sun2.meanAnomaly(), 1e-8); //6 DECIMALS
+        assertEquals(e2, sun2.angularSize(), 1e-8); //5 DECIMALS
 
         assertEquals(eclConverted3.ra(), sun3.equatorialPos().ra(), 1e-8); //5 DECIMALS
         assertEquals(eclConverted3.dec(), sun3.equatorialPos().dec(), 1e-8); //4 DECIMALS
+        assertEquals(mA3, sun3.meanAnomaly(), 1e-8); //6 DECIMALS
+        assertEquals(e3, sun3.angularSize(), 1e-8); //6 DECIMALS
 
         assertEquals(eclConverted4.ra(), sun4.equatorialPos().ra(), 1e-8); //4 DECIMALS
         assertEquals(eclConverted4.dec(), sun4.equatorialPos().dec(), 1e-8); //4 DECIMALS
+        assertEquals(mA4, sun4.meanAnomaly(), 1e-8); //7 DECIMALS
+        assertEquals(e4, sun4.angularSize(), 1e-8); //5 DECIMALS
 
         assertEquals(eclConverted5.ra(), sun5.equatorialPos().ra(), 1e-8); //6 DECIMALS
         assertEquals(eclConverted5.dec(), sun5.equatorialPos().dec(), 1e-8); //4 DECIMALS
-
+        assertEquals(mA5, sun5.meanAnomaly(), 1e-8); //FALSE
+        assertEquals(e5, sun5.angularSize(), 1e-8); //6 DECIMALS
     }
 }
