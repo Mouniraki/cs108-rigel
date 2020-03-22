@@ -11,6 +11,63 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MyPlanetModelTest {
     @Test
+    void atWorksWithFramapadValues(){
+        var equJupiter = PlanetModel.JUPITER
+                .at(-2231.0, new EclipticToEquatorialConversion(
+                        ZonedDateTime.of(
+                                LocalDate.of(2003, Month.NOVEMBER, 22),
+                                LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC)))
+                .equatorialPos();
+
+        assertEquals(11.187154934709682, equJupiter.raHr(), 1e-14); //THIS ONE
+        assertEquals(11.187154934709678, equJupiter.raHr(), 1e-14);
+        //assertEquals(11.18675858733765, equJupiter.raHr(), 1e-14);
+
+        assertEquals(6.3566355066857465, equJupiter.decDeg()); //THIS ONE
+        assertEquals(6.356635506685756, equJupiter.decDeg(), 1e-14);
+        //assertEquals(6.3426361553333095, equJupiter.decDeg(), 1e-14);
+
+        var angJupiter = Angle.toDeg(PlanetModel.JUPITER
+                .at(-2231.0, new EclipticToEquatorialConversion(
+                        ZonedDateTime.of(
+                                LocalDate.of(2003, Month.NOVEMBER, 22),
+                                LocalTime.of(0, 0, 0, 0),
+                                ZoneOffset.UTC)))
+                .angularSize())*3600;
+        assertEquals(35.11141185362771, angJupiter);
+
+        var magnJupiter = PlanetModel.JUPITER
+                .at(-2231.0, new EclipticToEquatorialConversion(
+                        ZonedDateTime.of(
+                                LocalDate.of(2003, Month.NOVEMBER, 22),
+                                LocalTime.of(0, 0, 0, 0),
+                                ZoneOffset.UTC)))
+                .magnitude();
+        assertEquals(-1.9885659217834473, magnJupiter);
+
+
+        var equMercury = PlanetModel.MERCURY
+                .at(-2231.0, new EclipticToEquatorialConversion(
+                        ZonedDateTime.of(
+                                LocalDate.of(2003, Month.NOVEMBER, 22),
+                                LocalTime.of(0, 0, 0, 0),
+                                ZoneOffset.UTC)))
+                .equatorialPos();
+
+        assertEquals(16.820074565897148, equMercury.raHr()); //THIS ONE
+        assertEquals(16.820074565897194, equMercury.raHr(), 1e-13);
+        assertEquals(16.82007456589712, equMercury.raHr(), 1e-13);
+        //assertEquals(16.8279572540347, equMercury.raHr(), 1e-13);
+
+        assertEquals(-24.500872462861224, equMercury.decDeg()); //THIS ONE
+        assertEquals(-24.500872462861274, equMercury.decDeg(), 1e-13);
+        assertEquals(-24.500872462861143, equMercury.decDeg(), 1e-13);
+        assertEquals(-24.500872462861228, equMercury.decDeg(), 1e-13);
+        assertEquals(-24.500872462861217, equMercury.decDeg(), 1e-13);
+        //assertEquals(-23.612022868326743, equMercury.decDeg(), 1e-13);
+    }
+
+    @Test
     void atWorksWithMercury(){
         double lonEclGeo = Angle.ofDeg(256.0213547);
         double latEclGeo = Angle.ofDeg(0.23851218);
