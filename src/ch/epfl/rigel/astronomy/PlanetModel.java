@@ -116,7 +116,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
     }
 
     private double radius(double trueAnomaly, PlanetModel p){
-        return (p.orbitSMAxis * (1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(trueAnomaly));
+        return (p.orbitSMAxis * (1 - p.orbitEccentricity * p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(trueAnomaly));
     }
 
     private double lonHelio(double trueAnomaly, PlanetModel p){
@@ -125,7 +125,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
 
     private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p){
         if(p == MERCURY || p == VENUS){
-            return Angle.TAU/2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
+            return Angle.TAU / 2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
         }
         else {
             return lonEclHelio + Math.atan2(earthRadius * Math.sin(lonEclHelio - lonEarthHelio), eclRadius - earthRadius * Math.cos(lonEclHelio - lonEarthHelio));

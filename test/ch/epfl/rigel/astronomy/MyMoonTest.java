@@ -70,11 +70,11 @@ class MyMoonTest {
     void constructorFailsOnNullEquatorialPosition(){
         var rng = TestRandomizer.newRandom();
         for(int i=0; i<1000; ++i) {
-            var angularSize = (float) rng.nextDouble(-100000.0, 0);
+            var angularSize = 0.f;
             var magnitude = 0.f;
             var phase = 0.f;
 
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(NullPointerException.class, () -> {
                 new Moon(null, angularSize, magnitude, phase);
             });
         }
