@@ -88,8 +88,8 @@ class MyPlanetModelTest {
         assertEquals("Mercure", mercury.name());
         assertEquals(eclConverted.ra(), mercury.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), mercury.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, mercury.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, mercury.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(angularSize, mercury.angularSize(), Angle.ofArcsec(0.1)); //NOT GOOD
+        assertEquals(magnitude, mercury.magnitude());
     }
 
     @Test
@@ -112,8 +112,8 @@ class MyPlanetModelTest {
         assertEquals("Vénus", venus.name());
         assertEquals(eclConverted.ra(), venus.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), venus.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, venus.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, venus.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(angularSize, venus.angularSize(), Angle.ofArcsec(0.1)); //NOT GOOD
+        assertEquals(magnitude, venus.magnitude());
     }
 
     @Test
@@ -137,7 +137,7 @@ class MyPlanetModelTest {
         assertEquals(eclConverted.ra(), mars.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), mars.equatorialPos().dec(), 1e-8);
         assertEquals(angularSize, mars.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, mars.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(magnitude, mars.magnitude());
     }
 
     @Test
@@ -161,7 +161,7 @@ class MyPlanetModelTest {
         assertEquals(eclConverted.ra(), jupiter.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), jupiter.equatorialPos().dec(), 1e-8);
         assertEquals(angularSize, jupiter.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, jupiter.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(magnitude, jupiter.magnitude());
     }
     @Test
     void atWorksWithSaturn(){
@@ -184,7 +184,7 @@ class MyPlanetModelTest {
         assertEquals(eclConverted.ra(), saturn.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), saturn.equatorialPos().dec(), 1e-8);
         assertEquals(angularSize, saturn.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, saturn.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(magnitude, saturn.magnitude());
     }
     @Test
     void atWorksWithUranus(){
@@ -207,7 +207,7 @@ class MyPlanetModelTest {
         assertEquals(eclConverted.ra(), uranus.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), uranus.equatorialPos().dec(), 1e-8);
         assertEquals(angularSize, uranus.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, uranus.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(magnitude, uranus.magnitude());
     }
 
     @Test
@@ -231,7 +231,7 @@ class MyPlanetModelTest {
         assertEquals(eclConverted.ra(), neptune.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), neptune.equatorialPos().dec(), 1e-8);
         assertEquals(angularSize, neptune.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, neptune.magnitude(), Angle.ofArcsec(0.1));
+        assertEquals(magnitude, neptune.magnitude());
     }
 
     @Test

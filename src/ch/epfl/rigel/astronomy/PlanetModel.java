@@ -103,6 +103,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double phase = (1 + Math.cos(lonEclGeo - lonPlanetHelio)) / 2;
         double magnitude = magnitudeAt1UA + 5 * Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
 
+
         return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSize, (float) magnitude);
     }
 
