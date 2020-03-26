@@ -7,7 +7,7 @@ import java.util.List;
 public final class Asterism {
     final private List<Star> stars;
 
-    Asterism(List<Star> stars){
+    public Asterism(List<Star> stars){
         Preconditions.checkArgument(stars.size() != 0);
         this.stars = stars;
     }

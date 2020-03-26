@@ -88,8 +88,8 @@ class MyPlanetModelTest {
         assertEquals("Mercure", mercury.name());
         assertEquals(eclConverted.ra(), mercury.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), mercury.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, mercury.angularSize(), Angle.ofArcsec(0.1)); //NOT GOOD
-        assertEquals(magnitude, mercury.magnitude());
+        assertEquals(angularSize, mercury.angularSize(), 1e-7); //NOT GOOD (2.4663238946232013E-5 VS 2.5222756366723797E-5) 7e décimale diff
+        assertEquals(magnitude, mercury.magnitude(), 1e-2);
     }
 
     @Test
@@ -112,8 +112,8 @@ class MyPlanetModelTest {
         assertEquals("Vénus", venus.name());
         assertEquals(eclConverted.ra(), venus.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), venus.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, venus.angularSize(), Angle.ofArcsec(0.1)); //NOT GOOD
-        assertEquals(magnitude, venus.magnitude());
+        assertEquals(angularSize, venus.angularSize(), 1e-7); //NOT GOOD (1.2724789849016815E-4 VS 1.2411235714798716E-4) 6e décimale diff
+        assertEquals(magnitude, venus.magnitude(),1e-2);
     }
 
     @Test
@@ -136,8 +136,8 @@ class MyPlanetModelTest {
         assertEquals("Mars", mars.name());
         assertEquals(eclConverted.ra(), mars.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), mars.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, mars.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, mars.magnitude());
+        assertEquals(angularSize, mars.angularSize(), 1e-7); //(1.9074581978307733E-5 VS 1.9090544810751453E-5) 8e décimale diff
+        assertEquals(magnitude, mars.magnitude(), 1e-2);
     }
 
     @Test
@@ -160,8 +160,8 @@ class MyPlanetModelTest {
         assertEquals("Jupiter", jupiter.name());
         assertEquals(eclConverted.ra(), jupiter.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), jupiter.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, jupiter.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, jupiter.magnitude());
+        assertEquals(angularSize, jupiter.angularSize(), 1e-7); //(1.8282212840858847E-4 VS 1.8277505666592947E-4) 8e décimale diff
+        assertEquals(magnitude, jupiter.magnitude(), 1e-2);
     }
     @Test
     void atWorksWithSaturn(){
@@ -183,8 +183,8 @@ class MyPlanetModelTest {
         assertEquals("Saturne", saturn.name());
         assertEquals(eclConverted.ra(), saturn.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), saturn.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, saturn.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, saturn.magnitude());
+        assertEquals(angularSize, saturn.angularSize(), 1e-7); //(7.703324808971956E-5 VS 7.661859139977485E-5) 7e décimale diff
+        assertEquals(magnitude, saturn.magnitude(), 1e-2);
     }
     @Test
     void atWorksWithUranus(){
@@ -206,8 +206,8 @@ class MyPlanetModelTest {
         assertEquals("Uranus", uranus.name());
         assertEquals(eclConverted.ra(), uranus.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), uranus.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, uranus.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, uranus.magnitude());
+        assertEquals(angularSize, uranus.angularSize(), 1e-7); //(1.6476364180562086E-5 VS 1.6429829027353553E-5) 8e décimale diff
+        assertEquals(magnitude, uranus.magnitude(), 1e-2);
     }
 
     @Test
@@ -230,8 +230,8 @@ class MyPlanetModelTest {
         assertEquals("Neptune", neptune.name());
         assertEquals(eclConverted.ra(), neptune.equatorialPos().ra(), 1e-8);
         assertEquals(eclConverted.dec(), neptune.equatorialPos().dec(), 1e-8);
-        assertEquals(angularSize, neptune.angularSize(), Angle.ofArcsec(0.1));
-        assertEquals(magnitude, neptune.magnitude());
+        assertEquals(angularSize, neptune.angularSize(), 1e-7); //(1.0145166015718132E-5 VS 1.0161061133663485E-5) 8e décimale diff
+        assertEquals(magnitude, neptune.magnitude(), 1e-2);
     }
 
     @Test

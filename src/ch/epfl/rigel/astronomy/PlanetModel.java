@@ -12,7 +12,7 @@ import java.util.List;
  * @author Mounir Raki (310287)
  */
 
-public enum PlanetModel implements CelestialObjectModel<Planet>{
+public enum PlanetModel implements CelestialObjectModel<Planet> {
     MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
             0.387098, 7.0051, 48.449, 6.74, -0.42),
     VENUS("Vénus", 0.615207, 272.30044, 131.54, 0.006812,
@@ -50,7 +50,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
 
     PlanetModel(String frenchName, double revPeriod, double lonAtJ2010, double lonAtPerigee, double orbitEccentricity,
                 double orbitSMAxis, double orbitEclipticInclination, double lonOrbitalNode, double angularSizeAt1UA,
-                double magnitudeAt1UA){
+                double magnitudeAt1UA) {
         this.frenchName = frenchName;
         this.revPeriod = revPeriod;
         this.lonAtJ2010 = Angle.ofDeg(lonAtJ2010);
@@ -93,7 +93,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double lonEarthHelio = lonHelio(earthTrueAnomaly, EARTH);
         double earthRadius = radius(earthTrueAnomaly, EARTH);
 
-        double lonEclGeo = Angle.normalizePositive(lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this));
+        double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this);
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
 
 
@@ -104,19 +104,19 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         double magnitude = magnitudeAt1UA + 5 * Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
 
 
-        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSize, (float) magnitude);
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(Angle.normalizePositive(lonEclGeo), latEclGeo)), (float) angularSize, (float) magnitude);
     }
 
 
-    private double meanAnomaly(double meanAngularSpeed, double daysSinceJ2010, PlanetModel p){
+    private double meanAnomaly(double meanAngularSpeed, double daysSinceJ2010, PlanetModel p) {
         return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
     }
 
-    private double trueAnomaly(double meanAnomaly, PlanetModel p){
+    private double trueAnomaly(double meanAnomaly, PlanetModel p) {
         return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
     }
 
-    private double radius(double trueAnomaly, PlanetModel p){
+    private double radius(double trueAnomaly, PlanetModel p) {
         return (p.orbitSMAxis * (1 - p.orbitEccentricity * p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(trueAnomaly));
     }
 
@@ -124,8 +124,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet>{
         return trueAnomaly + p.lonAtPerigee;
     }
 
-    private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p){
-        if(p == MERCURY || p == VENUS){
+    private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p) {
+        if(p == MERCURY || p == VENUS) {
             return Angle.TAU / 2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
         }
         else {
