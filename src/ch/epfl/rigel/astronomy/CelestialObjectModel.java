@@ -2,6 +2,13 @@ package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 
+/**
+ * A model of a celestial object.
+ *
+ * @author Nicolas Szwajcok (315213)
+ * @param <O>
+ *     The type of the celestial object to model
+ */
 public interface CelestialObjectModel<O> {
     /**
      * Abstract method. Modelises the number (can be negative) of days after given epoch J2010.
