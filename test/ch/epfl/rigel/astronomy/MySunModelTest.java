@@ -145,6 +145,12 @@ class MySunModelTest {
         var sun4 = SunModel.SUN.at(numberOfDays4, eclEqu4);
         var sun5 = SunModel.SUN.at(numberOfDays5, eclEqu5);
 
+        assertEquals("Soleil", sun1.toString());
+        assertEquals("Soleil", sun2.toString());
+        assertEquals("Soleil", sun3.toString());
+        assertEquals("Soleil", sun4.toString());
+        assertEquals("Soleil", sun5.toString());
+
         assertEquals(eclConverted1.ra(), sun1.equatorialPos().ra(), 1e-7); //7 DECIMALS
         assertEquals(eclConverted1.dec(), sun1.equatorialPos().dec(), 1e-7); //7 DECIMALS
         assertEquals(mA1, sun1.meanAnomaly(), 1e-6); //6 DECIMALS
