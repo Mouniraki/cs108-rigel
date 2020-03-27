@@ -78,16 +78,9 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
         double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
         double trueAnomaly = trueAnomaly(meanAnomaly, this);
-
         double radius = radius(trueAnomaly, this);
         double lonPlanetHelio = lonHelio(trueAnomaly, this);
-
-        //Math.sin(lonPlanetHelio - lonOrbitalNode)
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
-
-        //Math.cos(latEclHelio)
-
-
         double eclRadius = radius * Math.cos(latEclHelio);
         double lonEclHelio = Math.atan2(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
                 Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
@@ -97,10 +90,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double lonEarthHelio = lonHelio(earthTrueAnomaly, EARTH);
         double earthRadius = radius(earthTrueAnomaly, EARTH);
 
-        double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this);
-        //Math.sin(lonEclHelio - lonEarthHelio)
+        double lonEclGeo = Angle.normalizePositive(lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this));
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
-
 
         double distanceToEarth = Math.sqrt(earthRadius * earthRadius + radius * radius - 2 * earthRadius * radius * Math.cos(lonPlanetHelio - lonEarthHelio) * Math.cos(latEclHelio));
         double angularSize = angularSizeAt1UA / distanceToEarth;
@@ -108,8 +99,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double phase = (1 + Math.cos(lonEclGeo - lonPlanetHelio)) / 2;
         double magnitude = magnitudeAt1UA + 5 * Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
 
-
-        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(Angle.normalizePositive(lonEclGeo), latEclGeo)), (float) angularSize, (float) magnitude);
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSize, (float) magnitude);
     }
 
 
