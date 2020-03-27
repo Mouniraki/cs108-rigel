@@ -53,7 +53,8 @@ public final class Star extends CelestialObject { //immuable
      *
      * @return the color temperature of the Star
      */
-    public int colorTemperature(){ //TODO NOT sure if works
-        return (int) Math.round((4600 * ( 1 / (0.92 * colorIndex + 1.7) + 1 / (0.92 * colorIndex + 0.62) )));
+    public int colorTemperature(){
+        double temperature = 4600 * ((1 / (0.92 * colorIndex + 1.7)) + (1 / (0.92 * colorIndex + 0.62)));
+        return (int) Math.floor(temperature);
     }
 }

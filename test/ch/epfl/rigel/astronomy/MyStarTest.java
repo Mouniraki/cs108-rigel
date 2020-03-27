@@ -13,8 +13,6 @@ class MyStarTest {
     void constructorWorksWithValidValues(){
         var rng = TestRandomizer.newRandom();
         for(int i=0; i < 1000; ++i) {
-            var hipparcosId = i;
-
             String starName = "TestedStar";
 
             var ra = rng.nextDouble(0, Angle.ofHr(24));
@@ -23,14 +21,10 @@ class MyStarTest {
             var equPos = EquatorialCoordinates.of(ra, lat_dec);
 
             float magnitude = 0.1f * i;
-            float colorIndex = 5.5f;
+            float colorIndex = (float) rng.nextDouble(-0.5, 5.5);
 
-            if(0.1 * i <= 5.5){
-                colorIndex = 0.1f * i - 0.5f;
-            }
-
-            var star = new Star(hipparcosId, starName, equPos, magnitude, colorIndex);
-            assertEquals(hipparcosId, star.hipparcosId());
+            var star = new Star(i, starName, equPos, magnitude, colorIndex);
+            assertEquals(i, star.hipparcosId());
             assertEquals("TestedStar", star.name());
             assertEquals(equPos.toString(), star.equatorialPos().toString());
             assertEquals(0, star.angularSize());
@@ -49,14 +43,10 @@ class MyStarTest {
             var lat_dec = rng.nextDouble(-Angle.TAU / 4, Angle.TAU / 4);
             var equPos = EquatorialCoordinates.of(ra, lat_dec);
             float magnitude = 0.1f * i;
-            float colorIndex = 5.5f;
-            if (0.1 * i <= 5.5) {
-                colorIndex = 0.1f * i - 0.5f;
-            }
+            float colorIndex = (float) rng.nextDouble(-0.5, 5.5);
 
-            float finalColorIndex = colorIndex;
             assertThrows(IllegalArgumentException.class, () -> {
-                new Star(hipparcosId, starName, equPos, magnitude, finalColorIndex);
+                new Star(hipparcosId, starName, equPos, magnitude, colorIndex);
             });
         }
     }
@@ -64,26 +54,21 @@ class MyStarTest {
         @Test
         void constructorFailsOnWrongColorIndex(){
             var rng = TestRandomizer.newRandom();
-            for(int i=1; i < 10; ++i) {
+            for(int i=1; i < 1000; ++i) {
                 var hipparcosId = i;
                 String starName = "TestedStar";
                 var ra = rng.nextDouble(0, Angle.ofHr(24));
                 var lat_dec = rng.nextDouble(-Angle.TAU/4, Angle.TAU/4);
                 var equPos = EquatorialCoordinates.of(ra, lat_dec);
                 float magnitude = 0.1f * i;
-                float colorIndex = 5.5f;
+                float colorIndexNegative = (float) rng.nextDouble(-1000, -0.5);
+                float colorIndexPositive = (float) rng.nextDouble(5.5, 1000);
 
-                if(i % 2 == 0){
-                    colorIndex = -0.500001f - 0.0001f * i;
-                }
-                else{
-                    colorIndex = 5.5f + 0.00001f * i;
-                }
-
-
-                float finalColorIndex = colorIndex;
                 assertThrows(IllegalArgumentException.class, () -> {
-                    new Star(hipparcosId, starName, equPos, magnitude, finalColorIndex);
+                    new Star(hipparcosId, starName, equPos, magnitude, colorIndexNegative);
+                });
+                assertThrows(IllegalArgumentException.class, () -> {
+                    new Star(hipparcosId, starName, equPos, magnitude, colorIndexPositive);
                 });
             }
     }
@@ -98,14 +83,10 @@ class MyStarTest {
             var lat_dec = rng.nextDouble(-Angle.TAU/4, Angle.TAU/4);
             var equPos = EquatorialCoordinates.of(ra, lat_dec);
             float magnitude = 0.1f * i;
-            float colorIndex = 5.5f;
-            if(0.1 * i <= 5.5){
-                colorIndex = 0.1f * i - 0.5f;
-            }
+            float colorIndex = (float) rng.nextDouble(-0.5, 5.5);
 
-            float finalColorIndex = colorIndex;
             assertThrows(NullPointerException.class, () -> {
-                new Star(hipparcosId, starName, null, magnitude, finalColorIndex);
+                new Star(hipparcosId, starName, null, magnitude, colorIndex);
             });
         }
     }
