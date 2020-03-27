@@ -82,7 +82,11 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double radius = radius(trueAnomaly, this);
         double lonPlanetHelio = lonHelio(trueAnomaly, this);
 
+        //Math.sin(lonPlanetHelio - lonOrbitalNode)
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
+
+        //Math.cos(latEclHelio)
+
 
         double eclRadius = radius * Math.cos(latEclHelio);
         double lonEclHelio = Math.atan2(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
@@ -94,6 +98,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double earthRadius = radius(earthTrueAnomaly, EARTH);
 
         double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this);
+        //Math.sin(lonEclHelio - lonEarthHelio)
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
 
 
