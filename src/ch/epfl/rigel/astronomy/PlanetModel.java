@@ -90,7 +90,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double lonEarthHelio = lonHelio(earthTrueAnomaly, EARTH);
         double earthRadius = radius(earthTrueAnomaly, EARTH);
 
-        double lonEclGeo = Angle.normalizePositive(lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this));
+        double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this);
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
 
         double distanceToEarth = Math.sqrt(earthRadius * earthRadius + radius * radius - 2 * earthRadius * radius * Math.cos(lonPlanetHelio - lonEarthHelio) * Math.cos(latEclHelio));
@@ -99,7 +99,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
         double phase = (1 + Math.cos(lonEclGeo - lonPlanetHelio)) / 2;
         double magnitude = magnitudeAt1UA + 5 * Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
 
-        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(lonEclGeo, latEclGeo)), (float) angularSize, (float) magnitude);
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(Angle.normalizePositive(lonEclGeo), latEclGeo)), (float) angularSize, (float) magnitude);
     }
 
 
