@@ -9,7 +9,7 @@ import ch.epfl.rigel.math.ClosedInterval;
  *
  * @author Nicolas Szwajcok (315213)
  */
-public final class Star extends CelestialObject { //immuable
+public final class Star extends CelestialObject {
     final private int hipparcosId;
     final private float colorIndex;
 
@@ -54,7 +54,6 @@ public final class Star extends CelestialObject { //immuable
      * @return the color temperature of the Star
      */
     public int colorTemperature(){
-        double temperature = 4600 * ((1 / (0.92 * colorIndex + 1.7)) + (1 / (0.92 * colorIndex + 0.62)));
-        return (int) Math.floor(temperature);
+        return (int) Math.round((4600 * ( 1 / (0.92 * colorIndex + 1.7) + 1 / (0.92 * colorIndex + 0.62) )));
     }
 }
