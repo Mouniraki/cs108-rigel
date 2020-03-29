@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class MyMoonModelTest {
     @Test
     void atWorksWithBookExample(){
-        double refEclLon = 214.862515;
-        double refEclLat = 1.716257;
-        var refEclCoords = EclipticCoordinates.of(Angle.ofDeg(refEclLon), Angle.ofDeg(refEclLat));
+        double refEclLon = Angle.ofDeg(214.862515);
+        double refEclLat = Angle.ofDeg(1.716257);
+        var refEclCoords = EclipticCoordinates.of(refEclLon, refEclLat);
 
         var zdt = ZonedDateTime.of(
                 LocalDate.of(2003, Month.SEPTEMBER, 1),
@@ -26,16 +26,11 @@ class MyMoonModelTest {
         double numberOfDays = Epoch.J2010.daysUntil(zdt);
 
         var moon = MoonModel.MOON.at(numberOfDays, eclToEqu);
-        /*
+
         double calculatedRa = moon.equatorialPos().ra();
         double calculatedDec = moon.equatorialPos().dec();
 
-         */
-
-        double calcEclLon = Angle.toDeg(MoonModel.MOON.getEcl().lon());
-        double calcEclLat = Angle.toDeg(MoonModel.MOON.getEcl().lat());
-
-        assertEquals(refEclLon, calcEclLon);
-        assertEquals(refEclLat, calcEclLat);
+        assertEquals(refEquCoords.ra(), calculatedRa, 1e-7);
+        assertEquals(refEquCoords.dec(), calculatedDec, 1e-7);
     }
 }
