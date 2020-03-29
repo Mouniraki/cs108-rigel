@@ -14,6 +14,7 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
     private final static double ORBIT_ECC = 0.0549;
     private final static double THETA_ZERO = Angle.ofDeg(0.5181);
 
+    //DONT FORGET TO REMOVE THIS !
     public static EclipticCoordinates ecl;
 
     @Override
@@ -55,6 +56,7 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
         return new Moon(eclipticToEquatorialConversion.apply(moonEclCoords), (float) angularSize, 0, (float) phase);
     }
 
+    //DONT FORGET TO REMOVE THIS !
     public EclipticCoordinates getEcl(){
         return ecl;
     }
