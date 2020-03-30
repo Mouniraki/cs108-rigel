@@ -4,6 +4,11 @@ import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
+/**
+ * Model of the Moon.
+ *
+ * @author Mounir Raki (310287)
+ */
 public enum MoonModel implements CelestialObjectModel<Moon>{
     MOON;
 
@@ -14,6 +19,15 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
     private final static double ORBIT_ECC = 0.0549;
     private final static double THETA_ZERO = Angle.ofDeg(0.5181);
 
+    /**
+     * Creates the model of the Moon with specific parameters.
+     *
+     * @param daysSinceJ2010
+     *          Number of days after the epoch J2010
+     * @param eclipticToEquatorialConversion
+     *          Conversion from ecliptic to equatorial coordinates
+     * @return a new Moon with the corresponding model
+     */
     @Override
     public Moon at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         Sun sun = SunModel.SUN.at(daysSinceJ2010, eclipticToEquatorialConversion);
