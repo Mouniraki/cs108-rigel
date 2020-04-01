@@ -1,22 +1,34 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.Preconditions;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class StarCatalogue {
-    final private List<Star> stars;
-    final private List<Asterism> asterisms;
-    private Map<Integer, Integer> map = new HashMap<>();
+    private final List<Star> stars;
+    private final List<Asterism> asterisms;
+    private final Map<Asterism, List<Integer>> map = new HashMap<>();
 
 
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms){
         for (Asterism asterism : asterisms) {
-//            if(!stars.contains(asterism)){
-//                throw new IllegalArgumentException("One of the asterisms of this star catalogue is not contained in the list of the stars.");
-//            }
+            Preconditions.checkArgument(stars.contains(asterism));
         }
+        this.stars = List.copyOf(stars);
+        this.asterisms = List.copyOf(asterisms);
 
+        for(Asterism a : asterisms){
+            List<Integer> indexes = new ArrayList<>();
+            for(Star s : stars){
+                if(a.stars().contains(s))
+                    indexes.add(stars.indexOf(s));
+            }
+            map.put(a, List.copyOf(indexes));
+        }
+    }
+        /*
         InputStream is = this.getClass().getResourceAsStream("/asterisms.txt");
         Reader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
 
@@ -79,28 +91,31 @@ public final class StarCatalogue {
 //            isReader.
 //        }
 
-
-        this.stars = stars;
-        this.asterisms = asterisms;
-    }
+*/
 
     public List<Star> stars(){
         return stars;
     }
 
-    public Set<Asterism> asterisms(){ //TODO to check
-        return (Set<Asterism>) asterisms;
+    public Set<Asterism> asterisms(){
+        return new HashSet<>(asterisms);
     }
 //output index in the catalogue
-    public List<Integer> asterismIndices(Asterism asterism){//in test check the lengths of two arrays
-        List<Star> asterismStars = asterism.stars();
-        List<Integer> indices = new ArrayList<>();
+    public List<Integer> asterismIndices(Asterism asterism) {
+        Preconditions.checkArgument(asterisms.contains(asterism));
+        List<Integer> indices = map.get(asterism);
+        return indices;
+    }
+
+        //in test check the lengths of two arrays
+        //List<Star> asterismStars = asterism.stars();
+
 
 
 
 //        System.out.println(is);
 //        System.out.println(is.readNBytes(10));
-        return null;
+        //return null;
 // output
 //        InputStream imkdds = new FileInputStream("/resources/asterisms.txt");
 //
@@ -123,7 +138,7 @@ public final class StarCatalogue {
 
 
 
-    }
+    //}
 
 
     public final static class Builder{
@@ -140,7 +155,7 @@ public final class StarCatalogue {
             return this;
         }
 
-        public List<Star> stars(){ //TODO Verify non modifiable pas immuable|it's ok as intended
+        public List<Star> stars(){
             return Collections.unmodifiableList(stars);
         }
 
@@ -153,10 +168,10 @@ public final class StarCatalogue {
             return Collections.unmodifiableList(asterisms);
         }
 
-        //TODO class
+        //TODO CHECK IF IT IS CORRECT
         public Builder loadFrom(InputStream inputStream, Loader loader) throws IOException {
-
-            return null;
+            loader.load(inputStream, this);
+            return this;
         }
 
         public StarCatalogue build(){
