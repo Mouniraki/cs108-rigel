@@ -11,14 +11,10 @@ public final class StarCatalogue {
     private final Map<Asterism, List<Integer>> map = new HashMap<>();
 
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
-        this.stars = List.copyOf(stars);
-        this.asterisms = List.copyOf(asterisms);
 
-        for (int a = 0; a < asterisms.size(); ++a){
-            for(int b = 0; b < asterisms.get(a).stars().size(); ++b){
-                if(!stars.contains(asterisms.get(a).stars().get(b))){
-                    throw new IllegalArgumentException("One of the asterisms of this star catalogue is not contained in the list of the stars.");
-                }
+        for (Asterism asterism : asterisms) {
+            for (int b = 0; b < asterism.stars().size(); ++b) {
+                Preconditions.checkArgument(stars.contains(asterism.stars().get(b)));
             }
         }
 
@@ -30,7 +26,11 @@ public final class StarCatalogue {
             }
             map.put(a, List.copyOf(indexes));
         }
+
+        this.stars = List.copyOf(stars);
+        this.asterisms = List.copyOf(asterisms);
     }
+
 //        InputStream is = this.getClass().getResourceAsStream("/asterisms.txt");
 //        Reader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
 //        int asterismIndex = 0;
@@ -58,7 +58,6 @@ public final class StarCatalogue {
 //            }
 //        }
 
-
     public List<Star> stars(){
         return stars;
     }
@@ -66,7 +65,7 @@ public final class StarCatalogue {
     public Set<Asterism> asterisms(){ //TODO to check
         return (Set<Asterism>) asterisms;
     }
-//output index in the catalogue
+
     public List<Integer> asterismIndices(Asterism asterism){//in test check the lengths of two arrays
         Preconditions.checkArgument(asterisms.contains(asterism));
         List<Integer> indices = map.get(asterism);
