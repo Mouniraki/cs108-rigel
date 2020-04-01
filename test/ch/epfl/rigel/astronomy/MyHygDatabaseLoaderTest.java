@@ -1,5 +1,6 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,6 +27,13 @@ class MyHygDatabaseLoaderTest {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .build();
+            /*
+            for(Star s : catalogue.stars()){
+                String star = s.hipparcosId() + " " + s.name() + " " + s.equatorialPos() + " " + s.magnitude() + " " + s.colorTemperature();
+                System.out.println(star);
+            }
+
+             */
             Star rigel = null;
             for (Star s : catalogue.stars()) {
                 if (s.name().equalsIgnoreCase("rigel"))
