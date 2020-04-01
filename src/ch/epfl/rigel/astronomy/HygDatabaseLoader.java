@@ -1,6 +1,7 @@
 package ch.epfl.rigel.astronomy;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
@@ -8,13 +9,17 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 public enum HygDatabaseLoader implements StarCatalogue.Loader{
     INSTANCE;
 
+
     @Override
     public void load(InputStream inputStream, StarCatalogue.Builder builder) throws IOException {
         try(BufferedReader r = new BufferedReader(new InputStreamReader(inputStream, US_ASCII))){
             String line;
             while((line = r.readLine()) != null){
                String[] strArray = line.split(",");
-               System.out.println(strArray);
+                for (int i = 0; i < strArray.length; ++i) {
+                    StarCatalogue.Builder
+                }
+               System.out.println(Arrays.toString(strArray));
             }
         }
     }

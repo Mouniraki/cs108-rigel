@@ -28,70 +28,6 @@ public final class StarCatalogue {
             map.put(a, List.copyOf(indexes));
         }
     }
-        /*
-        InputStream is = this.getClass().getResourceAsStream("/asterisms.txt");
-        Reader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-
-
-        String toAppend = "";
-        int asterismIndex = 0;
-        StringBuffer sb = new StringBuffer();
-        String str = "";
-        BufferedReader reader = new BufferedReader(isReader);
-        System.out.println("SHDHSHHDHDSHDSNJDSN");
-
-
-//        while((str = reader.readLine())!= null){
-//            sb.append(str);
-//        }
-//        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("txtPath"),"ISO-8859-1"));
-//        for(int i = 0; i < 15; ++i){
-//            try {
-//                Character readerObj = (char) reader.read();
-//                if(readerObj == ',') {
-//                    map.put(Integer.parseInt(str), asterismIndex);
-//                    str = "";
-//                    asterismIndex += 1;
-//                }
-//                else{
-//                    str.concat(readerObj.toString());
-//                }
-//                System.out.println(str);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println(str);
-
-//            for(int in = 0; in < map.size(); ++in){
-//                System.out.println(map.get(in));
-//            }
-//            if(){
-//
-//            }
-//            if(reader == ","){
-//                asterismIndex += 1;
-//            }
-//            int value = 10;
-//            value += reader;
-//            toAppend.concat(isReader.read());
-//            int data = isReader.read();
-
-//            if(isReader.read() == -1){
-//
-//            }
-
-//            map.put(isReader, );
-//            map.put(asterisms.get(i), isReader.read());
-//        }
-
-//        for(int i = 0; i < asterisms.size(); ++i){
-//            map.put(asterisms.get(i), );
-////            map.put(asterisms.get(i), isReader.read());
-//            isReader.
-//        }
-
-*/
 
     public List<Star> stars(){
         return stars;
@@ -100,45 +36,12 @@ public final class StarCatalogue {
     public Set<Asterism> asterisms(){
         return new HashSet<>(asterisms);
     }
-//output index in the catalogue
+
     public List<Integer> asterismIndices(Asterism asterism) {
         Preconditions.checkArgument(asterisms.contains(asterism));
         List<Integer> indices = map.get(asterism);
         return indices;
     }
-
-        //in test check the lengths of two arrays
-        //List<Star> asterismStars = asterism.stars();
-
-
-
-
-//        System.out.println(is);
-//        System.out.println(is.readNBytes(10));
-        //return null;
-// output
-//        InputStream imkdds = new FileInputStream("/resources/asterisms.txt");
-//
-//        InputStream imkfdsdds = new FileInputStream("resources//asterisms.txt");
-//
-//        InputStream i = new FileInputStream("/home/nicolas/IdeaProjects/Rigel/resources/asterisms.txt");
-////        InputStream iss =  ObjectInputFilter.Config.class.getResourceAsStream("dfsfdfsdf");
-//
-////        InputStream i = new FileInputStream("./home/nicolas/IdeaProjects/Rigel/resources/asterisms.txt");
-////        Reader i = new InputStreamReader(
-////                new FileInputStream("resources/asterisms.txt"));
-////        File file = new File("C:/Java2blog.txt");
-//        File file = new File("resources/asterisms.txt");
-//        Reader io = new InputStreamReader(
-//                new FileInputStream("resources/asterisms.txt"),
-//                StandardCharsets.UTF_8);
-//        Reader iof = new InputStreamReader(
-//                new FileInputStream("resources/asterisms.txt"),
-//                StandardCharsets.UTF_8);
-
-
-
-    //}
 
 
     public final static class Builder{
