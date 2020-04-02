@@ -20,25 +20,49 @@ class MyHygDatabaseLoaderTest {
     }
 
     @Test
+    void hygDatabaseHasCorrectNumberOfStars() throws IOException {
+        try (InputStream hygStream = getClass()
+                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .build();
+
+            int numberOfStars = 5067; //FOUND WITH THE TERMINAL
+            assertEquals(numberOfStars, test.stars().size());
+        }
+    }
+
+    @Test
     void hygDatabaseContainsRigel() throws IOException {
         try (InputStream hygStream = getClass()
                 .getResourceAsStream(HYG_CATALOGUE_NAME)) {
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .build();
-            /*
-            for(Star s : catalogue.stars()){
-                String star = s.hipparcosId() + " " + s.name() + " " + s.equatorialPos() + " " + s.magnitude() + " " + s.colorTemperature();
-                System.out.println(star);
-            }
 
-             */
             Star rigel = null;
             for (Star s : catalogue.stars()) {
                 if (s.name().equalsIgnoreCase("rigel"))
                     rigel = s;
             }
             assertNotNull(rigel);
+        }
+    }
+
+    @Test
+    void hygDatabaseContainsBetelgeuse() throws IOException {
+        try (InputStream hygStream = getClass()
+                .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+            StarCatalogue catalogue = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .build();
+
+            Star betelgeuse = null;
+            for (Star s : catalogue.stars()) {
+                if (s.name().equalsIgnoreCase("betelgeuse"))
+                    betelgeuse = s;
+            }
+            assertNotNull(betelgeuse);
         }
     }
 }
