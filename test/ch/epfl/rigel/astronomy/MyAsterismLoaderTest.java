@@ -8,6 +8,14 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/* DEBUG SCRIPT (IF NEEDED)
+for(Asterism a : l){
+                System.out.println(test.asterismIndices(a));
+                for(Star s : a.stars())
+                    System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
+                System.out.println();
+            }
+ */
 class MyAsterismLoaderTest {
     private static final String HYG_CATALOGUE_NAME =
             "/hygdata_v3.csv";
@@ -40,6 +48,26 @@ class MyAsterismLoaderTest {
     }
 
     @Test
+    void asterismLoaderHasCorrectNbrOfKeys() throws IOException {
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            for(Asterism as : test.asterisms()){
+                int nbrOfStars = as.stars().size();
+                int nbrOfKeys = test.asterismIndices(as).size();
+                assertEquals(nbrOfStars, nbrOfKeys);
+            }
+        }
+    }
+
+    @Test
     void asterismLoaderContainsRigel() throws IOException {
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
@@ -60,13 +88,6 @@ class MyAsterismLoaderTest {
                     }
                 }
             }
-
-            for(Asterism a : l){
-                System.out.println(test.asterismIndices(a));
-                for(Star s : a.stars())
-                    System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
-                System.out.println();
-            }
             assertNotNull(l);
         }
     }
@@ -84,7 +105,6 @@ class MyAsterismLoaderTest {
                     .build();
 
             int rigelID = 0;
-            Set<Integer> starIDS = new HashSet<>();
             for(Asterism as : test.asterisms()){
                 for(Star star : as.stars()){
                     if((star.name()).equalsIgnoreCase("rigel")) {
@@ -97,7 +117,7 @@ class MyAsterismLoaderTest {
     }
 
     @Test
-    void asterismLoaderContainsBetelgeuse() throws IOException{
+    void asterismLoaderContainsBetelgeuse() throws IOException {
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
             InputStream hygStream = getClass()
@@ -117,14 +137,31 @@ class MyAsterismLoaderTest {
                     }
                 }
             }
-
-            for(Asterism a : l){
-                System.out.println(test.asterismIndices(a));
-                for(Star s : a.stars())
-                    System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
-                System.out.println();
-            }
             assertNotNull(l);
+        }
+    }
+
+    @Test
+    void asterismLoaderOutputsCorrectIDForBetelgeuse() throws IOException {
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)){
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            int betelID = 0;
+            for(Asterism as : test.asterisms()){
+                for(Star star : as.stars()){
+                    if((star.name()).equalsIgnoreCase("betelgeuse")) {
+                        betelID = test.asterismIndices(as).get(as.stars().indexOf(star));
+                    }
+                }
+            }
+            assertEquals(1213, betelID);
         }
     }
 
