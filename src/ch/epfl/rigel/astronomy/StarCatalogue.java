@@ -20,11 +20,9 @@ public final class StarCatalogue {
 
         for(Asterism a : asterisms) {
             List<Integer> indexes = new ArrayList<>();
-            for(Star s : a.stars()) {
-                if(a.stars().contains(s)) {
-                    indexes.add(stars.indexOf(s));
-                }
-            }
+            for(Star s : a.stars())
+                indexes.add(stars.indexOf(s));
+
             map.put(a, List.copyOf(indexes));
         }
 
