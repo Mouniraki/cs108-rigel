@@ -59,7 +59,7 @@ class MyAsterismLoaderTest {
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
-            for(Asterism as : test.asterisms()){
+            for(Asterism as : test.asterisms()) {
                 int nbrOfStars = as.stars().size();
                 int nbrOfKeys = test.asterismIndices(as).size();
                 assertEquals(nbrOfStars, nbrOfKeys);
@@ -82,7 +82,7 @@ class MyAsterismLoaderTest {
             List<Asterism> l = new ArrayList<>();
             int stars = 0;
 
-            for(Asterism as : test.asterisms()){
+            for(Asterism as : test.asterisms()) {
                 for(Star star : as.stars()){
                     if((star.name()).equalsIgnoreCase("Rigel")){
                         l.add(as);

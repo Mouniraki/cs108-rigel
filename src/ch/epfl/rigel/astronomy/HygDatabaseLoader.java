@@ -15,35 +15,35 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader{
         try(BufferedReader r = new BufferedReader(new InputStreamReader(inputStream, US_ASCII))){
             String line;
             int i=0;
-            while((line = r.readLine()) != null){
+            while((line = r.readLine()) != null) {
                String[] strArray = line.split(",");
                if(i > 0) {
                    int hipparcosId = 0;
                    String proper;
-                   double ra = Double.parseDouble(strArray[colIndexes.RARAD.ordinal()]);
-                   double dec = Double.parseDouble(strArray[colIndexes.DECRAD.ordinal()]);
+                   double ra = Double.parseDouble(strArray[ColName.RARAD.ordinal()]);
+                   double dec = Double.parseDouble(strArray[ColName.DECRAD.ordinal()]);
                    double magnitude = 0;
                    double colorIndex = 0;
                    String bayer = "?";
-                   String con = strArray[colIndexes.CON.ordinal()];
+                   String con = strArray[ColName.CON.ordinal()];
 
-                   if (!strArray[colIndexes.HIP.ordinal()].isEmpty())
-                       hipparcosId = Integer.parseInt(strArray[colIndexes.HIP.ordinal()]);
+                   if (!strArray[ColName.HIP.ordinal()].isEmpty())
+                       hipparcosId = Integer.parseInt(strArray[ColName.HIP.ordinal()]);
 
-                   if (!strArray[colIndexes.BAYER.ordinal()].isEmpty())
-                       bayer = strArray[colIndexes.BAYER.ordinal()];
+                   if (!strArray[ColName.BAYER.ordinal()].isEmpty())
+                       bayer = strArray[ColName.BAYER.ordinal()];
 
-                   if (!strArray[colIndexes.PROPER.ordinal()].isEmpty())
-                       proper = strArray[colIndexes.PROPER.ordinal()];
+                   if (!strArray[ColName.PROPER.ordinal()].isEmpty())
+                       proper = strArray[ColName.PROPER.ordinal()];
 
                    else
                        proper = bayer + " " + con;
 
-                   if (!strArray[colIndexes.MAG.ordinal()].isEmpty())
-                       magnitude = Double.parseDouble(strArray[colIndexes.MAG.ordinal()]);
+                   if (!strArray[ColName.MAG.ordinal()].isEmpty())
+                       magnitude = Double.parseDouble(strArray[ColName.MAG.ordinal()]);
 
-                   if (!strArray[colIndexes.CI.ordinal()].isEmpty())
-                       colorIndex = Double.parseDouble(strArray[colIndexes.CI.ordinal()]);
+                   if (!strArray[ColName.CI.ordinal()].isEmpty())
+                       colorIndex = Double.parseDouble(strArray[ColName.CI.ordinal()]);
 
                    EquatorialCoordinates equatorialPos = EquatorialCoordinates.of(ra, dec);
 
@@ -54,7 +54,7 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader{
         }
     }
 
-    private enum colIndexes{
+    private enum ColName {
         ID, HIP, HD, HR, GL, BF, PROPER, RA, DEC, DIST, PMRA, PMDEC,
                 RV, MAG, ABSMAG, SPECT, CI, X, Y, Z, VX, VY, VZ,
                 RARAD, DECRAD, PMRARAD, PMDECRAD, BAYER, FLAM, CON,

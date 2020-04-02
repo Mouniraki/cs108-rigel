@@ -11,30 +11,25 @@ public final class StarCatalogue {
     final private Map<Asterism, List<Integer>> map = new HashMap<>();
 
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
-
-        for (Asterism asterism : asterisms) {
-            for (int i = 0; i < asterism.stars().size(); ++i) {
-                Preconditions.checkArgument(stars.contains(asterism.stars().get(i)));
-            }
-        }
-
-        for(Asterism a : asterisms) {
+        for(Asterism asterism : asterisms) {
+            Preconditions.checkArgument(stars.containsAll(asterism.stars()));
             List<Integer> indexes = new ArrayList<>();
-            for(Star s : a.stars())
+
+            for(Star s : asterism.stars())
                 indexes.add(stars.indexOf(s));
 
-            map.put(a, List.copyOf(indexes));
+            map.put(asterism, List.copyOf(indexes));
         }
 
         this.stars = List.copyOf(stars);
         this.asterisms = List.copyOf(asterisms);
     }
 
-    public List<Star> stars(){
+    public List<Star> stars() {
         return stars;
     }
 
-    public Set<Asterism> asterisms(){
+    public Set<Asterism> asterisms() {
         return new HashSet<>(asterisms);
     }
 
@@ -43,7 +38,7 @@ public final class StarCatalogue {
         return map.get(asterism);
     }
 
-    public final static class Builder{
+    public final static class Builder {
         private List<Star> stars;
         private List<Asterism> asterisms;
 
@@ -66,7 +61,7 @@ public final class StarCatalogue {
             return this;
         }
 
-        public List<Asterism> asterisms(){
+        public List<Asterism> asterisms() {
             return Collections.unmodifiableList(asterisms);
         }
 
