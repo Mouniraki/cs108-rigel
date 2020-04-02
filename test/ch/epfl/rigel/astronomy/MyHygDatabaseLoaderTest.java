@@ -57,8 +57,9 @@ class MyHygDatabaseLoaderTest {
 
             Star rigel = null;
             for (Star s : catalogue.stars()) {
-                if (s.name().equalsIgnoreCase("rigel"))
+                if (s.name().equalsIgnoreCase("rigel")) {
                     rigel = s;
+                }
             }
             assertNotNull(rigel);
         }

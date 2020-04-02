@@ -18,7 +18,7 @@ public final class StarCatalogue {
             }
         }
 
-        for(Asterism a : asterisms) { //VERY BAD FOR TIME EXECUTION
+        for(Asterism a : asterisms) {
             List<Integer> indexes = new ArrayList<>();
             for(Star s : a.stars()) {
                 if(a.stars().contains(s)) {

@@ -80,15 +80,18 @@ class MyAsterismLoaderTest {
                     .build();
 
             List<Asterism> l = new ArrayList<>();
+            int stars = 0;
 
             for(Asterism as : test.asterisms()){
                 for(Star star : as.stars()){
                     if((star.name()).equalsIgnoreCase("Rigel")){
                         l.add(as);
+                        ++stars;
                     }
                 }
             }
             assertNotNull(l);
+            assertEquals(2, stars);
         }
     }
 
@@ -129,15 +132,18 @@ class MyAsterismLoaderTest {
                     .build();
 
             List<Asterism> l = new ArrayList<>();
+            int stars = 0;
 
             for(Asterism as : test.asterisms()){
                 for(Star star : as.stars()){
                     if((star.name()).equalsIgnoreCase("betelgeuse")){
                         l.add(as);
+                        ++stars;
                     }
                 }
             }
             assertNotNull(l);
+            assertEquals(2, stars);
         }
     }
 
