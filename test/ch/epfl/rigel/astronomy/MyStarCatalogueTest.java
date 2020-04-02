@@ -40,10 +40,7 @@ class MyStarCatalogueTest {
 
     @Test
     void constructorFailsWithAsterismStarNotInListOfStars() {
-        List<Star> starsForTheAsterism = new ArrayList<>();
-        for(Star star : stars){
-            starsForTheAsterism.add(star);
-        }
+        List<Star> starsForTheAsterism = new ArrayList<>(stars);
 
         starsForTheAsterism.add(new Star(1, "star5", equPos, 1.f, 1.f));
         asterisms.add(new Asterism(starsForTheAsterism));
@@ -111,8 +108,7 @@ class MyStarCatalogueTest {
                 System.out.println("This case works correctly, number of stars : " + nbStars);
             }
 
-            List<Star> allStar = new ArrayList<Star>();
-            allStar.addAll(catalogue.stars());
+            List<Star> allStar = new ArrayList<>(catalogue.stars());
 
             System.out.println("LIST OF STARS :");
             for(Star s : allStar){
