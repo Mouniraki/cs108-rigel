@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,17 +61,15 @@ class MyStarCatalogueTest {
 
     @Test
     void asterismsGetterWorksCorrectly() {
-        List<Star> starsForTheAsterism = new ArrayList<>();
-        for(Star star : stars){
-            starsForTheAsterism.add(star);
-        }
+
+        List<Star> starsForTheAsterism = new ArrayList<>(stars);
 //        asterisms.add(new Asterism(starsForTheAsterism));
         Asterism testAsterism = new Asterism(starsForTheAsterism);
         List<Asterism> testAsterisms = new ArrayList<>();
         testAsterisms.add(testAsterism);
 
         StarCatalogue catalogue = new StarCatalogue(stars, testAsterisms);
-        assertEquals(testAsterisms, catalogue.asterisms());
+        assertEquals(new HashSet<>(testAsterisms), catalogue.asterisms());
     }
 
 //    @Test
