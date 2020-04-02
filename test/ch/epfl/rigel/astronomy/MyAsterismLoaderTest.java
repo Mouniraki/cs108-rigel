@@ -40,7 +40,7 @@ class MyAsterismLoaderTest {
     }
 
     @Test
-    void asterismLoaderContainsRigel() throws IOException{
+    void asterismLoaderContainsRigel() throws IOException {
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
             InputStream hygStream = getClass()
@@ -62,6 +62,7 @@ class MyAsterismLoaderTest {
             }
 
             for(Asterism a : l){
+                System.out.println(test.asterismIndices(a));
                 for(Star s : a.stars())
                     System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
                 System.out.println();
@@ -118,6 +119,7 @@ class MyAsterismLoaderTest {
             }
 
             for(Asterism a : l){
+                System.out.println(test.asterismIndices(a));
                 for(Star s : a.stars())
                     System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
                 System.out.println();
