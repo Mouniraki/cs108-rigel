@@ -87,15 +87,8 @@ class MyAsterismLoaderTest {
             for(Asterism as : test.asterisms()){
                 for(Star star : as.stars()){
                     if((star.name()).equalsIgnoreCase("rigel")) {
-                        //System.out.println(test.asterismIndices(as).get(as.stars().indexOf(star)));
-                        System.out.println(test.asterismIndices(as));
-                        for(Star s : as.stars()){
-                            System.out.println(s.name());
-                        }
-                        System.out.println();
-                        //rigelID = test.asterismIndices(as).lastIndexOf(star);
+                        rigelID = test.asterismIndices(as).get(as.stars().indexOf(star));
                     }
-
                 }
             }
             assertEquals(1019, rigelID);

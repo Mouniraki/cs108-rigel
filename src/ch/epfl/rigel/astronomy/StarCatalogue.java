@@ -18,14 +18,23 @@ public final class StarCatalogue {
             }
         }
 
-        for(Asterism a : asterisms){
+        for(Asterism a : asterisms) { //VERY BAD FOR TIME EXECUTION
             List<Integer> indexes = new ArrayList<>();
-            for(Star s : stars){
+            for(Star s : a.stars()){
+                for(int i=0; i<stars.size(); ++i){
+                    if(i == stars.indexOf(s))
+                        indexes.add(i);
+                }
+            }
+            map.put(a, List.copyOf(indexes));
+
+            /* INCORRETCT PIECE OF CODE
+            for(Star s : stars) {
                 if(a.stars().contains(s)) {
                     indexes.add(stars.indexOf(s));
                 }
             }
-            map.put(a, List.copyOf(indexes));
+            */
         }
 
         this.stars = List.copyOf(stars);
