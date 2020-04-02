@@ -8,21 +8,22 @@ import java.util.*;
 public final class StarCatalogue {
     final private List<Star> stars;
     final private List<Asterism> asterisms;
-    private final Map<Asterism, List<Integer>> map = new HashMap<>();
+    final private Map<Asterism, List<Integer>> map = new HashMap<>();
 
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
 
         for (Asterism asterism : asterisms) {
-            for (int b = 0; b < asterism.stars().size(); ++b) {
-                Preconditions.checkArgument(stars.contains(asterism.stars().get(b)));
+            for (int i = 0; i < asterism.stars().size(); ++i) {
+                Preconditions.checkArgument(stars.contains(asterism.stars().get(i)));
             }
         }
 
         for(Asterism a : asterisms){
             List<Integer> indexes = new ArrayList<>();
             for(Star s : stars){
-                if(a.stars().contains(s))
+                if(a.stars().contains(s)) {
                     indexes.add(stars.indexOf(s));
+                }
             }
             map.put(a, List.copyOf(indexes));
         }
