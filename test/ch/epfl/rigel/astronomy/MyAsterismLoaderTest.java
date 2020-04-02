@@ -10,6 +10,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyAsterismLoaderTest {
+    private static final String HYG_CATALOGUE_NAME =
+            "/hygdata_v3.csv";
     private static final String ASTERISM_CATALOGUE_NAME =
             "/asterisms.txt";
 
@@ -24,8 +26,12 @@ class MyAsterismLoaderTest {
     @Test
     void asterismLoaderContainsRigel() throws IOException{
         try(InputStream asterismStream = getClass()
-                .getResourceAsStream(ASTERISM_CATALOGUE_NAME)){
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)){
+
             StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
@@ -33,7 +39,7 @@ class MyAsterismLoaderTest {
 
             for(Asterism as : test.asterisms()){
                 for(Star star : as.stars()){
-                    if((star.name()).equals("Rigel")){
+                    if((star.name()).equalsIgnoreCase("Rigel")){
                         l.add(as);
                     }
                 }
