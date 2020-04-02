@@ -31,45 +31,17 @@ public final class StarCatalogue {
         this.asterisms = List.copyOf(asterisms);
     }
 
-//        InputStream is = this.getClass().getResourceAsStream("/asterisms.txt");
-//        Reader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-//        int asterismIndex = 0;
-//        String str = "";
-//        BufferedReader reader = new BufferedReader(isReader);
-//        Character readerObj;
-//        boolean loopControler = true;
-//        while (loopControler) {
-//            try {
-//                readerObj = (char) reader.read();
-//                if (readerObj == Character.MAX_VALUE) {
-//                    loopControler = false;
-//                }
-//
-//                if (readerObj == ',' || readerObj == '\n') {
-//                    map.put(Integer.parseInt(str), asterismIndex);
-//                    System.out.println(Integer.parseInt(str) + " : " + asterismIndex);
-//                    str = "";
-//                    asterismIndex += 1;
-//                } else {
-//                    str += readerObj;
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
     public List<Star> stars(){
         return stars;
     }
 
-    public Set<Asterism> asterisms(){ //TODO to check
-        return (Set<Asterism>) asterisms;
+    public Set<Asterism> asterisms(){
+        return new HashSet<>(asterisms);
     }
 
-    public List<Integer> asterismIndices(Asterism asterism){//in test check the lengths of two arrays
+    public List<Integer> asterismIndices(Asterism asterism){
         Preconditions.checkArgument(asterisms.contains(asterism));
-        List<Integer> indices = map.get(asterism);
-        return indices;
+        return map.get(asterism);
     }
 
     public final static class Builder{
@@ -86,7 +58,7 @@ public final class StarCatalogue {
             return this;
         }
 
-        public List<Star> stars(){ //TODO Verify non modifiable pas immuable|it's ok as intended
+        public List<Star> stars(){
             return Collections.unmodifiableList(stars);
         }
 

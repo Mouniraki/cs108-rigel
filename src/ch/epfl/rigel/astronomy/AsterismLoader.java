@@ -21,7 +21,7 @@ public enum AsterismLoader implements StarCatalogue.Loader{
                 List<Star> stars = new ArrayList<>();
                 for(String hipId : strArray){
                     int hipparcosId = Integer.parseInt(hipId);
-                    for(Star star : builder.stars()){ //ISSUE HERE
+                    for(Star star : builder.stars()){
                         if(star.hipparcosId() == hipparcosId)
                             stars.add(star);
                     }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,6 +44,12 @@ class MyAsterismLoaderTest {
                         l.add(as);
                     }
                 }
+            }
+
+            for(Asterism a : l){
+                for(Star s : a.stars())
+                    System.out.printf(Locale.ROOT, "%d %s %s %.3f %d %n", s.hipparcosId(), s.name(), s.equatorialPos(), s.magnitude(), s.colorTemperature());
+                System.out.println();
             }
             assertNotNull(l);
         }
