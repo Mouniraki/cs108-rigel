@@ -27,8 +27,9 @@ public final class StarCatalogue {
             Preconditions.checkArgument(stars.containsAll(asterism.stars()));
             List<Integer> indexes = new ArrayList<>();
 
-            for(Star s : asterism.stars())
+            for(Star s : asterism.stars()) {
                 indexes.add(stars.indexOf(s));
+            }
             map.put(asterism, List.copyOf(indexes));
         }
         this.stars = List.copyOf(stars);
