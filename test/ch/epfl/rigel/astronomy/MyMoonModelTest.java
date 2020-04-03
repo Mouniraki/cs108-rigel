@@ -51,8 +51,8 @@ class MyMoonModelTest {
         assertEquals(14.211456457836, moon.equatorialPos().raHr(), 1e-8); //FRAMAPAD
         assertEquals(-0.20114171346014934, moon.equatorialPos().dec());
 
-        assertEquals(refEquCoords.ra(), calculatedRa, 1e-7);
-        assertEquals(refEquCoords.dec(), calculatedDec, 1e-7);
+        assertEquals(refEquCoords.ra(), calculatedRa, 1e-8);
+        assertEquals(refEquCoords.dec(), calculatedDec, 1e-8);
         assertEquals(refName, moon.info());
         assertEquals(0, moon.magnitude());
         assertEquals(refAngularDiameter, moon.angularSize(), 1e-3); //ISSUES WITH CALCULATION IN THE EXCEL
