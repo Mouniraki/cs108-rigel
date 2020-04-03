@@ -49,7 +49,7 @@ public final class StarCatalogue {
      * @return A collection of the asterisms constituting a star catalogue
      */
     public Set<Asterism> asterisms() {
-        return new HashSet<>(asterisms);
+        return map.keySet();
     }
 
     /**
