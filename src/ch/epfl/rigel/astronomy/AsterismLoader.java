@@ -39,8 +39,9 @@ public enum AsterismLoader implements StarCatalogue.Loader{
                 for(String hipId : strArray) {
                     int hipparcosId = Integer.parseInt(hipId);
                     for(Star star : builder.stars()){
-                        if(star.hipparcosId() == hipparcosId)
+                        if(star.hipparcosId() == hipparcosId) {
                             stars.add(star);
+                        }
                     }
                 }
 
