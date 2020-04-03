@@ -48,7 +48,7 @@ class MyMoonModelTest {
         String refName = String.format(Locale.ROOT, "Lune (%.1f%%)", refPhase * 100);
 
         assertEquals(14.211456457835899, moon.equatorialPos().raHr(), 1e-14); //WITHOUT SUNMODEL NORMALIZATION (NAEL)
-        //assertEquals(14.211456457836, moon.equatorialPos().raHr()); //FRAMAPAD
+        assertEquals(14.211456457836, moon.equatorialPos().raHr(), 1e-8); //FRAMAPAD
         assertEquals(-0.20114171346014934, moon.equatorialPos().dec());
 
         assertEquals(refEquCoords.ra(), calculatedRa, 1e-7);
