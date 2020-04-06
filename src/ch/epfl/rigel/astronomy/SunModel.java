@@ -5,7 +5,7 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
 /**
- * Model of the Sun.
+ * A model of the sun.
  *
  * @author Nicolas Szwajcok (315213)
  * @author Mounir Raki (310287)
@@ -22,11 +22,10 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     /**
      * Creates the model of the Sun with specific parameters.
      *
-     * @param daysSinceJ2010
-     *          Number of days after the epoch J2010
-     * @param eclipticToEquatorialConversion
-     *          Conversion from ecliptic to equatorial coordinates
-     * @return a new Sun with the corresponding model.
+     * @param daysSinceJ2010 Number of days after the epoch J2010
+     * @param eclipticToEquatorialConversion Conversion from ecliptic to equatorial coordinates
+     *
+     * @return A new Sun with the corresponding model.
      */
     @Override
     public Sun at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
@@ -40,6 +39,5 @@ public enum SunModel implements CelestialObjectModel<Sun> {
         double angularSize = THETA_ZERO * ((1 + ORBITAL_ECCENTRICITY*Math.cos(trueAnomaly)) / (1 - ORBITAL_ECCENTRICITY*ORBITAL_ECCENTRICITY));
 
         return new Sun(eclCoords, eclipticToEquatorialConversion.apply(eclCoords), (float) angularSize, (float) meanAnomaly);
-
     }
 }

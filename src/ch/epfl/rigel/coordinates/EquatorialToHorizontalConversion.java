@@ -7,19 +7,19 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
- * Class allowing the conversion from equatorial to horizontal coordinates.
+ * The conversion from equatorial to horizontal coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
-
-    final private double localSiderealTime;
-    final private GeographicCoordinates place;
+    private final double localSiderealTime;
+    private final GeographicCoordinates place;
 
     /**
-     * Constructs a conversion from equatorial to horizontal coordinates
-     * @param when the date and time
-     * @param where the place
+     * Constructs a conversion from equatorial to horizontal coordinates.
+     *
+     * @param when The date and time at the moment of the conversion
+     * @param where The geographic coordinates of the place of the conversion
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where){
         localSiderealTime = SiderealTime.local(when, where);
@@ -27,20 +27,21 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     }
 
     /**
-     * Applies the conversion from equatorial to horizontal coordinates
-     * @param equ The equatorial coordinates to convert
-     * @return Converted horizontal coordinates
+     * Applies the conversion from equatorial to horizontal coordinates.
+     *
+     * @param equ The equatorial coordinates to convert into horizontal coordinates
+     * @return The horizontal coordinates obtained from a conversion of the equatorial coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
         double H = localSiderealTime - equ.ra();
 
-        double sinDelta = Math.sin(equ.dec());
-        double cosDelta = Math.cos(equ.dec());
-        double sinPhi = Math.sin(place.lat());
-        double cosPhi = Math.cos(place.lat());
+        double sinDec = Math.sin(equ.dec());
+        double cosDec = Math.cos(equ.dec());
+        double sinLat = Math.sin(place.lat());
+        double cosLat = Math.cos(place.lat());
 
-        double h = Math.asin(sinDelta * sinPhi + cosDelta * cosPhi * Math.cos(H));
-        double A = Angle.normalizePositive(Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h)));
+        double h = Math.asin(sinDec * sinLat + cosDec * cosLat * Math.cos(H));
+        double A = Angle.normalizePositive(Math.atan2(-cosDec * cosLat * Math.sin(H), sinDec - sinLat * Math.sin(h)));
 
         return HorizontalCoordinates.of(A, h);
     }
@@ -48,17 +49,18 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
-    final public boolean equals(Object obj){ throw new UnsupportedOperationException(); }
+    @Override
+    public final boolean equals(Object obj){ throw new UnsupportedOperationException(); }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 }

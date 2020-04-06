@@ -5,27 +5,27 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import ch.epfl.rigel.math.ClosedInterval;
 
 /**
- * A specific type of Celestial Object : a Star.
+ * One of the types of celestial object: a star.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class Star extends CelestialObject {
-    final private int hipparcosId;
-    final private float colorIndex;
+    private final int hipparcosId;
+    private final float colorIndex;
 
     /**
-     * Constructs a new Star.
+     * Constructs a new star.
      *
      * @param hipparcosId
-     *          the specific Hipparcos ID of the Star
+     *          the specific Hipparcos ID of the star
      * @param name
-     *          the name of the Star
+     *          the name of the star
      * @param equatorialPos
-     *          the position of the Star (in EquatorialCoordinates)
+     *          the position of the star (in equatorial coordinates)
      * @param magnitude
-     *          the magnitude of the Star
+     *          the magnitude of the star
      * @param colorIndex
-     *          the color index of the Star, useful for computing the color temperature
+     *          the color index of the star, useful for computing the color temperature
      *
      * @throws IllegalArgumentException
      *          if either the Hipparcos ID is negative, or if the color index is not in the interval [-0.5, 5.5]
@@ -54,7 +54,7 @@ public final class Star extends CelestialObject {
      * @return the color temperature of the Star
      */
     public int colorTemperature(){
-        double temperature = 4600 * ((1 / (0.92*colorIndex + 1.7)) + (1 / (0.92*colorIndex + 0.62)));
+        double temperature = 4600*((1/(0.92*colorIndex + 1.7)) + (1/(0.92*colorIndex + 0.62)));
         return (int) Math.floor(temperature);
     }
 }

@@ -5,18 +5,17 @@ import ch.epfl.rigel.Preconditions;
 import java.util.List;
 
 /**
- * An asterism.
+ * The class describing an asterism.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class Asterism {
-    final private List<Star> stars;
+    private final List<Star> stars;
 
     /**
-     * Constructor of an Asterism.
+     * Constructor of an asterism.
      *
-     * @param stars
-     *          the list of stars of the asterism to construct
+     * @param stars the list of stars inside of the asterism
      */
     public Asterism(List<Star> stars){
         Preconditions.checkArgument(stars.size() != 0);
@@ -24,9 +23,9 @@ public final class Asterism {
     }
 
     /**
-     * Getter for the list of stars.
+     * Getter for the list of the stars of the asterism.
      *
-     * @return the list of stars.
+     * @return the list of the stars of the asterism
      */
     public List<Star> stars() {
         return stars;

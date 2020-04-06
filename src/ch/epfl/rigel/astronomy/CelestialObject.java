@@ -3,11 +3,10 @@ package ch.epfl.rigel.astronomy;
 import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
-import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Mother class for all types of Celestial objects.
+ * Mother class for all types of celestial objects.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -27,39 +26,44 @@ public abstract class CelestialObject {
 
     /**
      * Returns the name of the celestial object.
+     *
      * @return The name of the celestial object
      */
     public String name(){
-        return this.name;
+        return name;
     }
 
     /**
      * Returns the angular size of the celestial object.
+     *
      * @return The size of the celestial object
      */
     public double angularSize(){
-        return this.angularSize;
+        return angularSize;
     }
 
     /**
-     * Returns the magnitude of the celesial object.
+     * Returns the magnitude of the celestial object.
+     *
      * @return The magnitude of the celestial object
      */
     public double magnitude(){
-        return this.magnitude;
+        return magnitude;
     }
 
     /**
      * Returns the equatorial position of the celestial object.
+     *
      * @return The equatorial position of the celestial object
      */
     public EquatorialCoordinates equatorialPos(){
-        return this.equatorialPos;
+        return equatorialPos;
     }
 
     /**
      * Defines the textual representation of a celestial object.
-     * @return the textual representation of a celestial object
+     *
+     * @return The textual representation of a celestial object
      */
     public String info(){
         return name();
@@ -67,8 +71,10 @@ public abstract class CelestialObject {
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a celestial object.
+     *
      * @return the textual representation of a celestial object
      */
+    @Override
     public String toString(){
         return info();
     }

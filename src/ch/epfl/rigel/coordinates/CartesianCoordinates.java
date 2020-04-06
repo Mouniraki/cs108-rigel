@@ -3,7 +3,7 @@ package ch.epfl.rigel.coordinates;
 import java.util.Locale;
 
 /**
- * Class allowing the construction of a point the cartesian coordinates.
+ * One of the types of coordinates: cartesian coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -17,10 +17,12 @@ public final class CartesianCoordinates {
     }
 
     /**
-     * Allows to create cartesian coordinates.
+     * Creates an instance of the cartesian coordinates.
+     *
      * @param x x coordinate (abscissa)
      * @param y y coordinate (ordinate)
-     * @return A point expressed using the cartesian coordinates.
+     *
+     * @return A point expressed using the cartesian coordinates
      */
     public static CartesianCoordinates of(double x, double y){
         return new CartesianCoordinates(x, y);
@@ -28,24 +30,26 @@ public final class CartesianCoordinates {
 
     /**
      * Getter of the x value (abscissa).
+     *
      * @return the x value of the coordinates (abscissa)
      */
     public double x(){
-        return this.x;
+        return x;
     }
 
     /**
      * Getter of the y value (ordinate).
+     *
      * @return the y value of the coordinates (ordinate)
      */
     public double y(){
-        return this.y;
+        return y;
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
     @Override
     public final boolean equals(Object obj){
@@ -55,7 +59,7 @@ public final class CartesianCoordinates {
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
     public final int hashCode(){

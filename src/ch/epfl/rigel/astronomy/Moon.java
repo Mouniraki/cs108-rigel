@@ -7,7 +7,7 @@ import ch.epfl.rigel.math.ClosedInterval;
 import java.util.Locale;
 
 /**
- * Class allowing a construction of a Moon.
+ * One of the types of celestial object: a moon.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -15,7 +15,8 @@ public final class Moon extends CelestialObject {
     private final float phase;
 
     /**
-     * Constructor of an instance of moon.
+     * Constructor of an instance of a moon.
+     *
      * @param equatorialPos The equatorial position of the moon
      * @param angularSize The angular size of the moon
      * @param magnitude The magnitude of the moon
