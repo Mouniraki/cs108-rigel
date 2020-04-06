@@ -85,11 +85,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double sinC = 2*rho / (rho*rho + 1);
         double cosC = (1 - rho*rho) / (rho*rho + 1);
 
-        double lambda = Angle.normalizePositive(Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon());
+        double lambda = Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon();
 
         double phi = Math.asin(cosC*Math.sin(center.lat()) + (y*sinC*Math.cos(center.lat())) / rho);
 
-        return HorizontalCoordinates.of(lambda, phi);
+        return HorizontalCoordinates.of(Angle.normalizePositive(lambda), phi);
     }
 
     /**
@@ -119,6 +119,6 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "StereographicProjection with center at (x=0, y=%.4f)", center.lat() );
+        return String.format(Locale.ROOT, "StereographicProjection with center at (x=0, y=%.4f)", center.lat());
     }
 }

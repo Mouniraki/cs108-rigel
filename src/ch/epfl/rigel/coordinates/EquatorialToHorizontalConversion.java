@@ -50,7 +50,9 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(Object obj){ throw new UnsupportedOperationException(); }
+    final public boolean equals(Object obj){
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.

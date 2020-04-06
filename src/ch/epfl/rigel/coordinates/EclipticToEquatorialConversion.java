@@ -40,13 +40,10 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
         double beta = ecl.lat();
         double sinLambda = Math.sin(lambda);
 
-        double alpha = Angle.normalizePositive(
-                Math.atan2(
-                        sinLambda*cosEpsilon - Math.tan(beta) * sinEpsilon,
-                        Math.cos(lambda)));
+        double alpha = Math.atan2(sinLambda*cosEpsilon - Math.tan(beta) * sinEpsilon, Math.cos(lambda));
         double delta = Math.asin(Math.sin(beta)*cosEpsilon + Math.cos(beta)*sinEpsilon*sinLambda);
 
-        return EquatorialCoordinates.of(alpha, delta);
+        return EquatorialCoordinates.of(Angle.normalizePositive(alpha), delta);
     }
 
     /**

@@ -62,28 +62,36 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the value of the azimuth (in radians).
      */
-    public double az() {return super.lon();}
+    public double az() {
+        return super.lon();
+    }
 
     /**
      * Getter for the azimuth in degrees.
      *
      * @return the value of the azimuth (in degrees).
      */
-    public double azDeg() {return super.lonDeg();}
+    public double azDeg() {
+        return super.lonDeg();
+    }
 
     /**
      * Getter for the altitude in radians.
      *
      * @return the value of the altitude (in radians).
      */
-    public double alt() {return super.lat();}
+    public double alt() {
+        return super.lat();
+    }
 
     /**
      * Getter for the altitude in degrees.
      *
      * @return the value of the altitude (in degrees).
      */
-    public double altDeg() {return super.latDeg();}
+    public double altDeg() {
+        return super.latDeg();
+    }
 
     /**
      * Constructs the textual representation of the octant in which the azimuth value is localized.

@@ -50,7 +50,8 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
      * Returns the right ascension expressed in hours.
      * @return the right ascension (in hours)
      */
-    public double raHr(){return Angle.toHr(super.lon());
+    public double raHr(){
+        return Angle.toHr(super.lon());
     }
 
     /**
