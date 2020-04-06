@@ -55,11 +55,21 @@ public final class Polynomial {
         StringBuilder string = new StringBuilder();
         for(int i = 0; i < coefficientsTable.length; ++i){
             if(coefficientsTable[i] != 0) {
-                if (coefficientsTable[i] > 0 && i > 0 && i <= coefficientsTable.length - 1) string.append("+");
-                if (Math.abs(coefficientsTable[i]) != 1.0) string.append(coefficientsTable[i]);
-                else if (coefficientsTable[i] == -1.0) string.append("-");
-                if (i < coefficientsTable.length - 2) string.append("x^").append(coefficientsTable.length - i - 1);
-                else if (i < coefficientsTable.length - 1) string.append("x");
+                if (coefficientsTable[i] > 0 && i > 0 && i <= coefficientsTable.length - 1)
+                    string.append("+");
+
+                if (Math.abs(coefficientsTable[i]) != 1.0)
+                    string.append(coefficientsTable[i]);
+
+                else if (coefficientsTable[i] == -1.0)
+                    string.append("-");
+
+                if (i < coefficientsTable.length - 2)
+                    string.append("x^")
+                            .append(coefficientsTable.length - i - 1);
+
+                else if (i < coefficientsTable.length - 1)
+                    string.append("x");
             }
         }
         return string.toString();
@@ -74,7 +84,9 @@ public final class Polynomial {
      *          if the method is called
      */
     @Override
-    public boolean equals(Object obj) {throw new UnsupportedOperationException();}
+    public boolean equals(Object obj) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Redefines the hashCode method from java.lang.Object to throw an error.
@@ -83,5 +95,7 @@ public final class Polynomial {
      *          if the method is called
      */
     @Override
-    public int hashCode() {throw new UnsupportedOperationException();}
+    public int hashCode() {
+        throw new UnsupportedOperationException();
+    }
 }

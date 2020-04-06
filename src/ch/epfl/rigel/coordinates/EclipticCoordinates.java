@@ -42,28 +42,36 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the longitude (in radians)
      */
-    public double lon() {return super.lon();}
+    public double lon() {
+        return super.lon();
+    }
 
     /**
      * Getter for the value of the longitude (in degrees).
      *
      * @return the value of the longitude (in degrees)
      */
-    public double lonDeg() {return super.lonDeg();}
+    public double lonDeg() {
+        return super.lonDeg();
+    }
 
     /**
      * Getter for the value of the latitude (in radians).
      *
      * @return the value of the latitude (in radians)
      */
-    public double lat() {return super.lat();}
+    public double lat() {
+        return super.lat();
+    }
 
     /**
      * Getter for the value of the latitude (in degrees).
      *
      * @return the value of the latitude (in degrees)
      */
-    public double latDeg() {return super.latDeg();}
+    public double latDeg() {
+        return super.latDeg();
+    }
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a point

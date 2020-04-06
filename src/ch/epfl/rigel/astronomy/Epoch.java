@@ -39,7 +39,7 @@ public enum Epoch {
      */
     public double daysUntil(ZonedDateTime when){
        double msSplit = date.until(when, ChronoUnit.MILLIS);
-       return msSplit/MS_PER_DAY;
+       return msSplit / MS_PER_DAY;
     }
 
     /**
@@ -52,7 +52,7 @@ public enum Epoch {
      */
     public double julianCenturiesUntil(ZonedDateTime when){
         double msSplit = date.until(when, ChronoUnit.MILLIS);
-        return msSplit/MS_PER_CENTURY;
+        return msSplit / MS_PER_CENTURY;
     }
 
 }

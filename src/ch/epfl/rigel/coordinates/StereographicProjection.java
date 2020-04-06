@@ -97,11 +97,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double sinC = 2*rho/(rho*rho + 1);
         double cosC = (1 - rho*rho)/(rho*rho + 1);
 
-        double lambda = Angle.normalizePositive(Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon());
+        double lambda = Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon();
 
         double phi = Math.asin(cosC*Math.sin(center.lat()) + (y*sinC*Math.cos(center.lat()))/rho);
 
-        return HorizontalCoordinates.of(lambda, phi);
+        return HorizontalCoordinates.of(Angle.normalizePositive(lambda), phi);
     }
 
     /**
