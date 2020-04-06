@@ -3,8 +3,7 @@ package ch.epfl.rigel.coordinates;
 import java.util.Locale;
 
 /**
- * One of the types of coordinates: cartesian coordinates.
- * Class allowing the construction of a point the cartesian coordinates. //PREFERRED IMHO
+ * Class allowing the construction of a point the cartesian coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
