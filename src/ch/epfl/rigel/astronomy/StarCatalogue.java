@@ -14,7 +14,7 @@ import java.util.*;
 public final class StarCatalogue {
     final private List<Star> stars;
     final private List<Asterism> asterisms;
-    final private Map<Asterism, List<Integer>> map = new HashMap<>();
+    final private Map<Asterism, List<Integer>> map;
 
     /**
      * Creates an instance of a star catalogue.
@@ -23,6 +23,7 @@ public final class StarCatalogue {
      * @param asterisms The list of asterisms used to construct a star catalogue
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
+        Map<Asterism, List<Integer>> tempMap = new HashMap<>();
         for(Asterism asterism : asterisms) {
             Preconditions.checkArgument(stars.containsAll(asterism.stars()));
             List<Integer> indexes = new ArrayList<>();
@@ -30,8 +31,9 @@ public final class StarCatalogue {
             for(Star s : asterism.stars()) {
                 indexes.add(stars.indexOf(s));
             }
-            map.put(asterism, List.copyOf(indexes));
+            tempMap.put(asterism, List.copyOf(indexes));
         }
+        this.map = Map.copyOf(tempMap);
         this.stars = List.copyOf(stars);
         this.asterisms = List.copyOf(asterisms);
     }
