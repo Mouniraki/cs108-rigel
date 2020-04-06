@@ -6,10 +6,9 @@ import ch.epfl.rigel.math.Polynomial;
 
 import java.time.ZonedDateTime;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
- * Class allowing the conversion from ecliptic to equatorial coordinates.
+ * The conversion from ecliptic to equatorial coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -20,6 +19,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
 
     /**
      * Constructs a conversion from ecliptic to equatorial coordinates.
+     *
      * @param when The date and time of the conversion
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
@@ -32,8 +32,10 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
 
     /**
      * Applies the conversion from ecliptic to equatorial coordinates.
-     * @param ecl The ecliptic coordinates to convert
-     * @return The converted equatorial coordinates
+     *
+     * @param ecl The ecliptic coordinates to convert into equatorial coordinates
+     *
+     * @return The equatorial coordinates obtained from a conversion of the ecliptic coordinates
      */
     public EquatorialCoordinates apply(EclipticCoordinates ecl){
         double lambda = ecl.lon();
@@ -49,8 +51,9 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException Using the equals() method is not supported.
      */
+    @Override
     final public boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
@@ -58,7 +61,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException Using the hashCode() method is not supported.
      */
     @Override
     final public int hashCode(){
