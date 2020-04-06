@@ -54,7 +54,7 @@ public final class Star extends CelestialObject {
      * @return the color temperature of the Star
      */
     public int colorTemperature(){
-        double temperature = 4600*((1/(0.92*colorIndex + 1.7)) + (1/(0.92*colorIndex + 0.62)));
+        double temperature = 4600 * ((1 / (0.92*colorIndex + 1.7)) + (1 / (0.92*colorIndex + 0.62)));
         return (int) Math.floor(temperature);
     }
 }

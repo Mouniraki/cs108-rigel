@@ -40,10 +40,12 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
         double sinLat = Math.sin(place.lat());
         double cosLat = Math.cos(place.lat());
 
-        double h = Math.asin(sinDec * sinLat + cosDec * cosLat * Math.cos(H));
-        double A = Angle.normalizePositive(Math.atan2(-cosDec * cosLat * Math.sin(H), sinDec - sinLat * Math.sin(h)));
+        double h = Math.asin(sinDec*sinLat + cosDec*cosLat*Math.cos(H));
+        double A = Math.atan2(
+                -cosDec * cosLat * Math.sin(H),
+                sinDec - sinLat*Math.sin(h));
 
-        return HorizontalCoordinates.of(A, h);
+        return HorizontalCoordinates.of(Angle.normalizePositive(A), h);
     }
 
     /**

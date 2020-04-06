@@ -13,8 +13,8 @@ import java.util.function.Function;
  * @author Nicolas Szwajcok (315213)
  */
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
-    private final double cosEpsilon;
-    private final double sinEpsilon;
+    private final double cosEclObl;
+    private final double sinEclObl;
 
     /**
      * Constructs a conversion from ecliptic to equatorial coordinates.
@@ -24,9 +24,9 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         Polynomial p = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006), -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45));
         double T = Epoch.J2000.julianCenturiesUntil(when);
-        double epsilon = p.at(T);
-        cosEpsilon = Math.cos(epsilon);
-        sinEpsilon = Math.sin(epsilon);
+        double eclObliquity = p.at(T);
+        cosEclObl = Math.cos(eclObliquity);
+        sinEclObl = Math.sin(eclObliquity);
     }
 
     /**
@@ -37,17 +37,16 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @return The equatorial coordinates obtained from a conversion of the ecliptic coordinates
      */
     public EquatorialCoordinates apply(EclipticCoordinates ecl){
-        double lon = ecl.lon();
-        double lat = ecl.lat();
-        double sinLon = Math.sin(lon);
+        double eclLon = ecl.lon();
+        double eclLat = ecl.lat();
+        double sinEclLon = Math.sin(eclLon);
 
-        double alpha = Angle.normalizePositive(
-                Math.atan2(
-                        sinLon*cosEpsilon - Math.tan(lat)*sinEpsilon,
-                        Math.cos(lon)));
-        double delta = Math.asin(Math.sin(lat)*cosEpsilon + Math.cos(lat)*sinEpsilon*sinLon);
+        double ra = Math.atan2(
+                        sinEclLon*cosEclObl - Math.tan(eclLat)*sinEclObl,
+                        Math.cos(eclLon));
+        double dec = Math.asin(Math.sin(eclLat)*cosEclObl + Math.cos(eclLat)*sinEclObl*sinEclLon);
 
-        return EquatorialCoordinates.of(alpha, delta);
+        return EquatorialCoordinates.of(Angle.normalizePositive(ra), dec);
     }
 
     /**
