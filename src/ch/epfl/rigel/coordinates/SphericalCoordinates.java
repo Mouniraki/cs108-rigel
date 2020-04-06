@@ -26,7 +26,7 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Returns the longitude in degrees.
+     * Returns the longitude expressed in degrees.
      *
      * @return the longitude (in degrees)
      */
@@ -44,7 +44,7 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Returns the latitude in degrees.
+     * Returns the latitude expressed in degrees.
      *
      * @return the latitude (in degrees)
      */
@@ -57,7 +57,8 @@ abstract class SphericalCoordinates {
      *
      * @throws UnsupportedOperationException
      */
-    final public boolean equals(Object obj){
+    @Override
+    public final boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
 
@@ -67,7 +68,7 @@ abstract class SphericalCoordinates {
      * @throws UnsupportedOperationException
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 }

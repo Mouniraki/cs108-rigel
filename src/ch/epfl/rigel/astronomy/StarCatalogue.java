@@ -48,7 +48,8 @@ public final class StarCatalogue {
     }
 
     /**
-     * Returns a collection of the asterisms constituting a star catalogue
+     * Returns a collection of the asterisms constituting a star catalogue.
+     *
      * @return A collection of the asterisms constituting a star catalogue
      */
     public Set<Asterism> asterisms() {

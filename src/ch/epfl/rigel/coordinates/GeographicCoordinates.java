@@ -8,11 +8,11 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * Class allowing the creation of the geographic coordinates.
+ * A specific type of spherical coordinates : geographic coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
-final public class GeographicCoordinates extends SphericalCoordinates{
+public final class GeographicCoordinates extends SphericalCoordinates{
 
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
@@ -20,8 +20,10 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Constructs geographic coordinates.
+     *
      * @param lonDeg longitude expressed in degrees
      * @param latDeg latitude expressed in degrees
+     *
      * @return Geographic coordinates
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg){
@@ -33,7 +35,9 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Verifies if the angle (expressed in degrees) represents a valid longitude.
+     *
      * @param lonDeg the longitude expressed in degrees
+     *
      * @return true if the longitude is valid, false otherwise
      */
     public static boolean isValidLonDeg(double lonDeg){
@@ -42,7 +46,9 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Verifies if the angle (expressed in degrees) represents a valid latitude.
+     *
      * @param latDeg the latitude expressed in degrees
+     *
      * @return true if the latitude is valid, false otherwise
      */
     public static boolean isValidLatDeg(double latDeg){
@@ -51,6 +57,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the longitude.
+     *
      * @return the longitude
      */
     @Override
@@ -60,6 +67,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the longitude expressed in degrees.
+     *
      * @return the longitude (in degrees)
      */
     @Override
@@ -69,6 +77,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the latitude.
+     *
      * @return the latitude
      */
     @Override
@@ -78,6 +87,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the latitude expressed in degrees.
+     *
      * @return the latitude in degrees
      */
     @Override
@@ -87,6 +97,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Prints the geographic coordinates.
+     *
      * @return print of the geographic coordinates
      */
     @Override
