@@ -33,6 +33,7 @@ public final class StarCatalogue {
             }
             tempMap.put(asterism, List.copyOf(indexes));
         }
+
         this.map = Map.copyOf(tempMap);
         this.stars = List.copyOf(stars);
         this.asterisms = List.copyOf(asterisms);
