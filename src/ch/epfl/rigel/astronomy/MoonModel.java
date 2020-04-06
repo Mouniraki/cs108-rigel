@@ -34,10 +34,10 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
         double sunLonEclGeo = sun.eclipticPos().lon();
         double sunMeanAnomaly = sun.meanAnomaly();
 
-        double meanOrbitalLon = Angle.ofDeg(13.1763966) * daysSinceJ2010 + MEAN_LON;
-        double moonMeanAnomaly = meanOrbitalLon - Angle.ofDeg(0.1114041) * daysSinceJ2010 - MEAN_LON_AT_PERIGEE;
+        double meanOrbitalLon = Angle.ofDeg(13.1763966)*daysSinceJ2010 + MEAN_LON;
+        double moonMeanAnomaly = meanOrbitalLon - Angle.ofDeg(0.1114041)*daysSinceJ2010 - MEAN_LON_AT_PERIGEE;
 
-        double evection = Angle.ofDeg(1.2739) * Math.sin(2 * (meanOrbitalLon - sunLonEclGeo) - moonMeanAnomaly);
+        double evection = Angle.ofDeg(1.2739) * Math.sin(2*(meanOrbitalLon - sunLonEclGeo) - moonMeanAnomaly);
         double annualEquCorr = Angle.ofDeg(0.1858) * Math.sin(sunMeanAnomaly);
         double correction3 = Angle.ofDeg(0.37) * Math.sin(sunMeanAnomaly);
 
@@ -50,8 +50,8 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
 
         double realOrbitalLon = orbitalLonCorr + variation;
 
-        double meanLonAscNode = LON_ASC_NODE - Angle.ofDeg(0.0529539) * daysSinceJ2010;
-        double corrLonAscNode = meanLonAscNode - Angle.ofDeg(0.16) * Math.sin(sunMeanAnomaly);
+        double meanLonAscNode = LON_ASC_NODE - Angle.ofDeg(0.0529539)*daysSinceJ2010;
+        double corrLonAscNode = meanLonAscNode - Angle.ofDeg(0.16)*Math.sin(sunMeanAnomaly);
 
         double eclLon = Math.atan2(
                 Math.sin(realOrbitalLon - corrLonAscNode) * Math.cos(ORBIT_INCL),
@@ -62,7 +62,7 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
 
         double phase = (1 - Math.cos(realOrbitalLon - sunLonEclGeo)) / 2;
 
-        double earthMoonDist = (1 - ORBIT_ECC * ORBIT_ECC) / (1 + ORBIT_ECC * Math.cos(corrAnomaly + centerEquCorr));
+        double earthMoonDist = (1 - ORBIT_ECC*ORBIT_ECC) / (1 + ORBIT_ECC*Math.cos(corrAnomaly + centerEquCorr));
         double angularSize = THETA_ZERO / earthMoonDist;
 
         return new Moon(eclipticToEquatorialConversion.apply(moonEclCoords), (float) angularSize, 0, (float) phase);

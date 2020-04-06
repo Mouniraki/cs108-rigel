@@ -119,7 +119,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return the angular distance between the two points (in radians)
      */
     public double angularDistanceTo(HorizontalCoordinates that) {
-        return Math.acos(Math.sin(this.alt()) * Math.sin(that.alt()) + Math.cos(this.alt()) * Math.cos(that.alt()) * Math.cos(this.az() - that.az()));
+        return Math.acos(Math.sin(this.alt())*Math.sin(that.alt()) + Math.cos(this.alt())*Math.cos(that.alt())*Math.cos(this.az() - that.az()));
     }
 
     /**

@@ -42,7 +42,7 @@ public final class ClosedInterval extends Interval{
      */
     public static ClosedInterval symmetric(double size){
         checkArgument(size > 0);
-        return new ClosedInterval(-(size/2), size/2);
+        return new ClosedInterval(-(size / 2), size / 2);
     }
 
     /**
@@ -54,7 +54,7 @@ public final class ClosedInterval extends Interval{
      * @return the clipped argument to the interval
      */
     public double clip(double v){
-        if(v<=low()) return low();
+        if(v <= low()) return low();
         else return Math.min(v, high());
     }
 
@@ -72,6 +72,6 @@ public final class ClosedInterval extends Interval{
      * @return true if the value is contained in the interval, false otherwise
      */
     @Override
-    public boolean contains(double v) {return (v<=high() && v>=low());}
+    public boolean contains(double v) {return (v <= high() && v >= low());}
 
 }

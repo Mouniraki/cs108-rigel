@@ -61,5 +61,5 @@ public abstract class Interval {
      *
      * @return the size of the interval
      */
-    public double size() {return high-low;}
+    public double size() {return high - low;}
 }

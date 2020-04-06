@@ -13,16 +13,16 @@ public final class Angle {
     /**
      * Defines the constant TAU.
      */
-    public final static double TAU = 2*Math.PI;
+    public final static double TAU = 2 * Math.PI;
 
     private static final double HR_PER_RAD = 24 / TAU;
     private static final double RAD_PER_HR = TAU / 24;
 
-    private static final double DEG_PER_MIN = 1.0/60.0;
-    private static final double DEG_PER_SEC = 1.0/3600.0;
+    private static final double DEG_PER_MIN = 1.0 / 60.0;
+    private static final double DEG_PER_SEC = 1.0 / 3600.0;
 
 
-    private static double floorMod(double a, double b) {return a - b * Math.floor(a/b);}
+    private static double floorMod(double a, double b) {return a - b*Math.floor(a / b);}
 
     /**
      * Normalizes an angle in the interval going from 0 (included) to TAU (excluded).
@@ -62,7 +62,7 @@ public final class Angle {
     public static double ofDMS(int deg, int min, double sec){
         checkInInterval(RightOpenInterval.of(0, 60), min);
         checkInInterval(RightOpenInterval.of(0, 60), sec);
-        return Math.toRadians(deg + min * DEG_PER_MIN + sec * DEG_PER_SEC);
+        return Math.toRadians(deg + min*DEG_PER_MIN + sec*DEG_PER_SEC);
     }
 
     /**

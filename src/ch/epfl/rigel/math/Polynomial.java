@@ -11,7 +11,7 @@ public final class Polynomial {
     private double[] coefficientsTable;
 
     private Polynomial(double coefficientN, double... coefficients){
-        coefficientsTable = new double[coefficients.length+1];
+        coefficientsTable = new double [coefficients.length + 1];
         coefficientsTable[0] = coefficientN;
         System.arraycopy(coefficients, 0, coefficientsTable, 1, coefficients.length);
     }
@@ -31,20 +31,23 @@ public final class Polynomial {
     }
 
     /**
-     * Evaluates a polynomial
+     * Evaluates a polynomial at at value specified in parameters.
+     *
      * @param x
-     * @return
+     *          the value at which the polynomial has to be evaluated
+     * @return the value of the evaluation of the polynomial at the value in parameters
      */
     public double at(double x){
         double result = coefficientsTable[0];
-        for(int i=1; i<coefficientsTable.length; ++i){
-            result = result * x + coefficientsTable[i];
+        for(int i = 1; i < coefficientsTable.length; ++i){
+            result = result*x + coefficientsTable[i];
         }
         return result;
     }
 
     /**
      * Redefines the toString method from Objects to construct the textual representation of a polynomial.
+     *
      * @return the textual representation of the polynomial.
      */
     @Override
@@ -63,13 +66,22 @@ public final class Polynomial {
     }
 
     /**
-     * Redefines
+     * Redefines the equals method from java.lang.Object to throw an error.
+     *
      * @param obj
-     * @return
+     *          the interval to compare with this one (doesn't matter here)
+     * @throws UnsupportedOperationException
+     *          if the method is called
      */
     @Override
     public boolean equals(Object obj) {throw new UnsupportedOperationException();}
 
+    /**
+     * Redefines the hashCode method from java.lang.Object to throw an error.
+     *
+     * @throws UnsupportedOperationException
+     *          if the method is called
+     */
     @Override
     public int hashCode() {throw new UnsupportedOperationException();}
 }

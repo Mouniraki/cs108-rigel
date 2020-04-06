@@ -74,15 +74,17 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
      */
     @Override
     public Planet at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
-        double meanAngularSpeed = (Angle.TAU / DAYS_IN_TROPICAL_YEAR);
+        double meanAngularSpeed = Angle.TAU / DAYS_IN_TROPICAL_YEAR;
 
         double meanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, this);
         double trueAnomaly = trueAnomaly(meanAnomaly, this);
         double radius = radius(trueAnomaly, this);
         double lonPlanetHelio = lonHelio(trueAnomaly, this);
+
         double latEclHelio = Math.asin(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.sin(orbitEclipticInclination));
         double eclRadius = radius * Math.cos(latEclHelio);
-        double lonEclHelio = Math.atan2(Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
+        double lonEclHelio = Math.atan2(
+                Math.sin(lonPlanetHelio - lonOrbitalNode) * Math.cos(orbitEclipticInclination),
                 Math.cos(lonPlanetHelio - lonOrbitalNode)) + lonOrbitalNode;
 
         double earthMeanAnomaly = meanAnomaly(meanAngularSpeed, daysSinceJ2010, EARTH);
@@ -92,27 +94,28 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
         double lonEclGeo = lonEclGeo(lonEarthHelio, earthRadius, lonEclHelio, eclRadius, this);
         double latEclGeo = Math.atan((eclRadius * Math.tan(latEclHelio) * Math.sin(lonEclGeo - lonEclHelio)) / (earthRadius * Math.sin(lonEclHelio - lonEarthHelio)));
+        EclipticCoordinates eclCoords = EclipticCoordinates.of(Angle.normalizePositive(lonEclGeo), latEclGeo);
 
-        double distanceToEarth = Math.sqrt(earthRadius * earthRadius + radius * radius - 2 * earthRadius * radius * Math.cos(lonPlanetHelio - lonEarthHelio) * Math.cos(latEclHelio));
+        double distanceToEarth = Math.sqrt(earthRadius*earthRadius + radius*radius - 2*earthRadius*radius*Math.cos(lonPlanetHelio - lonEarthHelio)*Math.cos(latEclHelio));
         double angularSize = angularSizeAt1UA / distanceToEarth;
 
         double phase = (1 + Math.cos(lonEclGeo - lonPlanetHelio)) / 2;
-        double magnitude = magnitudeAt1UA + 5 * Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
+        double magnitude = magnitudeAt1UA + 5*Math.log10((radius * distanceToEarth) / Math.sqrt(phase));
 
-        return new Planet(frenchName, eclipticToEquatorialConversion.apply(EclipticCoordinates.of(Angle.normalizePositive(lonEclGeo), latEclGeo)), (float) angularSize, (float) magnitude);
+        return new Planet(frenchName, eclipticToEquatorialConversion.apply(eclCoords), (float) angularSize, (float) magnitude);
     }
 
 
     private double meanAnomaly(double meanAngularSpeed, double daysSinceJ2010, PlanetModel p) {
-        return meanAngularSpeed * (daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
+        return meanAngularSpeed*(daysSinceJ2010 / p.revPeriod) + p.lonAtJ2010 - p.lonAtPerigee;
     }
 
     private double trueAnomaly(double meanAnomaly, PlanetModel p) {
-        return meanAnomaly + 2 * p.orbitEccentricity * Math.sin(meanAnomaly);
+        return meanAnomaly + 2*p.orbitEccentricity*Math.sin(meanAnomaly);
     }
 
     private double radius(double trueAnomaly, PlanetModel p) {
-        return (p.orbitSMAxis * (1 - p.orbitEccentricity * p.orbitEccentricity)) / (1 + p.orbitEccentricity * Math.cos(trueAnomaly));
+        return (p.orbitSMAxis*(1 - p.orbitEccentricity*p.orbitEccentricity)) / (1 + p.orbitEccentricity*Math.cos(trueAnomaly));
     }
 
     private double lonHelio(double trueAnomaly, PlanetModel p){
@@ -121,10 +124,14 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
     private double lonEclGeo(double lonEarthHelio, double earthRadius, double lonEclHelio, double eclRadius, PlanetModel p) {
         if(p == MERCURY || p == VENUS) {
-            return Angle.TAU / 2 + lonEarthHelio + Math.atan2(eclRadius * Math.sin(lonEarthHelio - lonEclHelio), earthRadius - eclRadius * Math.cos(lonEarthHelio - lonEclHelio));
+            return Angle.TAU / 2 + lonEarthHelio + Math.atan2(
+                    eclRadius*Math.sin(lonEarthHelio - lonEclHelio),
+                    earthRadius - eclRadius*Math.cos(lonEarthHelio - lonEclHelio));
         }
         else {
-            return lonEclHelio + Math.atan2(earthRadius * Math.sin(lonEclHelio - lonEarthHelio), eclRadius - earthRadius * Math.cos(lonEclHelio - lonEarthHelio));
+            return lonEclHelio + Math.atan2(
+                    earthRadius*Math.sin(lonEclHelio - lonEarthHelio),
+                    eclRadius - earthRadius*Math.cos(lonEclHelio - lonEarthHelio));
         }
     }
 }
