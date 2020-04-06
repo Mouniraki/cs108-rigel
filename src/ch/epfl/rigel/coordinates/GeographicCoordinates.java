@@ -13,7 +13,6 @@ import java.util.Locale;
  * @author Nicolas Szwajcok (315213)
  */
 public final class GeographicCoordinates extends SphericalCoordinates{
-
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
     }

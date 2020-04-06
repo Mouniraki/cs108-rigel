@@ -12,7 +12,6 @@ import java.util.function.Function;
  * @author Nicolas Szwajcok (315213)
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
-
     final private double localSiderealTime;
     final private GeographicCoordinates place;
 
