@@ -55,7 +55,7 @@ abstract class SphericalCoordinates {
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
     @Override
     public final boolean equals(Object obj){
@@ -65,7 +65,7 @@ abstract class SphericalCoordinates {
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
     public final int hashCode(){
