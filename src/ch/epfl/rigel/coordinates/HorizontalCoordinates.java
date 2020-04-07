@@ -18,7 +18,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Constructs a set of horizontal coordinates from a value of azimuth (in radians)
+     * Constructs a set of Horizontal Coordinates from a value of azimuth (in radians)
      * and a value of altitude (in radians).
      *
      * @param az
@@ -29,7 +29,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *          if the azimuth isn't in the interval [0°,360°[
      *          or if the altitude isn't in the interval [-90°,90°]
      *
-     * @return a new set of horizontal coordinates
+     * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates of(double az, double alt) {
         Preconditions.checkInInterval(RightOpenInterval.of(0, 360), Angle.toDeg(az));
@@ -38,7 +38,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Constructs a set of horizontal coordinates from a value of azimuth (in degrees)
+     * Constructs a set of Horizontal Coordinates from a value of azimuth (in degrees)
      * and a value of altitude (in degrees).
      *
      * @param azDeg
@@ -49,7 +49,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *          if the azimuth isn't in the interval [0°,360°[
      *          or if the altitude isn't in the interval [-90°,90°]
      *
-     * @return a new set of horizontal coordinates
+     * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
         Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg);
@@ -119,7 +119,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Calculates the angular distance between two points expressed in the horizontal coordinates.
+     * Calculates the angular distance between two points expressed in the Horizontal Coordinates.
      *
      * @param that
      *          the point to compare with (in horizontal coordinates)
@@ -132,9 +132,9 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a point
-     * expressed in the horizontal coordinates.
+     * expressed in the Horizontal Coordinates.
      *
-     * @return the textual representation of the point in the horizontal coordinates
+     * @return the textual representation of the point in the Horizontal Coordinates
      */
     @Override
     public String toString() {

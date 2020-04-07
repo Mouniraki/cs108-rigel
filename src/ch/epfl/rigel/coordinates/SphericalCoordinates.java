@@ -3,7 +3,7 @@ package ch.epfl.rigel.coordinates;
 import ch.epfl.rigel.math.Angle;
 
 /**
- * Mother class for all types of spherical coordinates.
+ * Mother class for all types of Spherical Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */

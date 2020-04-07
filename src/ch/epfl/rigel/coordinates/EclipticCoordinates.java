@@ -75,9 +75,9 @@ public final class EclipticCoordinates extends SphericalCoordinates {
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a point
-     * expressed in the ecliptic coordinates.
+     * expressed in the Ecliptic Coordinates.
      *
-     * @return the textual representation of the point in the ecliptic coordinates
+     * @return the textual representation of the point in the Ecliptic Coordinates
      */
     @Override
     public String toString() {

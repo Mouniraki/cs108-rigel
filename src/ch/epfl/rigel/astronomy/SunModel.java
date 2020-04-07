@@ -5,7 +5,7 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
 /**
- * A model of the sun.
+ * A model of the Sun.
  *
  * @author Nicolas Szwajcok (315213)
  * @author Mounir Raki (310287)

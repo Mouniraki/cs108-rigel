@@ -8,7 +8,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * A specific type of spherical coordinates : geographic coordinates.
+ * A specific type of Spherical Coordinates : Geographic Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -18,12 +18,12 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Constructs geographic coordinates.
+     * Constructs new Geographic Coordinates.
      *
      * @param lonDeg longitude expressed in degrees
      * @param latDeg latitude expressed in degrees
      *
-     * @return Geographic coordinates
+     * @return a new instance of Geographic Coordinates
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg){
         Preconditions.checkInInterval(RightOpenInterval.symmetric(360), lonDeg);
@@ -33,7 +33,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Verifies if the angle (expressed in degrees) represents a valid longitude.
+     * Checks if the angle (expressed in degrees) represents a valid longitude.
      *
      * @param lonDeg the longitude expressed in degrees
      *
@@ -44,7 +44,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Verifies if the angle (expressed in degrees) represents a valid latitude.
+     * Checks if the angle (expressed in degrees) represents a valid latitude.
      *
      * @param latDeg the latitude expressed in degrees
      *
@@ -87,7 +87,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     /**
      * Returns the latitude expressed in degrees.
      *
-     * @return the latitude in degrees
+     * @return the latitude (in degrees)
      */
     @Override
     public double latDeg(){
@@ -95,9 +95,10 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Prints the geographic coordinates.
+     * Redefines the toString method in java.lang.Object to construct the textual representation of a point
+     * expressed in the Geographic Coordinates.
      *
-     * @return print of the geographic coordinates
+     * @return the textual representation of the point in the Geographic Coordinates
      */
     @Override
     public String toString(){

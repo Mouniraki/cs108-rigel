@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
- * The conversion from equatorial to horizontal coordinates.
+ * The conversion from Equatorial to Horizontal Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -16,7 +16,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     private final GeographicCoordinates place;
 
     /**
-     * Constructs a conversion from equatorial to horizontal coordinates.
+     * Constructs a conversion from Equatorial to Horizontal Coordinates.
      *
      * @param when The date and time at the moment of the conversion
      * @param where The geographic coordinates of the place of the conversion
@@ -27,10 +27,10 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     }
 
     /**
-     * Applies the conversion from equatorial to horizontal coordinates.
+     * Applies the conversion from Equatorial to Horizontal Coordinates.
      *
-     * @param equ The equatorial coordinates to convert into horizontal coordinates
-     * @return The horizontal coordinates obtained from a conversion of the equatorial coordinates
+     * @param equ The Equatorial Coordinates to convert into Horizontal Coordinates
+     * @return The Horizontal Coordinates obtained from a conversion of the Equatorial Coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
         double hourAngle = localSiderealTime - equ.ra();

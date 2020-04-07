@@ -14,7 +14,7 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader{
     INSTANCE;
 
     /**
-     * Loads a file containing the information of the stars from a HYG catalog,
+     * Loads a file containing the information of the stars from a HYG catalog (CSV file),
      * and builds the list of stars in a StarCatalogue.
      *
      * @param inputStream

@@ -8,7 +8,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * A specific type of spherical coordinates : equatorial coordinates.
+ * A specific type of Spherical Coordinates : Equatorial Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -23,7 +23,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
      * @param ra the right ascension (in radians)
      * @param dec the declination (in radians)
      *
-     * @return Equatorial coordinates
+     * @return a new instance of Equatorial Coordinates
      */
     public static EquatorialCoordinates of(double ra, double dec){
         Preconditions.checkInInterval(RightOpenInterval.of(0, 24), Angle.toHr(ra));

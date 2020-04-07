@@ -132,8 +132,8 @@ public final class StarCatalogue {
          * Adds the stars and/or asterisms from the input stream to the catalogue and returns the builder.
          *
          * @param inputStream The input stream containing the stars and/or asterisms
-         * @param loader The loader used to process the data from the input stream
-         * @return The builder after adding to its content the input stream
+         * @param loader The loader used to read the data from the input stream
+         * @return The builder after adding the flow of data to its content
          *
          * @throws IOException In case of input or output error, the IOException will be thrown
          */
@@ -162,7 +162,7 @@ public final class StarCatalogue {
          * Loads the stars and/or asterisms from the input stream to the catalogue under construction by the builder.
          *
          * @param inputStream The input stream containing the stars and/or asterisms
-         * @param builder The loader used to process the data from the input stream
+         * @param builder The builder used to process the data from the input stream
          *
          * @throws IOException In case of an input or output error, the IOException will be thrown
          */

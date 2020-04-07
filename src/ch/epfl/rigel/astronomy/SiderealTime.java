@@ -41,8 +41,8 @@ public final class SiderealTime {
         double S0 = p1.at(julianCenturiesUntilWhen);
         double S1 = p2.at(hoursInWhen);
 
-        double greenwichST = Angle.ofHr(S0 + S1);
-        return Angle.normalizePositive(greenwichST);
+        double gst = Angle.ofHr(S0 + S1);
+        return Angle.normalizePositive(gst);
     }
 
     /**

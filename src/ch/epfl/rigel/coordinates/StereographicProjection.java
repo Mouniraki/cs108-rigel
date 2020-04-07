@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.function.Function;
 
 /**
- * Allows the construction of a stereographic projection.
+ * Allows the construction of a Stereographic Projection.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -16,7 +16,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     private final double cosCenterLat;
 
     /**
-     * Constructs a stereographic projection using an instance of horizontal coordinates.
+     * Constructs a Stereographic Projection using an instance of Horizontal Coordinates.
      *
      * @param center The center of the projection
      */
@@ -27,9 +27,9 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
 
     /**
-     * Returns the cartesian coordinates of the center of the circle corresponding to the projection of the parallel passing by the point of coordinates hor.
+     * Returns the Cartesian Coordinates of the center of the circle corresponding to the projection of the parallel passing by the point of coordinates hor.
      *
-     * @param hor The horizontal coordinates of a point by which the projection of the parallel passes by
+     * @param hor The Horizontal Coordinates of a point by which the projection of the parallel passes by
      *
      * @return The coordinates of the circle corresponding to the projection of the parallel passing by the point hor
      */
@@ -62,11 +62,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
 
     /**
      *
-     * Converts a point expressed using horizontal coordinates into a point expressed using cartesian coordinates.
+     * Converts a point expressed using Horizontal Coordinates into a point expressed using Cartesian Coordinates.
      *
-     * @param azAlt The horizontal coordinates to be converted into cartesian coordinates
+     * @param azAlt The Horizontal Coordinates to be converted into Cartesian Coordinates
      *
-     * @return The cartesian coordinates of the projected point
+     * @return The Cartesian Coordinates of the projected point
      */
     @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
@@ -83,11 +83,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
 
     /**
-     * Converts a point expressed using cartesian coordinates into a point expressed using horizontal coordinates.
+     * Converts a point expressed using Cartesian Coordinates into a point expressed using Horizontal Coordinates.
      *
-     * @param xy The cartesian coordinates to be converted into horizontal coordinates
+     * @param xy The Cartesian Coordinates to be converted into Horizontal Coordinates
      *
-     * @return The horizontal coordinates of the point of the projection
+     * @return The Horizontal Coordinates of the point of the projection
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy){
         double x = xy.x();
@@ -125,9 +125,9 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
 
     /**
-     * Redefines the toString method in java.lang.Object to construct the textual representation of a point expressed using the stereographic projection.
+     * Redefines the toString method in java.lang.Object to construct the textual representation of a point expressed using the Stereographic Projection.
      *
-     * @return The textual representation of the point in the stereographic projection
+     * @return The textual representation of the point in the Stereographic Projection
      */
     @Override
     public String toString() {

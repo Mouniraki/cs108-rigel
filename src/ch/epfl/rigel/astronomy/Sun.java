@@ -6,7 +6,7 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 import java.util.Objects;
 
 /**
- * One of the types of celestial object: a sun.
+ * One of the types of celestial object: a Sun.
  *
  * @author Nicolas Szwajcok (315213)
  */
