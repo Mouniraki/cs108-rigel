@@ -70,14 +70,14 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
-        double azAltLat = azAlt.lat();
+        double alt = azAlt.lat();
         double centerLat = center.lat();
         double lonDifference = azAlt.lon() - center.lon();
 
-        double d = 1 / (1 + Math.sin(azAltLat)*Math.sin(centerLat) + Math.cos(azAltLat)*Math.cos(centerLat)*Math.cos(lonDifference));
+        double d = 1 / (1 + Math.sin(alt)*Math.sin(centerLat) + Math.cos(alt)*Math.cos(centerLat)*Math.cos(lonDifference));
 
-        double x = d*Math.cos(azAltLat)*Math.sin(lonDifference);
-        double y = d * (Math.sin(azAltLat)*Math.cos(centerLat) - Math.cos(azAltLat)*Math.sin(centerLat)*Math.cos(lonDifference));
+        double x = d*Math.cos(alt)*Math.sin(lonDifference);
+        double y = d * (Math.sin(alt)*Math.cos(centerLat) - Math.cos(alt)*Math.sin(centerLat)*Math.cos(lonDifference));
 
         return CartesianCoordinates.of(x, y);
     }
@@ -97,11 +97,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double sinC = 2*rho/(rho*rho + 1);
         double cosC = (1 - rho*rho)/(rho*rho + 1);
 
-        double lambda = Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon();
+        double az = Math.atan2(x*sinC, rho*Math.cos(center.lat())*cosC - y*Math.sin(center.lat())*sinC) + center.lon();
 
-        double phi = Math.asin(cosC*Math.sin(center.lat()) + (y*sinC*Math.cos(center.lat()))/rho);
+        double alt = Math.asin(cosC*Math.sin(center.lat()) + (y*sinC*Math.cos(center.lat()))/rho);
 
-        return HorizontalCoordinates.of(Angle.normalizePositive(lambda), phi);
+        return HorizontalCoordinates.of(Angle.normalizePositive(az), alt);
     }
 
     /**

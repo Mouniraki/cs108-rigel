@@ -33,19 +33,19 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @return The horizontal coordinates obtained from a conversion of the equatorial coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-        double H = localSiderealTime - equ.ra();
+        double hourAngle = localSiderealTime - equ.ra();
 
-        double sinDec = Math.sin(equ.dec());
-        double cosDec = Math.cos(equ.dec());
-        double sinLat = Math.sin(place.lat());
-        double cosLat = Math.cos(place.lat());
+        double sinEquDec = Math.sin(equ.dec());
+        double cosEquDec = Math.cos(equ.dec());
+        double sinGeoLat = Math.sin(place.lat());
+        double cosGeoLat = Math.cos(place.lat());
 
-        double h = Math.asin(sinDec*sinLat + cosDec*cosLat*Math.cos(H));
-        double A = Math.atan2(
-                -cosDec * cosLat * Math.sin(H),
-                sinDec - sinLat*Math.sin(h));
+        double alt = Math.asin(sinEquDec*sinGeoLat + cosEquDec*cosGeoLat*Math.cos(hourAngle));
+        double az = Math.atan2(
+                -cosEquDec * cosGeoLat * Math.sin(hourAngle),
+                sinEquDec - sinGeoLat*Math.sin(alt));
 
-        return HorizontalCoordinates.of(Angle.normalizePositive(A), h);
+        return HorizontalCoordinates.of(Angle.normalizePositive(az), alt);
     }
 
     /**
