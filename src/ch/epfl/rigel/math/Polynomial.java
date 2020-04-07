@@ -31,7 +31,7 @@ public final class Polynomial {
     }
 
     /**
-     * Evaluates a polynomial at at value specified in parameters.
+     * Evaluates a polynomial at at value specified in parameters, calculated using the Horner method.
      *
      * @param x
      *          the value at which the polynomial has to be evaluated
