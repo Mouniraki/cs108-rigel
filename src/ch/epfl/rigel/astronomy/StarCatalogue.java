@@ -106,6 +106,7 @@ public final class StarCatalogue {
         public List<Star> stars(){
             return Collections.unmodifiableList(stars);
         }
+
         /**
          * Adds the given asterism to the catalogue under construction and returns the builder.
          *
