@@ -164,7 +164,7 @@ public final class StarCatalogue {
          * @param inputStream The input stream containing the stars and/or asterisms
          * @param builder The loader used to process the data from the input stream
          *
-         * @throws IOException In case of input or output error, the IOException will be thrown
+         * @throws IOException In case of an input or output error, the IOException will be thrown
          */
         public abstract void load(InputStream inputStream, Builder builder) throws IOException;
     }
