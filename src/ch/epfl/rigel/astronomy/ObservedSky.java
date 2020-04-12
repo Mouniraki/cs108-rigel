@@ -14,11 +14,10 @@ import java.util.*;
 public class ObservedSky {
     private final Sun sun;
     private final Moon moon;
-    private final List<Planet> planets;
-    private final List<Star> stars;
+    private final List<CelestialObject> planets, stars;
 
-    private final CartesianCoordinates projectedSun, projectedMoon;
-    private final double[] planetCoords, starCoords;
+    private final CartesianCoordinates sunPosition, moonPosition;
+    private final double[] planetPositions, starPositions;
 
     private final StarCatalogue catalogue;
     private final Map<CelestialObject, CartesianCoordinates> map;
@@ -29,19 +28,11 @@ public class ObservedSky {
         EquatorialToHorizontalConversion equToHor = new EquatorialToHorizontalConversion(observationInstant, observationPos);
         this.catalogue = catalogue;
 
+        sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
+        moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
         planets = new ArrayList<>();
         stars = List.copyOf(catalogue.stars());
         map = new HashMap<>();
-
-        sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
-        HorizontalCoordinates sunHorPor = equToHor.apply(sun.equatorialPos());
-        projectedSun = projection.apply(sunHorPor);
-        map.put(sun, projectedSun);
-
-        moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
-        HorizontalCoordinates moonHorPor = equToHor.apply(moon.equatorialPos());
-        projectedMoon = projection.apply(moonHorPor);
-        map.put(moon, projectedMoon);
 
         for(PlanetModel pm : PlanetModel.ALL){
             if(pm != PlanetModel.EARTH) {
@@ -50,29 +41,10 @@ public class ObservedSky {
             }
         }
 
-        planetCoords = new double[planets.size() * 2];
-        starCoords = new double[stars.size() * 2];
-
-        for (int i = 0; i < planets.size(); i++) {
-            Planet planet = planets.get(i);
-            HorizontalCoordinates planetHorPos = equToHor.apply(planet.equatorialPos());
-            CartesianCoordinates planetCartPos = projection.apply(planetHorPos);
-
-            map.put(planet, planetCartPos);
-            planetCoords[i] = planetCartPos.x();
-            planetCoords[i+1] = planetCartPos.y();
-        }
-
-        for (int i = 0; i < stars.size(); i++) {
-            Star star = catalogue.stars().get(i);
-            HorizontalCoordinates starHorPos = equToHor.apply(star.equatorialPos());
-            CartesianCoordinates starCartPos = projection.apply(starHorPos);
-
-            map.put(star, starCartPos);
-            starCoords[i] = starCartPos.x();
-            starCoords[i+1] = starCartPos.y();
-        }
-
+        sunPosition = projectedObject(sun, equToHor, projection);
+        moonPosition = projectedObject(moon, equToHor, projection);
+        planetPositions = projectedObjects(planets, equToHor, projection);
+        starPositions = projectedObjects(stars, equToHor, projection);
     }
 
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
@@ -96,28 +68,28 @@ public class ObservedSky {
         return sun;
     }
     public CartesianCoordinates sunPosition(){
-        return projectedSun;
+        return sunPosition;
     }
 
     public Moon moon(){
         return moon;
     }
     public CartesianCoordinates moonPosition(){
-        return projectedMoon;
+        return moonPosition;
     }
 
-    public List<Planet> planets(){
+    public List<CelestialObject> planets(){
         return List.copyOf(planets);
     }
     public double[] planetPositions(){
-        return planetCoords;
+        return planetPositions;
     }
 
-    public List<Star> stars(){
+    public List<CelestialObject> stars(){
         return stars;
     }
     public double[] starPositions(){
-        return starCoords;
+        return starPositions;
     }
 
     public Set<Asterism> asterisms(){
@@ -125,5 +97,27 @@ public class ObservedSky {
     }
     public List<Integer> asterismsIndices(Asterism a){
         return catalogue.asterismIndices(a);
+    }
+
+    private CartesianCoordinates projectedObject(CelestialObject object, EquatorialToHorizontalConversion equToHor, StereographicProjection projection){
+        HorizontalCoordinates objectHorPor = equToHor.apply(object.equatorialPos());
+        CartesianCoordinates projectedCoordinates = projection.apply(objectHorPor);
+        map.put(object, projectedCoordinates);
+
+        return projectedCoordinates;
+    }
+
+    private double[] projectedObjects(List<CelestialObject> objects, EquatorialToHorizontalConversion equToHor, StereographicProjection projection){
+        double[] objectCoords = new double[objects.size() * 2];
+        for (int i = 0; i < objects.size(); i++) {
+            CelestialObject object = objects.get(i);
+            HorizontalCoordinates objectHorPos = equToHor.apply(object.equatorialPos());
+            CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
+
+            map.put(object, objectCartPos);
+            objectCoords[i] = objectCartPos.x();
+            objectCoords[i+1] = objectCartPos.y();
+        }
+        return objectCoords;
     }
 }
