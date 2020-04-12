@@ -1,6 +1,7 @@
 package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.coordinates.*;
+import ch.epfl.rigel.math.ClosedInterval;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -22,7 +23,10 @@ public class ObservedSky {
     private final StarCatalogue catalogue;
     private final Map<CelestialObject, CartesianCoordinates> map;
 
-    public ObservedSky(ZonedDateTime observationInstant, GeographicCoordinates observationPos, StereographicProjection projection, StarCatalogue catalogue) {
+    public ObservedSky(ZonedDateTime observationInstant,
+                       GeographicCoordinates observationPos,
+                       StereographicProjection projection,
+                       StarCatalogue catalogue) {
         double daysUntilJ2010 = Epoch.J2010.daysUntil(observationInstant);
         EclipticToEquatorialConversion eclToEqu = new EclipticToEquatorialConversion(observationInstant);
         EquatorialToHorizontalConversion equToHor = new EquatorialToHorizontalConversion(observationInstant, observationPos);
@@ -46,17 +50,24 @@ public class ObservedSky {
         planetPositions = projectedObjects(planets, equToHor, projection, object_position);
         starPositions = projectedObjects(stars, equToHor, projection, object_position);
         map = Map.copyOf(object_position);
-
     }
 
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
         CelestialObject closestObject = null;
         double minDistance = maxDistance;
 
-        for(Map.Entry<CelestialObject, CartesianCoordinates> entry : map.entrySet()) {
-            if(c.distanceTo(entry.getValue()) < minDistance) {
-                minDistance = c.distanceTo(entry.getValue());
-                closestObject = entry.getKey();
+        ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+        ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+
+        for(CelestialObject o : map.keySet()){
+            CartesianCoordinates cartesian = map.get(o);
+            double x = cartesian.x();
+            double y = cartesian.y();
+            if(xInterval.contains(x) && yInterval.contains(y)){
+                minDistance = c.distanceTo(cartesian);
+                xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+                yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                closestObject = o;
             }
         }
 

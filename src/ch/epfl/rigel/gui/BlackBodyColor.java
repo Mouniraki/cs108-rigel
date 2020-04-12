@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Mounir Raki (310287)
  */
 public class BlackBodyColor {
-    private final static Map<Integer, Color> comboTemperatureColor = new HashMap<>(); //DON'T KNOW IF HAS TO BE IMMUTABLE
+    private final static Map<Integer, Color> TEMPERATURE_COLOR = new HashMap<>(); //DON'T KNOW IF HAS TO BE IMMUTABLE
 
     private BlackBodyColor(){}
 
@@ -28,7 +28,7 @@ public class BlackBodyColor {
                     if(line.substring(10, 15).contains("10deg")){
                         int colorTemperature = Integer.parseInt(line.substring(1, 6).trim());
                         Color color = Color.web(line.substring(80, 87).trim());
-                        comboTemperatureColor.put(colorTemperature, color);
+                        TEMPERATURE_COLOR.put(colorTemperature, color);
                     }
                 }
             }
@@ -42,6 +42,6 @@ public class BlackBodyColor {
         Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), colorTemperature);
         double index = Math.round(colorTemperature / 100.0);
         int approachedTemp = (int) (index * 100);
-        return comboTemperatureColor.get(approachedTemp);
+        return TEMPERATURE_COLOR.get(approachedTemp);
     }
 }
