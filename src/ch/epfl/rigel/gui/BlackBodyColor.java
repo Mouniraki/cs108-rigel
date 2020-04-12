@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Mounir Raki (310287)
  */
 public class BlackBodyColor {
-    private static Map<Integer, Color> map; //I THINK IT MUST BE FINAL
+    private final static Map<Integer, Color> comboTemperatureColor = new HashMap<>(); //DON'T KNOW IF HAS TO BE IMMUTABLE
 
     private BlackBodyColor(){}
 
@@ -22,7 +22,6 @@ public class BlackBodyColor {
         try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt")){
             BufferedReader r = new BufferedReader(new InputStreamReader(stream));
             String line;
-            Map<Integer, Color> comboTemperatureColor = new HashMap<>();
 
             while((line = r.readLine()) != null){
                 if(line.charAt(0) != '#'){
@@ -33,7 +32,6 @@ public class BlackBodyColor {
                     }
                 }
             }
-            map = Map.copyOf(comboTemperatureColor);
 
         } catch(IOException e) {
             throw new UncheckedIOException(e);
@@ -44,6 +42,6 @@ public class BlackBodyColor {
         Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), colorTemperature);
         double index = Math.round(colorTemperature / 100.0);
         int approachedTemp = (int) (index * 100);
-        return map.get(approachedTemp);
+        return comboTemperatureColor.get(approachedTemp);
     }
 }
