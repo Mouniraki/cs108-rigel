@@ -9,18 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * CLASSDESCRIPTION
+ * Determines the color of a black body given its temperature.
  *
  * @author Mounir Raki (310287)
  */
 public class BlackBodyColor {
-    private final Map<Integer, Color> map;
+    private static Map<Integer, Color> map; //I THINK IT MUST BE FINAL
 
-    private BlackBodyColor(Map<Integer, Color> map){
-        this.map = Map.copyOf(map);//CHECK IF IMMUABILITY IS NEEDED
-    }
+    private BlackBodyColor(){}
 
-    public static BlackBodyColor of(){
+    public static void readFile(){
         try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt")){
             BufferedReader r = new BufferedReader(new InputStreamReader(stream));
             String line;
@@ -35,7 +33,8 @@ public class BlackBodyColor {
                     }
                 }
             }
-            return new BlackBodyColor(comboTemperatureColor);
+            map = Map.copyOf(comboTemperatureColor);
+
         } catch(IOException e) {
             throw new UncheckedIOException(e);
         }
