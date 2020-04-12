@@ -94,7 +94,7 @@ public class ObservedSky {
     }
 
     public List<CelestialObject> planets(){
-        return List.copyOf(planets);
+        return planets;
     }
     public double[] planetPositions(){
         return planetPositions;
