@@ -46,6 +46,22 @@ public final class CartesianCoordinates {
         return y;
     }
 
+
+    /**
+     * Calculates the distance between two points in Cartesian Coordinates.
+     *
+     * @param coords
+     *          the point to which the distance must be calculated.
+     *
+     * @return the calculated distance
+     */
+    public double distanceTo(CartesianCoordinates coords){
+        double xTerm = (coords.x()-this.x()) * (coords.x()-this.x());
+        double yTerm = (coords.y()-this.y()) * (coords.y()-this.y());
+
+        return Math.sqrt(xTerm + yTerm);
+    }
+
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
