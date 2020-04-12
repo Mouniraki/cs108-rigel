@@ -33,17 +33,19 @@ public class ObservedSky {
         this.catalogue = catalogue;
 
         Map<CelestialObject, CartesianCoordinates> object_position = new HashMap<>();
-        sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
-        moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
-        planets = new ArrayList<>();
-        stars = List.copyOf(catalogue.stars());
 
+        List<CelestialObject> tempPlanets = new ArrayList<>();
         for(PlanetModel pm : PlanetModel.ALL){
             if(pm != PlanetModel.EARTH) {
                 Planet planet = pm.at(daysUntilJ2010, eclToEqu);
-                planets.add(planet);
+                tempPlanets.add(planet);
             }
         }
+
+        sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
+        moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
+        planets = List.copyOf(tempPlanets);
+        stars = List.copyOf(catalogue.stars());
 
         sunPosition = projectedObject(sun, equToHor, projection, object_position);
         moonPosition = projectedObject(moon, equToHor, projection, object_position);
