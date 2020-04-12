@@ -65,12 +65,12 @@ class MyObservedSkyTest {
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
-            var geoCoords = GeographicCoordinates.ofDeg(20, 50);
-            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(22, 43));
+            var geoCoords = GeographicCoordinates.ofDeg(20, 50); //TO CHANGE
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(22, 43)); //TO CHANGE
             var equToHor = new EquatorialToHorizontalConversion(ZDT_SEMESTER_START, geoCoords);
             var observedSky = new ObservedSky(ZDT_SEMESTER_START, geoCoords, stereographic, test);
 
-            var equCoords = EquatorialCoordinates.of(0.004696959812148989, -0.861893035343076);
+            var equCoords = EquatorialCoordinates.of(0.004696959812148989, -0.861893035343076); //TO CHANGE
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
             double maxDistance = 30;
