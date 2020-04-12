@@ -40,7 +40,6 @@ class MyObservedSkyTest {
             var geoCoords = GeographicCoordinates.ofDeg(30, 45);
             var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
             var equToHor = new EquatorialToHorizontalConversion(ZDT_FRAMAPAD, geoCoords);
-            var eclToEqu = new EclipticToEquatorialConversion(ZDT_FRAMAPAD);
             var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
 
             var equCoords = EquatorialCoordinates.of(0.004696959812148989,-0.861893035343076);
@@ -52,7 +51,6 @@ class MyObservedSkyTest {
             var result2 = observedSky.objectClosestTo(cartesian, 0.001);
             assertEquals("Tau Phe", result1.get().name());
             assertEquals(Optional.empty(), result2);
-
         }
     }
 
@@ -62,20 +60,23 @@ class MyObservedSkyTest {
             InputStream hygStream = getClass()
                     .getResourceAsStream(HYG_CATALOGUE_NAME)){
 
-            var observationPos = GeographicCoordinates.ofDeg(20, 50);
-            var horizontal = HorizontalCoordinates.ofDeg(20, 50); //TO BE MODIFIED
-            var stereographic = new StereographicProjection(horizontal);
             StarCatalogue test = new StarCatalogue.Builder()
                     .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
-            var observedSky = new ObservedSky(ZDT_SEMESTER_START, observationPos, stereographic, test);
-            var cartesian = CartesianCoordinates.of(20, 2);
+            var geoCoords = GeographicCoordinates.ofDeg(20, 50);
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(22, 43));
+            var equToHor = new EquatorialToHorizontalConversion(ZDT_SEMESTER_START, geoCoords);
+            var observedSky = new ObservedSky(ZDT_SEMESTER_START, geoCoords, stereographic, test);
+
+            var equCoords = EquatorialCoordinates.of(0.004696959812148989, -0.861893035343076);
+            var horCoords = equToHor.apply(equCoords);
+            var cartesian = stereographic.apply(horCoords);
             double maxDistance = 30;
-
-            observedSky.objectClosestTo(cartesian, maxDistance);
-
+            
+            Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
+            assertEquals("OBJECTNAME", o.get().name());
 
         }
     }

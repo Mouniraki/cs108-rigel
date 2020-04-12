@@ -66,11 +66,14 @@ public class ObservedSky {
             double x = cartesian.x();
             double y = cartesian.y();
             if(xInterval.contains(x) && yInterval.contains(y)){
+                System.out.println(minDistance);
                 minDistance = c.distanceTo(cartesian);
                 xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
                 yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
                 closestObject = o;
+                System.out.println(minDistance);
             }
+
         }
 
         if(closestObject != null)
