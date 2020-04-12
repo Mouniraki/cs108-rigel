@@ -75,14 +75,14 @@ public class ObservedSky {
 
     }
 
-    public Optional<CelestialObject> objectClosestTo(CartesianCoordinates coords, double maxDistance){
+    public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
         CelestialObject closestObject = null;
         double minDistance = maxDistance;
 
-        for(Map.Entry<CelestialObject, CartesianCoordinates> e : map.entrySet()) {
-            if(coords.distanceTo(e.getValue()) < minDistance) {
-                minDistance = coords.distanceTo(e.getValue());
-                closestObject = e.getKey();
+        for(Map.Entry<CelestialObject, CartesianCoordinates> entry : map.entrySet()) {
+            if(c.distanceTo(entry.getValue()) < minDistance) {
+                minDistance = c.distanceTo(entry.getValue());
+                closestObject = entry.getKey();
             }
         }
 
@@ -90,22 +90,6 @@ public class ObservedSky {
             return Optional.of(closestObject);
         else
             return Optional.empty();
-    }
-
-    //TRYING TO MODULARISE THE CODE, BUT ISSUES WITH THE "List<CelestialObject> objects" NOT REPRESENTING CORRECTLY
-    //THE TYPE OF OBJECT I WANT TO MANIPULATE
-    private double[] celestialObjectsAdder(List<CelestialObject> objects, EquatorialToHorizontalConversion equToHor, StereographicProjection projection){
-        double[] objectCoords = new double[objects.size() * 2];
-        for (int i = 0; i < objects.size(); i++) {
-            CelestialObject object = objects.get(i);
-            HorizontalCoordinates objectHorPos = equToHor.apply(object.equatorialPos());
-            CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
-
-            map.put(object, objectCartPos);
-            objectCoords[i] = objectCartPos.x();
-            objectCoords[i+1] = objectCartPos.y();
-        }
-        return objectCoords;
     }
 
     public Sun sun(){

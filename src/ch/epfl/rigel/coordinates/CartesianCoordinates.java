@@ -50,14 +50,14 @@ public final class CartesianCoordinates {
     /**
      * Calculates the distance between two points in Cartesian Coordinates.
      *
-     * @param coords
+     * @param c
      *          the point to which the distance must be calculated.
      *
      * @return the calculated distance
      */
-    public double distanceTo(CartesianCoordinates coords){
-        double xTerm = (coords.x()-this.x()) * (coords.x()-this.x());
-        double yTerm = (coords.y()-this.y()) * (coords.y()-this.y());
+    public double distanceTo(CartesianCoordinates c){
+        double xTerm = (c.x()-this.x()) * (c.x()-this.x());
+        double yTerm = (c.y()-this.y()) * (c.y()-this.y());
 
         return Math.sqrt(xTerm + yTerm);
     }
