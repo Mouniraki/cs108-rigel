@@ -24,24 +24,6 @@ class MyObservedSkyTest {
             LocalTime.of(0, 0),
             ZoneOffset.UTC);
 
-
-    void starsAreCorrectlyStored() throws IOException{
-        try(InputStream asterismStream = getClass()
-                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
-            InputStream hygStream = getClass()
-                    .getResourceAsStream(HYG_CATALOGUE_NAME)) {
-
-            StarCatalogue test = new StarCatalogue.Builder()
-                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
-                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
-                    .build();
-
-            var geoCoords = GeographicCoordinates.ofDeg(30, 45);
-            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
-            var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
-        }
-    }
-
     @Test
     void starPositionsAreCalculatedProperly() throws IOException{
         try(InputStream asterismStream = getClass()
@@ -58,24 +40,23 @@ class MyObservedSkyTest {
             var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
             var equToHor = new EquatorialToHorizontalConversion(ZDT_FRAMAPAD, geoCoords);
             var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
-            int i = 0;
-            double memory = observedSky.starPositions()[0];
-            observedSky.starPositions()[0] = Double.MAX_VALUE;
-            assertEquals(memory, observedSky.starPositions()[0]);
-             /*
-            for (Star star : observedSky.stars()) {
 
+            for(Star s : observedSky.stars()){
+                int startIndex = observedSky.stars().indexOf(s);
+                var horCoords = equToHor.apply(s.equatorialPos());
+                var cartCoords = stereographic.apply(horCoords);
 
+                double expectedX = cartCoords.x();
+                double expectedY = cartCoords.y();
+                System.out.println("Expected : (" + expectedX + ", " + expectedY + ")");
+                System.out.println("Actual : (" + observedSky.starPositions()[startIndex] + ", " + observedSky.starPositions()[startIndex+1] + ")");
+                /*
+                assertEquals(expectedX, observedSky.starPositions()[startIndex]);
+                assertEquals(expectedY, observedSky.starPositions()[startIndex+1]);
 
-                assertEquals(stereographic.apply(equToHor.apply(star.equatorialPos())).x(),
-                        observedSky.starPositions()[i]);
-
-
-                i += 2;
+                 */
+                System.out.println();
             }
-            assertEquals(test.stars().size(), observedSky.stars().size());
-
-              */
         }
     }
 

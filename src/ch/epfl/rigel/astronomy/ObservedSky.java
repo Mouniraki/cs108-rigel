@@ -126,6 +126,8 @@ public class ObservedSky {
         return catalogue.asterismIndices(a);
     }
 
+
+
     private List<Planet> fillPlanets(double daysUntilJ2010, EclipticToEquatorialConversion eclToEqu) {
         List<Planet> planets = new ArrayList<>();
         for (PlanetModel pm : PlanetModel.ALL) {
