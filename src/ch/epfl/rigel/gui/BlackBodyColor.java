@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Mounir Raki (310287)
  */
 public class BlackBodyColor {
-    private final static Map<Integer, Color> TEMPERATURE_COLOR = initTable(); //DON'T KNOW IF HAS TO BE IMMUTABLE
+    private final static Map<Integer, Color> TEMPERATURE_COLOR = initTable();
 
     private BlackBodyColor(){}
 
