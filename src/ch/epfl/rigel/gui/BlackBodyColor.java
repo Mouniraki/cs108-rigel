@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Determines the color of a black body given its temperature.
+ * Determines the color of a black body given its color temperature.
  *
  * @author Mounir Raki (310287)
  */
@@ -39,6 +39,17 @@ public class BlackBodyColor {
         }
     }
 
+    /**
+     * Associates a color temperature in degrees Kelvin to its color representation.
+     *
+     * @param colorTemperature
+     *          the color temperature for which a color association has to be found
+     * @throws IllegalArgumentException
+     *          if the color temperature is lower than 1000 or greater than 40000,
+     *          or if the association temperature - color is empty or not properly initialized
+     *
+     * @return the color representation of a color temperature
+     */
     public static Color colorForTemperature(int colorTemperature) {
         Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), colorTemperature);
         Preconditions.checkArgument(!TEMPERATURE_COLOR.isEmpty());
