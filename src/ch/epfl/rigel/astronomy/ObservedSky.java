@@ -17,6 +17,8 @@ public class ObservedSky {
     private final Sun sun;
     private final Moon moon;
     private final List<CelestialObject> planets, stars;
+    private final ZonedDateTime observationInstant;
+    private final GeographicCoordinates observationPos;
 
     private final CartesianCoordinates sunPosition, moonPosition;
     private final double[] planetPositions, starPositions;
@@ -32,6 +34,8 @@ public class ObservedSky {
         EclipticToEquatorialConversion eclToEqu = new EclipticToEquatorialConversion(observationInstant);
         EquatorialToHorizontalConversion equToHor = new EquatorialToHorizontalConversion(observationInstant, observationPos);
         this.catalogue = catalogue;
+        this.observationPos = observationPos;
+        this.observationInstant = observationInstant;
 
         Map<CelestialObject, CartesianCoordinates> object_position = new HashMap<>();
 
@@ -96,6 +100,13 @@ public class ObservedSky {
     }
     public CartesianCoordinates moonPosition(){
         return moonPosition;
+    }
+
+    public ZonedDateTime observationInstant(){
+        return observationInstant;
+    }
+    public GeographicCoordinates observationPos(){
+        return observationPos;
     }
 
     public List<CelestialObject> planets(){
