@@ -69,6 +69,10 @@ public class ObservedSky {
                 double distance = c.distanceTo(cartesian);
                 if(distance < minDistance){
                     minDistance = distance;
+                    if(minDistance != 0) {
+                        xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+                        yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                    }
                     closestObject = o;
                 }
             }
