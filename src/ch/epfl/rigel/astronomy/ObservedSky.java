@@ -56,19 +56,22 @@ public class ObservedSky {
 
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
         CelestialObject closestObject = null;
-        double minDistance = maxDistance;
-
-        ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-        ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+        ClosedInterval xInterval = ClosedInterval.of(c.x() - maxDistance, c.x() + maxDistance);
+        ClosedInterval yInterval = ClosedInterval.of(c.y() - maxDistance, c.y() + maxDistance);
 
         for(CelestialObject o : map.keySet()){
             CartesianCoordinates cartesian = map.get(o);
             double x = cartesian.x();
             double y = cartesian.y();
             if(xInterval.contains(x) && yInterval.contains(y)){
-                minDistance = c.distanceTo(cartesian);
-                xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-                yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                double minDistance = c.distanceTo(cartesian);
+                boolean boundsForXAreNotEqual = (c.x() - minDistance) != (c.x() + minDistance);
+                boolean boundsForYAreNotEqual = (c.y() - minDistance) != (c.y() + minDistance);
+
+                if(boundsForXAreNotEqual && boundsForYAreNotEqual) {
+                    xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+                    yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                }
                 closestObject = o;
             }
 

@@ -46,6 +46,7 @@ class MyObservedSkyTest {
             var horCoords = equToHor.apply(equCoords);
 
             var cartesian = stereographic.apply(horCoords);
+            System.out.println(cartesian.toString());
 
             var result1 = observedSky.objectClosestTo(cartesian, 0.1);
             var result2 = observedSky.objectClosestTo(cartesian, 0.001);
@@ -54,6 +55,7 @@ class MyObservedSkyTest {
         }
     }
 
+    @Test
     void OCTWorksWithValidValues() throws IOException {
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
@@ -65,18 +67,19 @@ class MyObservedSkyTest {
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
-            var geoCoords = GeographicCoordinates.ofDeg(20, 50); //TO CHANGE
-            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(22, 43)); //TO CHANGE
+            var geoCoords = GeographicCoordinates.ofDeg(0, 0); //TO CHANGE
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(0, 0)); //TO CHANGE
             var equToHor = new EquatorialToHorizontalConversion(ZDT_SEMESTER_START, geoCoords);
             var observedSky = new ObservedSky(ZDT_SEMESTER_START, geoCoords, stereographic, test);
 
-            var equCoords = EquatorialCoordinates.of(0.004696959812148989, -0.861893035343076); //TO CHANGE
+            var equCoords = EquatorialCoordinates.of(1.3724303693276385, -0.143145630755865); //RIGEL
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
-            double maxDistance = 30;
+            System.out.println(cartesian.toString());
+            double maxDistance = 0.01; //TO CHANGE
             
             Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
-            assertEquals("OBJECTNAME", o.get().name());
+            assertEquals("Rigel", o.get().name());
 
         }
     }
