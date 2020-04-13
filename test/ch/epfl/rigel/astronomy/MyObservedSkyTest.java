@@ -56,7 +56,7 @@ class MyObservedSkyTest {
     }
 
     @Test
-    void OCTWorksWithValidValues() throws IOException {
+    void OCTWorksWithRigel() throws IOException {
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
             InputStream hygStream = getClass()
@@ -76,11 +76,10 @@ class MyObservedSkyTest {
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
             System.out.println(cartesian.toString());
-            double maxDistance = 30; //TO CHANGE
+            double maxDistance = 40; //TO CHANGE
             
             Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
             assertEquals("Rigel", o.get().name());
-
         }
     }
 }

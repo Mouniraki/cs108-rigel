@@ -57,26 +57,21 @@ public class ObservedSky {
 
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
         Preconditions.checkArgument(maxDistance > 0);
-        CelestialObject closestObject = null;
-        ClosedInterval xInterval = ClosedInterval.of(c.x() - maxDistance, c.x() + maxDistance);
-        ClosedInterval yInterval = ClosedInterval.of(c.y() - maxDistance, c.y() + maxDistance);
-
         double minDistance = maxDistance;
+        ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+        ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+
+        CelestialObject closestObject = null;
 
         for(CelestialObject o : map.keySet()){
             CartesianCoordinates cartesian = map.get(o);
-            double x = cartesian.x();
-            double y = cartesian.y();
-            if(xInterval.contains(x) && yInterval.contains(y)){
+            if(xInterval.contains(cartesian.x()) && yInterval.contains(cartesian.y())){
                 double distance = c.distanceTo(cartesian);
-                if(minDistance > distance && distance > 0) {
+                if(distance < minDistance){
                     minDistance = distance;
-                    xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-                    yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                    closestObject = o;
                 }
-                closestObject = o;
             }
-
         }
 
         if(closestObject != null)
