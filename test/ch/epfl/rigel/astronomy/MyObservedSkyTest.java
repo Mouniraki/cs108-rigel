@@ -25,6 +25,37 @@ class MyObservedSkyTest {
             ZoneOffset.UTC);
 
     @Test
+    void planetPositionsAreCalculatedProperly() throws IOException{
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            var geoCoords = GeographicCoordinates.ofDeg(30, 45);
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
+            var equToHor = new EquatorialToHorizontalConversion(ZDT_FRAMAPAD, geoCoords);
+            var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
+
+            int i=0;
+            for(Planet p : observedSky.planets()){
+                var horCoords = equToHor.apply(p.equatorialPos());
+                var cartCoords = stereographic.apply(horCoords);
+
+                double expectedX = cartCoords.x();
+                double expectedY = cartCoords.y();
+                assertEquals(expectedX, observedSky.planetPositions()[i]);
+                assertEquals(expectedY, observedSky.planetPositions()[i+1]);
+                i+=2;
+            }
+        }
+    }
+
+    @Test
     void starPositionsAreCalculatedProperly() throws IOException{
         try(InputStream asterismStream = getClass()
                 .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
@@ -130,7 +161,7 @@ class MyObservedSkyTest {
             var equToHor = new EquatorialToHorizontalConversion(ZDT_SEMESTER_START, geoCoords);
             var observedSky = new ObservedSky(ZDT_SEMESTER_START, geoCoords, stereographic, test);
 
-            var equCoords = EquatorialCoordinates.of(1.3724303693276385, -0.143145630755865); //RIGEL
+            var equCoords = EquatorialCoordinates.of(1.5497291183713153, 0.12927763169419373); //BETELGEUSE
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
             System.out.println(cartesian.toString());
