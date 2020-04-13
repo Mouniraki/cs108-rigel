@@ -170,10 +170,12 @@ public class ObservedSky {
             T object = objects.get(i);
             HorizontalCoordinates objectHorPos = equToHor.apply(((CelestialObject) object).equatorialPos());
             CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
-
             map.put((CelestialObject) object, objectCartPos);
-            objectCoords[i] = objectCartPos.x();
-            objectCoords[i+1] = objectCartPos.y();
+
+            int xIndex = 2 * i;
+            int yIndex = 2*i + 1;
+            objectCoords[xIndex] = objectCartPos.x();
+            objectCoords[yIndex] = objectCartPos.y();
         }
         return objectCoords;
     }

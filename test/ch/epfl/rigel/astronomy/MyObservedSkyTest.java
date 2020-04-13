@@ -41,21 +41,16 @@ class MyObservedSkyTest {
             var equToHor = new EquatorialToHorizontalConversion(ZDT_FRAMAPAD, geoCoords);
             var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
 
+            int i=0;
             for(Star s : observedSky.stars()){
-                int startIndex = observedSky.stars().indexOf(s);
                 var horCoords = equToHor.apply(s.equatorialPos());
                 var cartCoords = stereographic.apply(horCoords);
 
                 double expectedX = cartCoords.x();
                 double expectedY = cartCoords.y();
-                System.out.println("Expected : (" + expectedX + ", " + expectedY + ")");
-                System.out.println("Actual : (" + observedSky.starPositions()[startIndex] + ", " + observedSky.starPositions()[startIndex+1] + ")");
-                /*
-                assertEquals(expectedX, observedSky.starPositions()[startIndex]);
-                assertEquals(expectedY, observedSky.starPositions()[startIndex+1]);
-
-                 */
-                System.out.println();
+                assertEquals(expectedX, observedSky.starPositions()[i]);
+                assertEquals(expectedY, observedSky.starPositions()[i+1]);
+                i+=2;
             }
         }
     }
