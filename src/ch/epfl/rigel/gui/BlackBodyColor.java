@@ -18,7 +18,7 @@ public class BlackBodyColor {
 
     private BlackBodyColor(){}
 
-    private static void readFile(){
+    public static void readFile(){
         try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt")){
             BufferedReader r = new BufferedReader(new InputStreamReader(stream));
             String line;
@@ -38,7 +38,7 @@ public class BlackBodyColor {
         }
     }
 
-    public Color colorForTemperature(int colorTemperature) {
+    public static Color colorForTemperature(int colorTemperature) {
         Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), colorTemperature);
         double index = Math.round(colorTemperature / 100.0);
         int approachedTemp = (int) (index * 100);
