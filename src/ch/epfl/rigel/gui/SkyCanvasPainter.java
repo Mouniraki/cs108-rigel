@@ -44,7 +44,7 @@ public class SkyCanvasPainter {
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
         List<Star> stars = sky.stars();
         EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-        BlackBodyColor.readFile();
+        //BlackBodyColor.readFile(); //NO NEED FOR INITIALIZATION OF THE FILE, YOU JUST NEED TO CALL THE COLORTEMPERATURE METHOD NOW
 
         for(Star star : stars){
             HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
@@ -107,7 +107,7 @@ public class SkyCanvasPainter {
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform transform) {
         List<Planet> planets = sky.planets();
         EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-        BlackBodyColor.readFile();
+        //BlackBodyColor.readFile(); //NO NEED FOR INITIALIZATION OF THE FILE, YOU JUST NEED TO CALL THE COLORTEMPERATURE METHOD NOW
 
         for(Planet planet : planets){
             HorizontalCoordinates coordinates = conversion.apply(planet.equatorialPos());

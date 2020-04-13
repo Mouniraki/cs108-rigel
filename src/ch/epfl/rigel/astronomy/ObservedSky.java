@@ -42,9 +42,7 @@ public class ObservedSky {
 
         sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
         moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
-        planets = List.copyOf(
-                fillPlanets(daysUntilJ2010, eclToEqu)
-        );
+        planets = fillPlanets(daysUntilJ2010, eclToEqu);
         stars = List.copyOf(catalogue.stars());
 
         sunPosition = projectedObject(sun, equToHor, projection, object_position);
@@ -147,7 +145,7 @@ public class ObservedSky {
                 planets.add(planet);
             }
         }
-        return planets;
+        return List.copyOf(planets);
     }
 
     private CartesianCoordinates projectedObject(CelestialObject object,
