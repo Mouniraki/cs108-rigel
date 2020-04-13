@@ -1,5 +1,6 @@
 package ch.epfl.rigel.astronomy;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.*;
 import ch.epfl.rigel.math.ClosedInterval;
 
@@ -55,20 +56,21 @@ public class ObservedSky {
     }
 
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
+        Preconditions.checkArgument(maxDistance > 0);
         CelestialObject closestObject = null;
         ClosedInterval xInterval = ClosedInterval.of(c.x() - maxDistance, c.x() + maxDistance);
         ClosedInterval yInterval = ClosedInterval.of(c.y() - maxDistance, c.y() + maxDistance);
+
+        double minDistance = maxDistance;
 
         for(CelestialObject o : map.keySet()){
             CartesianCoordinates cartesian = map.get(o);
             double x = cartesian.x();
             double y = cartesian.y();
             if(xInterval.contains(x) && yInterval.contains(y)){
-                double minDistance = c.distanceTo(cartesian);
-                boolean boundsForXAreNotEqual = (c.x() - minDistance) != (c.x() + minDistance);
-                boolean boundsForYAreNotEqual = (c.y() - minDistance) != (c.y() + minDistance);
-
-                if(boundsForXAreNotEqual && boundsForYAreNotEqual) {
+                double distance = c.distanceTo(cartesian);
+                if(minDistance > distance && distance > 0) {
+                    minDistance = distance;
                     xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
                     yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
                 }
