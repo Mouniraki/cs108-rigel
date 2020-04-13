@@ -18,7 +18,7 @@ public class BlackBodyColor {
 
     private BlackBodyColor(){}
 
-    public static void readFile(){
+    private static void readFile(){
         try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt")){
             BufferedReader r = new BufferedReader(new InputStreamReader(stream));
             String line;
