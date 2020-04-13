@@ -25,6 +25,60 @@ class MyObservedSkyTest {
             ZoneOffset.UTC);
 
 
+    void starsAreCorrectlyStored() throws IOException{
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            var geoCoords = GeographicCoordinates.ofDeg(30, 45);
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
+            var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
+        }
+    }
+
+    @Test
+    void starPositionsAreCalculatedProperly() throws IOException{
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)) {
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            var geoCoords = GeographicCoordinates.ofDeg(30, 45);
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(20, 22));
+            var equToHor = new EquatorialToHorizontalConversion(ZDT_FRAMAPAD, geoCoords);
+            var observedSky = new ObservedSky(ZDT_FRAMAPAD, geoCoords, stereographic, test);
+            int i = 0;
+            double memory = observedSky.starPositions()[0];
+            observedSky.starPositions()[0] = Double.MAX_VALUE;
+            assertEquals(memory, observedSky.starPositions()[0]);
+             /*
+            for (Star star : observedSky.stars()) {
+
+
+
+                assertEquals(stereographic.apply(equToHor.apply(star.equatorialPos())).x(),
+                        observedSky.starPositions()[i]);
+
+
+                i += 2;
+            }
+            assertEquals(test.stars().size(), observedSky.stars().size());
+
+              */
+        }
+    }
+
     @Test
     void OCTWorksWithFramapadValues() throws IOException{
         try(InputStream asterismStream = getClass()
@@ -80,6 +134,34 @@ class MyObservedSkyTest {
             
             Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
             assertEquals("Rigel", o.get().name());
+        }
+    }
+
+    @Test
+    void OCTWorksWithBetelgeuse() throws IOException {
+        try(InputStream asterismStream = getClass()
+                .getResourceAsStream(ASTERISM_CATALOGUE_NAME);
+            InputStream hygStream = getClass()
+                    .getResourceAsStream(HYG_CATALOGUE_NAME)){
+
+            StarCatalogue test = new StarCatalogue.Builder()
+                    .loadFrom(hygStream, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(asterismStream, AsterismLoader.INSTANCE)
+                    .build();
+
+            var geoCoords = GeographicCoordinates.ofDeg(0, 0); //TO CHANGE
+            var stereographic = new StereographicProjection(HorizontalCoordinates.ofDeg(0, 0)); //TO CHANGE
+            var equToHor = new EquatorialToHorizontalConversion(ZDT_SEMESTER_START, geoCoords);
+            var observedSky = new ObservedSky(ZDT_SEMESTER_START, geoCoords, stereographic, test);
+
+            var equCoords = EquatorialCoordinates.of(1.3724303693276385, -0.143145630755865); //RIGEL
+            var horCoords = equToHor.apply(equCoords);
+            var cartesian = stereographic.apply(horCoords);
+            System.out.println(cartesian.toString());
+            double maxDistance = 100; //TO CHANGE
+
+            Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
+            assertEquals("Betelgeuse", o.get().name());
         }
     }
 }

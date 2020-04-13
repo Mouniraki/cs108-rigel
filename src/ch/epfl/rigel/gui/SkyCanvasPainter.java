@@ -3,6 +3,7 @@ package ch.epfl.rigel.gui;
 import ch.epfl.rigel.astronomy.CelestialObject;
 import ch.epfl.rigel.astronomy.Moon;
 import ch.epfl.rigel.astronomy.ObservedSky;
+import ch.epfl.rigel.astronomy.Star;
 import ch.epfl.rigel.coordinates.*;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -41,9 +42,9 @@ public class SkyCanvasPainter {
 
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
-        List<CelestialObject> stars = sky.stars();
+        List<Star> stars = sky.stars();
 
-        for(CelestialObject star : stars){
+        for(Star star : stars){
             EquatorialCoordinates starPosition = star.equatorialPos();
             EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
 
