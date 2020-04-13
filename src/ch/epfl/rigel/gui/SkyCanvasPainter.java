@@ -3,6 +3,7 @@ package ch.epfl.rigel.gui;
 import ch.epfl.rigel.astronomy.*;
 import ch.epfl.rigel.coordinates.*;
 import ch.epfl.rigel.math.Angle;
+import ch.epfl.rigel.math.ClosedInterval;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,12 +14,14 @@ import javafx.scene.transform.Transform;
 import java.util.List;
 
 public class SkyCanvasPainter {
+    private final ClosedInterval interval;
     final private Canvas canvas;
     private GraphicsContext ctx;
 
     public SkyCanvasPainter(Canvas canvas){
         this.canvas = canvas;
         this.ctx = canvas.getGraphicsContext2D();
+        this.interval = ClosedInterval.of(-2, 5);
     }
 
     public void clear(){
@@ -51,14 +54,7 @@ public class SkyCanvasPainter {
             CartesianCoordinates projCoord = projection.apply(coordinates);
 
             Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
-            double starSize = star.magnitude();
-
-            if(starSize < -2){
-                starSize = -2;
-            }
-            if(starSize > 5){
-                starSize = 5;
-            }
+            double starSize = interval.clip(star.magnitude());
 
             double sizeFactor = (99 - (17 * starSize)) / 140;
             double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
@@ -114,16 +110,8 @@ public class SkyCanvasPainter {
             CartesianCoordinates projCoord = projection.apply(coordinates);
 
             Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
-            double starSize = planet.magnitude();
-
-            if(starSize < -2){
-                starSize = -2;
-            }
-            if(starSize > 5){
-                starSize = 5;
-            }
-
-            double sizeFactor = (99 - (17 * starSize)) / 140;
+            double planetSize = interval.clip(planet.magnitude());
+            double sizeFactor = (99 - (17 * planetSize)) / 140;
             double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
 
             ctx.setFill(Color.LIGHTGRAY);
