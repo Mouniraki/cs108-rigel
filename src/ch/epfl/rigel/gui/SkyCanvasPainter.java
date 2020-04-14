@@ -47,39 +47,22 @@ public class SkyCanvasPainter {
         ctx.fillOval(point2D.getX() - (diameterVector.magnitude())/2, point2D.getY() - (diameterVector.magnitude())/2, diameterVector.magnitude(), diameterVector.magnitude());
     }
 
+    public void drawHorizon(){
+
+    }
+
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
         Set<Asterism> asterismsList = sky.asterisms();
         Iterator<Asterism> asterismIterator = asterismsList.iterator();
         EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
 
-        for(Asterism a : sky.asterisms()){
-            ctx.setLineWidth(1.0);
-            ctx.setStroke(Color.BLUE);
-            ctx.setLineJoin(StrokeLineJoin.ROUND);
+        ctx.setLineWidth(1.0);
+        ctx.setStroke(Color.BLUE);
+        ctx.setLineJoin(StrokeLineJoin.ROUND);
 
-            for(int starIndex : sky.asterismsIndices(a)){
-                double x = sky.starPositions()[2 * starIndex];
-                double y = sky.starPositions()[2*starIndex + 1];
-                Point2D point2D = transform.transform(x, y);
-
-                boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
-                if(isInCanvasBounds) {
-                    ctx.lineTo(point2D.getX(), point2D.getY());
-                    ctx.moveTo(point2D.getX(), point2D.getY());
-                }
-            }
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-/*
         while(asterismIterator.hasNext()){
             Asterism asterism = asterismIterator.next();
-            ctx.setLineWidth(1.0);
-            ctx.setStroke(Color.BLUE);
-            ctx.setLineJoin(StrokeLineJoin.ROUND);
-
             ctx.beginPath();
 
             for (Star star : asterism.stars()){
@@ -95,9 +78,8 @@ public class SkyCanvasPainter {
             }
             ctx.stroke();
             ctx.closePath();
-
         }
-        */
+
         for(Star star : sky.stars()) {
             int starIndex = sky.stars().indexOf(star);
             double x = sky.starPositions()[2 * starIndex];
