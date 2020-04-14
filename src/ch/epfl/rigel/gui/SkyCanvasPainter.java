@@ -53,21 +53,41 @@ public class SkyCanvasPainter {
         Iterator<Asterism> asterismIterator = asterismsList.iterator();
         EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
 
+        for(Asterism a : sky.asterisms()){
+            ctx.setLineWidth(1.0);
+            ctx.setStroke(Color.BLUE);
+            ctx.setLineJoin(StrokeLineJoin.ROUND);
+
+            for(int starIndex : sky.asterismsIndices(a)){
+                double x = sky.starPositions()[2 * starIndex];
+                double y = sky.starPositions()[2*starIndex + 1];
+                Point2D point2D = transform.transform(x, y);
+
+                boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
+                if(isInCanvasBounds) {
+                    ctx.lineTo(point2D.getX(), point2D.getY());
+                    ctx.moveTo(point2D.getX(), point2D.getY());
+                }
+            }
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+/*
         while(asterismIterator.hasNext()){
             Asterism asterism = asterismIterator.next();
-            List<Star> stars = asterism.stars();
             ctx.setLineWidth(1.0);
             ctx.setStroke(Color.BLUE);
             ctx.setLineJoin(StrokeLineJoin.ROUND);
 
             ctx.beginPath();
 
-            for (Star star : stars){
+            for (Star star : asterism.stars()){
                 HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
                 CartesianCoordinates projCoord = projection.apply(coordinates);
+
                 Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
                 boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
-
                 if(isInCanvasBounds) {
                     ctx.lineTo(point2D.getX(), point2D.getY());
                     ctx.moveTo(point2D.getX(), point2D.getY());
@@ -77,17 +97,16 @@ public class SkyCanvasPainter {
             ctx.closePath();
 
         }
-
-        List<Star> stars = sky.stars();
-        for(Star star : stars){
-            HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
-            CartesianCoordinates projCoord = projection.apply(coordinates);
-
-            Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
+        */
+        for(Star star : sky.stars()) {
+            int starIndex = sky.stars().indexOf(star);
+            double x = sky.starPositions()[2 * starIndex];
+            double y = sky.starPositions()[2*starIndex + 1];
+            Point2D point2D = transform.transform(x, y);
             double starSize = interval.clip(star.magnitude());
 
-            double sizeFactor = (99 - (17 * starSize)) / 140;
-            double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
+            double sizeFactor = (99 - 17*starSize) / 140;
+            double diameter = sizeFactor * 2 * Math.tan(Angle.ofDeg(0.5) / 4 );
             Point2D diameterVector = transform.deltaTransform(0, diameter);
 
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
