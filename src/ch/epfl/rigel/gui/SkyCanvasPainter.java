@@ -49,10 +49,6 @@ public class SkyCanvasPainter {
 
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
-        Set<Asterism> asterismsList = sky.asterisms();
-        Iterator<Asterism> asterismIterator = asterismsList.iterator();
-        EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-
         for(Asterism a : sky.asterisms()){
             ctx.setLineWidth(1.0);
             ctx.setStroke(Color.BLUE);
