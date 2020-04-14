@@ -62,13 +62,16 @@ public class SkyCanvasPainter {
 
             ctx.beginPath();
 
-            for (Star star : stars){//TODO add if for only visible values
+            for (Star star : stars){
                 HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
                 CartesianCoordinates projCoord = projection.apply(coordinates);
                 Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
+                boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
 
-                ctx.lineTo(point2D.getX(), point2D.getY());
-                ctx.moveTo(point2D.getX(), point2D.getY());
+                if(isInCanvasBounds) {
+                    ctx.lineTo(point2D.getX(), point2D.getY());
+                    ctx.moveTo(point2D.getX(), point2D.getY());
+                }
             }
             ctx.stroke();
             ctx.closePath();
