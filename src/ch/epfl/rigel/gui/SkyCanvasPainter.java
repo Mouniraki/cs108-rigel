@@ -47,18 +47,29 @@ public class SkyCanvasPainter {
         ctx.fillOval(point2D.getX() - (diameterVector.magnitude())/2, point2D.getY() - (diameterVector.magnitude())/2, diameterVector.magnitude(), diameterVector.magnitude());
     }
 
+    public void drawHorizon(){
+
+    }
+
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
-        for(Asterism a : sky.asterisms()){
-            ctx.setLineWidth(1.0);
-            ctx.setStroke(Color.BLUE);
-            ctx.setLineJoin(StrokeLineJoin.ROUND);
+        Set<Asterism> asterismsList = sky.asterisms();
+        Iterator<Asterism> asterismIterator = asterismsList.iterator();
+        EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
 
-            for(int starIndex : sky.asterismsIndices(a)){
-                double x = sky.starPositions()[2 * starIndex];
-                double y = sky.starPositions()[2*starIndex + 1];
-                Point2D point2D = transform.transform(x, y);
+        ctx.setLineWidth(1.0);
+        ctx.setStroke(Color.BLUE);
+        ctx.setLineJoin(StrokeLineJoin.ROUND);
 
+        while(asterismIterator.hasNext()){
+            Asterism asterism = asterismIterator.next();
+            ctx.beginPath();
+
+            for (Star star : asterism.stars()){
+                HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
+                CartesianCoordinates projCoord = projection.apply(coordinates);
+
+                Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
                 boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
                 if(isInCanvasBounds) {
                     ctx.lineTo(point2D.getX(), point2D.getY());
