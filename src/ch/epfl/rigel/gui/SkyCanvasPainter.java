@@ -9,10 +9,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +44,7 @@ public class SkyCanvasPainter {
         Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());
+        ctx.fillOval(point2D.getX() - (diameterVector.magnitude())/2, point2D.getY() - (diameterVector.magnitude())/2, diameterVector.magnitude(), diameterVector.magnitude());
     }
 
 
@@ -58,52 +56,26 @@ public class SkyCanvasPainter {
         while(asterismIterator.hasNext()){
             Asterism asterism = asterismIterator.next();
             List<Star> stars = asterism.stars();
-            ctx.setLineWidth(1);
+            ctx.setLineWidth(1.0);
             ctx.setStroke(Color.BLUE);
             ctx.setLineJoin(StrokeLineJoin.ROUND);
 
             ctx.beginPath();
 
-            for (Star star : stars){
+            for (Star star : stars){//TODO add if for only visible values
                 HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
                 CartesianCoordinates projCoord = projection.apply(coordinates);
-
                 Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
 
-                ctx.moveTo(point2D.getX(), point2D.getY());//TODO add if for only visible values
                 ctx.lineTo(point2D.getX(), point2D.getY());
+                ctx.moveTo(point2D.getX(), point2D.getY());
             }
             ctx.stroke();
             ctx.closePath();
 
-
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         List<Star> stars = sky.stars();
-        //BlackBodyColor.readFile(); //NO NEED FOR INITIALIZATION OF THE FILE, YOU JUST NEED TO CALL THE COLORTEMPERATURE METHOD NOW
-
         for(Star star : stars){
             HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
             CartesianCoordinates projCoord = projection.apply(coordinates);
@@ -114,12 +86,11 @@ public class SkyCanvasPainter {
             double sizeFactor = (99 - (17 * starSize)) / 140;
             double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
             Point2D diameterVector = transform.deltaTransform(0, diameter);
-            System.out.println(diameter);
 
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
             ctx.setFill(color);
-            ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude()); //not sure if correct diameter, but very similar to Professor's sky.png file
+            ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());
         }
     }
 
@@ -135,24 +106,21 @@ public class SkyCanvasPainter {
         Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
 
         double diameter = 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 ); //should the diameter be this constant or I should calculate it?
-        ctx.setFill(Color.YELLOW);//TODO deriveHalo
-
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx()+2, diameter*transform.getTy()+2 );
-
-        ctx.setGlobalAlpha(0.25);
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx()*2.2, diameter*transform.getTy()*2.2 );
-        ctx.setGlobalAlpha(1.0);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
+        ctx.setFill(Color.YELLOW);
+        ctx.fillOval(point2D.getX() - (diameterVector.magnitude() + 2)/2, point2D.getY() - (diameterVector.magnitude() + 2)/2, diameterVector.magnitude()+2, diameterVector.magnitude()+2 );
 
+        ctx.setFill(Color.YELLOW.deriveColor(1, 1, 1, 0.25));
+        ctx.fillOval(point2D.getX() - (diameterVector.magnitude() * 2.2)/2, point2D.getY() - (diameterVector.magnitude() * 2.2)/2, diameterVector.magnitude()*2.2, diameterVector.magnitude()*2.2 );
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());    }
+        ctx.fillOval(point2D.getX() - (diameterVector.magnitude())/2, point2D.getY() - (diameterVector.magnitude())/2, diameterVector.magnitude(), diameterVector.magnitude());
+    }
 
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform transform) {
         List<Planet> planets = sky.planets();
         EquatorialToHorizontalConversion conversion = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-        //BlackBodyColor.readFile(); //NO NEED FOR INITIALIZATION OF THE FILE, YOU JUST NEED TO CALL THE COLORTEMPERATURE METHOD NOW
 
         for(Planet planet : planets){
             HorizontalCoordinates coordinates = conversion.apply(planet.equatorialPos());

@@ -1,8 +1,6 @@
 package ch.epfl.rigel.gui;
 
-import ch.epfl.rigel.astronomy.HygDatabaseLoader;
-import ch.epfl.rigel.astronomy.ObservedSky;
-import ch.epfl.rigel.astronomy.StarCatalogue;
+import ch.epfl.rigel.astronomy.*;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
@@ -19,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class DrawSky extends Application {
     public static void main(String[] args) { launch(args); }
@@ -30,8 +30,10 @@ public final class DrawSky extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try (InputStream hs = resourceStream("/hygdata_v3.csv")){
+            InputStream asterisms2 = resourceStream("/asterisms.txt");
+
             StarCatalogue catalogue = new StarCatalogue.Builder()
-                    .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(hs, HygDatabaseLoader.INSTANCE).loadFrom(asterisms2, AsterismLoader.INSTANCE)
                     .build();
 
             ZonedDateTime when =
@@ -55,12 +57,8 @@ public final class DrawSky extends Application {
 
             painter.clear();
             painter.drawStars(sky, projection, planeToCanvas);
-//            painter.drawMoon(sky, projection, planeToCanvas);
-
-
-
-//            painter.drawSun(sky, projection, planeToCanvas);
-
+            painter.drawMoon(sky, projection, planeToCanvas);
+            painter.drawSun(sky, projection, planeToCanvas);
 
             WritableImage fxImage =
                     canvas.snapshot(null, null);
