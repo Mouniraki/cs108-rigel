@@ -40,13 +40,15 @@ public class SkyCanvasPainter {
 
         double moonSize = sky.moon().angularSize();
         double diameter = 2 * Math.tan(moonSize / 4);
+        Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         CartesianCoordinates projCoord = projection.apply(coordinates);
         Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameter, diameter);
+        ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());
     }
+
 
     public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
         Set<Asterism> asterismsList = sky.asterisms();
@@ -111,12 +113,13 @@ public class SkyCanvasPainter {
 
             double sizeFactor = (99 - (17 * starSize)) / 140;
             double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
+            Point2D diameterVector = transform.deltaTransform(0, diameter);
             System.out.println(diameter);
 
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
             ctx.setFill(color);
-            ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx(), diameter*transform.getTy()); //not sure if correct diameter, but very similar to Professor's sky.png file
+            ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude()); //not sure if correct diameter, but very similar to Professor's sky.png file
         }
     }
 
@@ -139,11 +142,12 @@ public class SkyCanvasPainter {
         ctx.setGlobalAlpha(0.25);
         ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx()*2.2, diameter*transform.getTy()*2.2 );
         ctx.setGlobalAlpha(1.0);
+        Point2D diameterVector = transform.deltaTransform(0, diameter);
+
 
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx(), diameter*transform.getTy() );
-    }
+        ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());    }
 
     public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform transform) {
         List<Planet> planets = sky.planets();
@@ -158,10 +162,10 @@ public class SkyCanvasPainter {
             double planetSize = interval.clip(planet.magnitude());
             double sizeFactor = (99 - (17 * planetSize)) / 140;
             double diameter = sizeFactor * 2 * Math.tan( (Angle.ofDeg(0.5)) / 4 );
+            Point2D diameterVector = transform.deltaTransform(0, diameter);
 
             ctx.setFill(Color.LIGHTGRAY);
-            ctx.fillOval(point2D.getX(), point2D.getY(), diameter*transform.getTx(), diameter*transform.getTy()); //not sure if correct diameter, but very similar to Professor's sky.png file
-        }
+            ctx.fillOval(point2D.getX(), point2D.getY(), diameterVector.magnitude(), diameterVector.magnitude());        }
     }
 
     public void drawSkyCanvas(ObservedSky sky, StereographicProjection projection, Transform transform){
