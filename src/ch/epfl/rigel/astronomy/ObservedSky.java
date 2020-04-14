@@ -27,6 +27,18 @@ public class ObservedSky {
     private final StarCatalogue catalogue;
     private final Map<CelestialObject, CartesianCoordinates> map;
 
+    /**
+     * Builds a sky of celestial objects at a specific time and observation point.
+     *
+     * @param observationInstant
+     *          the instant at which the sky is observed
+     * @param observationPos
+     *          the position of the observation point
+     * @param projection
+     *          the stereographic projection to use
+     * @param catalogue
+     *          the catalogue of stars and asterisms to project onto this sky
+     */
     public ObservedSky(ZonedDateTime observationInstant,
                        GeographicCoordinates observationPos,
                        StereographicProjection projection,
@@ -53,8 +65,20 @@ public class ObservedSky {
         map = Map.copyOf(object_position);
     }
 
+    /**
+     * Searches for the closest celestial object from a specific point and a maximal distance.
+     *
+     * @param c
+     *          the point from which the closest celestial object is being searched
+     * @param maxDistance
+     *          the maximal distance to which the searching process will be conducted
+     * @throws IllegalArgumentException
+     *          if the maximal distance is negative (or 0), or if the cartesian coordinates are null
+     * @return the closest celestial object if there is one, or null if there are no close object
+     *         with a distance to the point that is closer than the maximal distance
+     */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(maxDistance >= 0);
+        Preconditions.checkArgument(maxDistance >= 0 || c != null);
         double minDistance = maxDistance;
         ClosedInterval xInterval = null, yInterval = null; //NOT SURE ABOUT THE CASE (maxDistance == 0), IF IT HAS TO BE TAKEN INTO ACCOUNT OR NOT
         if(maxDistance != 0) { //NOT SURE ABOUT THE CASE (maxDistance == 0), IF IT HAS TO BE TAKEN INTO ACCOUNT OR NOT
@@ -93,48 +117,115 @@ public class ObservedSky {
             return Optional.empty();
     }
 
+    /**
+     * Getter for the generated Sun.
+     *
+     * @return the generated Sun in the constructor
+     */
     public Sun sun(){
         return sun;
     }
+
+    /**
+     * Getter for the coordinates of the generated Sun.
+     *
+     * @return the coordinates of the generated Sun
+     */
     public CartesianCoordinates sunPosition(){
         return sunPosition;
     }
 
+    /**
+     * Getter for the generated Moon.
+     *
+     * @return the generated Moon in the constructor
+     */
     public Moon moon(){
         return moon;
     }
+
+    /**
+     * Getter for the coordinates of the generated Moon.
+     *
+     * @return the coordinates of the generated Moon
+     */
     public CartesianCoordinates moonPosition(){
         return moonPosition;
     }
 
-    public ZonedDateTime observationInstant(){
-        return observationInstant;
-    }
-    public GeographicCoordinates observationPos(){
-        return observationPos;
-    }
-
+    /**
+     * Getter for the list of the seven planets generated in the constructor.
+     *
+     * @return the list of seven planets (without the Earth)
+     */
     public List<Planet> planets(){
         return planets;
     }
+
+    /**
+     * Getter for the array containing the positions of the seven planets.
+     *
+     * @return the array containing the positions of the seven planets
+     */
     public double[] planetPositions(){
         return planetPositions;
     }
 
+    /**
+     * Getter for the list of stars.
+     *
+     * @return the list of stars
+     */
     public List<Star> stars(){
         return stars;
     }
+
+    /**
+     * Getter for the array containing the positions of the stars.
+     *
+     * @return the array containing the positions of the stars
+     */
     public double[] starPositions(){
         return starPositions;
     }
 
+    /**
+     * Getter for the list of asterisms (directly from StarCatalogue).
+     *
+     * @return the list of asterisms
+     */
     public Set<Asterism> asterisms(){
         return catalogue.asterisms();
     }
+
+    /**
+     * Getter for the list of indices (from StarCatalogue) of the stars constituting a given asterism.
+     *
+     * @param a
+     *          The asterism used to obtain the indices
+     * @return The list of indices in the star catalogue of the stars constituting a given asterism
+     */
     public List<Integer> asterismsIndices(Asterism a){
         return catalogue.asterismIndices(a);
     }
 
+    /**
+     * Getter for the instant of observation.
+     *
+     * @return the instant of observation (ZonedDateTime)
+     */
+    public ZonedDateTime observationInstant(){
+        return observationInstant;
+    }
+
+    /**
+     * Getter for the position of the observation.
+     *
+     * @return the position of observation (GeographicCoordinates)
+     */
+    public GeographicCoordinates observationPos(){
+        return observationPos;
+    }
 
 
     private List<Planet> fillPlanets(double daysUntilJ2010, EclipticToEquatorialConversion eclToEqu) {
