@@ -69,31 +69,6 @@ public class SkyCanvasPainter {
             ctx.closePath();
         }
 
-/*
-        while(asterismIterator.hasNext()){
-            Asterism asterism = asterismIterator.next();
-            ctx.setLineWidth(1.0);
-            ctx.setStroke(Color.BLUE);
-            ctx.setLineJoin(StrokeLineJoin.ROUND);
-
-            ctx.beginPath();
-
-            for (Star star : asterism.stars()){
-                HorizontalCoordinates coordinates = conversion.apply(star.equatorialPos());
-                CartesianCoordinates projCoord = projection.apply(coordinates);
-
-                Point2D point2D = transform.transform(projCoord.x(), projCoord.y());
-                boolean isInCanvasBounds = canvas.getBoundsInLocal().contains(point2D);
-                if(isInCanvasBounds) {
-                    ctx.lineTo(point2D.getX(), point2D.getY());
-                    ctx.moveTo(point2D.getX(), point2D.getY());
-                }
-            }
-            ctx.stroke();
-            ctx.closePath();
-
-        }
-        */
         for(Star star : sky.stars()) {
             int starIndex = sky.stars().indexOf(star);
             double x = sky.starPositions()[2 * starIndex];
