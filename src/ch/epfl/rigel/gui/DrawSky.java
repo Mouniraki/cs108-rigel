@@ -17,8 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class DrawSky extends Application {
     public static void main(String[] args) { launch(args); }
@@ -40,9 +38,13 @@ public final class DrawSky extends Application {
                     ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
             GeographicCoordinates where =
                     GeographicCoordinates.ofDeg(6.57, 46.52);
-            HorizontalCoordinates projCenter =              //Professor's
-                    HorizontalCoordinates.ofDeg(180, 45);   //data
+//            HorizontalCoordinates projCenter =              //Professor's
+//                    HorizontalCoordinates.ofDeg(180, 45);   //data
 //            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(277, -23);
+            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(0, 23);
+//            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(0, 90);
+//            HorizontalCoordinates projCenter = HorizontalCoordinates.ofDeg(3.7, -65);
+//            Transform planeToCanvas = Transform.affine(260, 0, 0, -260, 400, 300);
             StereographicProjection projection =
                     new StereographicProjection(projCenter);
             ObservedSky sky =
@@ -50,15 +52,19 @@ public final class DrawSky extends Application {
 
             Canvas canvas =
                     new Canvas(800, 600);
-            Transform planeToCanvas =
-                    Transform.affine(1300, 0, 0, -1300, 400, 300);
+            Transform planeToCanvas =                             //Professor's
+                    Transform.affine(1300, 0, 0, -1300, 400, 300); //data
             SkyCanvasPainter painter =
                     new SkyCanvasPainter(canvas);
 
-            painter.clear();
-            painter.drawStars(sky, projection, planeToCanvas);
-            painter.drawMoon(sky, projection, planeToCanvas);
-            painter.drawSun(sky, projection, planeToCanvas);
+            painter.skyCanvasPaint(sky, projection, planeToCanvas);
+
+//            painter.clear();
+//            painter.drawStars(sky, projection, planeToCanvas);
+//            painter.drawMoon(sky, projection, planeToCanvas);
+//            painter.drawSun(sky, projection, planeToCanvas);
+//            painter.drawPlanets(sky, projection, planeToCanvas);
+//            painter.drawHorizon(projection, planeToCanvas);
 
             WritableImage fxImage =
                     canvas.snapshot(null, null);
