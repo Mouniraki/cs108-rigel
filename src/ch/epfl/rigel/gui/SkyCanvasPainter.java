@@ -1,6 +1,9 @@
 package ch.epfl.rigel.gui;
 
-import ch.epfl.rigel.astronomy.*;
+import ch.epfl.rigel.astronomy.Asterism;
+import ch.epfl.rigel.astronomy.ObservedSky;
+import ch.epfl.rigel.astronomy.Planet;
+import ch.epfl.rigel.astronomy.Star;
 import ch.epfl.rigel.coordinates.*;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
@@ -136,11 +139,7 @@ public class SkyCanvasPainter {
             double xCoord = sky.starPositions()[2*starIndex];
             double yCoord = sky.starPositions()[2*starIndex + 1];
             Point2D transformedCoord = transform.transform(xCoord, yCoord);
-            double starSize = interval.clip(star.magnitude());
-
-            double sizeFactor = (99 - 17*starSize) / 140;
-            double diameter = sizeFactor * 2 * Math.tan(Angle.ofDeg(0.5) / 4 );
-            Point2D diameterVector = transform.deltaTransform(0, diameter);
+            Point2D diameterVector = transformedSizeBasedOnMagnitude(star.magnitude(), transform);
 
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
@@ -194,10 +193,7 @@ public class SkyCanvasPainter {
             CartesianCoordinates projCoord = projection.apply(horCoord);
 
             Point2D transformedCoord = transform.transform(projCoord.x(), projCoord.y());
-            double planetSize = interval.clip(planet.magnitude());
-            double sizeFactor = (99 - 17*planetSize) / 140;
-            double diameter = sizeFactor * 2*Math.tan(Angle.ofDeg(0.5)/4);
-            Point2D diameterVector = transform.deltaTransform(0, diameter);
+            Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), transform);
 
             ctx.setFill(Color.LIGHTGRAY);
             ctx.fillOval(transformedCoord.getX(), transformedCoord.getY(), diameterVector.magnitude(), diameterVector.magnitude());
@@ -218,5 +214,12 @@ public class SkyCanvasPainter {
         drawSun(sky, projection, transform);
         drawMoon(sky, projection, transform);
         drawHorizon(projection, transform);
+    }
+
+    private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, Transform transform){
+        double planetSize = interval.clip(celestialObjectMagnitude);
+        double sizeFactor = (99 - 17*planetSize) / 140;
+        double diameter = sizeFactor * 2*Math.tan(Angle.ofDeg(0.5)/4);
+        return transform.deltaTransform(0, diameter);
     }
 }
