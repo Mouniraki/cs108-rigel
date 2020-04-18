@@ -50,15 +50,17 @@ public class SkyCanvasPainter {
      * Generates an image of the moon.
      *
      * @param sky The observed sky at the moment of generation of an image of the sky.
-     * @param projection The projection used to project given coordinates into a two-dimensional plane.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
+    public void drawMoon(ObservedSky sky, Transform transform){
+        /*
         EquatorialCoordinates moonEquPos = sky.moon().equatorialPos();
         EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
         HorizontalCoordinates horCoord = equToHorConv.apply(moonEquPos);
         CartesianCoordinates projCoord = projection.apply(horCoord);
-        Point2D transformedCoord = transform.transform(projCoord.x(), projCoord.y());
+        */
+        CartesianCoordinates moonCoords = sky.moonPosition();
+        Point2D transformedCoord = transform.transform(moonCoords.x(), moonCoords.y());
 
         double moonAngularSize = sky.moon().angularSize();
         double diameter = 2 * Math.tan(moonAngularSize/4);
@@ -107,17 +109,31 @@ public class SkyCanvasPainter {
      * Generates images of the stars and the asterisms.
      *
      * @param sky The observed sky at the moment of generation of an image of the sky.
-     * @param projection The projection used to project given coordinates into a two-dimensional plane.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
+    public void drawStars(ObservedSky sky, Transform transform){
         Iterator<Asterism> asterismsIterator = sky.asterisms().iterator();
+        /*
         EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-
+        */
         ctx.setLineWidth(1.0);
         ctx.setStroke(Color.BLUE);
         ctx.setLineJoin(StrokeLineJoin.ROUND);
 
+        while(asterismsIterator.hasNext()){
+            Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
+            ctx.beginPath();
+            for(int starIndex : sky.asterismsIndices(asterism)){
+                double x = sky.starPositions()[2*starIndex];
+                double y = sky.starPositions()[2*starIndex + 1];
+                Point2D transformedCoord = transform.transform(x, y);
+                ctx.lineTo(transformedCoord.getX(), transformedCoord.getY());
+                ctx.moveTo(transformedCoord.getX(), transformedCoord.getY());
+            }
+            ctx.stroke();
+            ctx.closePath();
+        }
+        /*
         while(asterismsIterator.hasNext()){ //there is no condition regarding containing two stars, but for now there are no problems
             Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
             ctx.beginPath();
@@ -133,6 +149,7 @@ public class SkyCanvasPainter {
             ctx.stroke();
             ctx.closePath();
         }
+        */
 
         for(Star star : sky.stars()) {
             int starIndex = sky.stars().indexOf(star);
@@ -152,10 +169,10 @@ public class SkyCanvasPainter {
      * Generates an image of the sun.
      *
      * @param sky The observed sky at the moment of generation of an image of the sky.
-     * @param projection The projection used to project given coordinates into a two-dimensional plane.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawSun(ObservedSky sky, StereographicProjection projection, Transform transform){
+    public void drawSun(ObservedSky sky, Transform transform){
+        /*
         EclipticCoordinates sunPos = sky.sun().eclipticPos();
         EclipticToEquatorialConversion eclToEquConv = new EclipticToEquatorialConversion(sky.observationInstant());
         EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
@@ -163,7 +180,10 @@ public class SkyCanvasPainter {
         HorizontalCoordinates horCoord = equToHorConv.apply(eclToEquConv.apply(sunPos));
 
         CartesianCoordinates projCoord = projection.apply(horCoord);
-        Point2D transformedCoord = transform.transform(projCoord.x(), projCoord.y());
+         */
+
+        CartesianCoordinates sunCoords = sky.sunPosition();
+        Point2D transformedCoord = transform.transform(sunCoords.x(), sunCoords.y());
 
         double diameter = 2*Math.tan(Angle.ofDeg(0.5)/4);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
@@ -182,12 +202,23 @@ public class SkyCanvasPainter {
      * Generates images of the planets.
      *
      * @param sky The observed sky at the moment of generation of an image of the sky.
-     * @param projection The projection used to project given coordinates into a two-dimensional plane.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform transform) {
-        EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
+    public void drawPlanets(ObservedSky sky, Transform transform) {
+        //EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
 
+        for(Planet planet : sky.planets()){
+            int planetIndex = sky.planets().indexOf(planet);
+            double x = sky.planetPositions()[2*planetIndex];
+            double y = sky.planetPositions()[2*planetIndex + 1];
+            Point2D transformedCoord = transform.transform(x, y);
+            Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), transform);
+
+            ctx.setFill(Color.LIGHTGRAY);
+            ctx.fillOval(transformedCoord.getX(), transformedCoord.getY(), diameterVector.magnitude(), diameterVector.magnitude());
+        }
+
+        /*
         for(Planet planet : sky.planets()){
             HorizontalCoordinates horCoord = equToHorConv.apply(planet.equatorialPos());
             CartesianCoordinates projCoord = projection.apply(horCoord);
@@ -198,6 +229,7 @@ public class SkyCanvasPainter {
             ctx.setFill(Color.LIGHTGRAY);
             ctx.fillOval(transformedCoord.getX(), transformedCoord.getY(), diameterVector.magnitude(), diameterVector.magnitude());
         }
+        */
     }
 
     /**
@@ -209,10 +241,10 @@ public class SkyCanvasPainter {
      */
     public void skyCanvasPaint(ObservedSky sky, StereographicProjection projection, Transform transform){
         clear();
-        drawStars(sky, projection, transform);
-        drawPlanets(sky, projection, transform);
-        drawSun(sky, projection, transform);
-        drawMoon(sky, projection, transform);
+        drawStars(sky, transform);
+        drawPlanets(sky, transform);
+        drawSun(sky, transform);
+        drawMoon(sky, transform);
         drawHorizon(projection, transform);
     }
 

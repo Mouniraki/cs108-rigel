@@ -18,8 +18,6 @@ public class ObservedSky {
     private final Moon moon;
     private final List<Planet> planets;
     private final List<Star> stars;
-    private final ZonedDateTime observationInstant;
-    private final GeographicCoordinates observationPos;
 
     private final CartesianCoordinates sunPosition, moonPosition;
     private final double[] planetPositions, starPositions;
@@ -46,8 +44,6 @@ public class ObservedSky {
         double daysUntilJ2010 = Epoch.J2010.daysUntil(observationInstant);
         EclipticToEquatorialConversion eclToEqu = new EclipticToEquatorialConversion(observationInstant);
         EquatorialToHorizontalConversion equToHor = new EquatorialToHorizontalConversion(observationInstant, observationPos);
-        this.observationInstant = observationInstant;
-        this.observationPos = observationPos;
         this.catalogue = catalogue;
 
         Map<CelestialObject, CartesianCoordinates> object_position = new HashMap<>();
@@ -207,24 +203,6 @@ public class ObservedSky {
      */
     public List<Integer> asterismsIndices(Asterism a){
         return catalogue.asterismIndices(a);
-    }
-
-    /**
-     * Getter for the instant of observation.
-     *
-     * @return the instant of observation (ZonedDateTime)
-     */
-    public ZonedDateTime observationInstant(){
-        return observationInstant;
-    }
-
-    /**
-     * Getter for the position of the observation.
-     *
-     * @return the position of observation (GeographicCoordinates)
-     */
-    public GeographicCoordinates observationPos(){
-        return observationPos;
     }
 
 
