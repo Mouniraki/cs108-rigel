@@ -117,7 +117,7 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineJoin(StrokeLineJoin.ROUND);
 
-        while(asterismsIterator.hasNext()){
+        while(asterismsIterator.hasNext()){//there is no condition regarding containing two stars, but for now there are no problems
             Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
             ctx.beginPath();
             for(int starIndex : sky.asterismsIndices(asterism)){
