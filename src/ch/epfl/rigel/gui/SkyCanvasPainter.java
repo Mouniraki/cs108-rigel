@@ -52,12 +52,12 @@ public class SkyCanvasPainter {
      * @param sky The observed sky at the moment of generation of an image of the sky.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawMoon(ObservedSky sky, Transform transform){
+    public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
         CartesianCoordinates moonCoords = sky.moonPosition();
         Point2D transformedCoord = transform.transform(moonCoords.x(), moonCoords.y());
 
         double moonAngularSize = sky.moon().angularSize();
-        double diameter = 2 * Math.tan(moonAngularSize/4);
+        double diameter = projection.applyToAngle(moonAngularSize);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         ctx.setFill(Color.WHITE);
@@ -108,7 +108,7 @@ public class SkyCanvasPainter {
      * @param sky The observed sky at the moment of generation of an image of the sky.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawStars(ObservedSky sky, Transform transform){
+    public void drawStars(ObservedSky sky, StereographicProjection projection, Transform transform){
         Iterator<Asterism> asterismsIterator = sky.asterisms().iterator();
         double[] transformedPoints = new double[sky.starPositions().length];
         transform.transform2DPoints(sky.starPositions(), 0, transformedPoints, 0, transformedPoints.length/2);
@@ -134,7 +134,7 @@ public class SkyCanvasPainter {
             int starIndex = sky.stars().indexOf(star);
             double x = transformedPoints[2*starIndex];
             double y = transformedPoints[2*starIndex + 1];
-            Point2D diameterVector = transformedSizeBasedOnMagnitude(star.magnitude(), transform);
+            Point2D diameterVector = transformedSizeBasedOnMagnitude(star.magnitude(), projection, transform);
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
             ctx.setFill(color);
@@ -151,11 +151,11 @@ public class SkyCanvasPainter {
      * @param sky The observed sky at the moment of generation of an image of the sky.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawSun(ObservedSky sky, Transform transform){
+    public void drawSun(ObservedSky sky, StereographicProjection projection, Transform transform){
         CartesianCoordinates sunCoords = sky.sunPosition();
         Point2D transformedCoord = transform.transform(sunCoords.x(), sunCoords.y());
 
-        double diameter = 2*Math.tan(Angle.ofDeg(0.5)/4);
+        double diameter = projection.applyToAngle(Angle.ofDeg(0.5));
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         ctx.setFill(Color.YELLOW);
@@ -183,7 +183,7 @@ public class SkyCanvasPainter {
      * @param sky The observed sky at the moment of generation of an image of the sky.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void drawPlanets(ObservedSky sky, Transform transform) {
+    public void drawPlanets(ObservedSky sky, StereographicProjection projection, Transform transform) {
         double[] transformedPoints = new double[sky.planetPositions().length];
         transform.transform2DPoints(sky.planetPositions(), 0, transformedPoints, 0, transformedPoints.length/2);
 
@@ -191,7 +191,7 @@ public class SkyCanvasPainter {
             int planetIndex = sky.planets().indexOf(planet);
             double x = transformedPoints[2*planetIndex];
             double y = transformedPoints[2*planetIndex + 1];
-            Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), transform);
+            Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), projection, transform);
 
             ctx.setFill(Color.LIGHTGRAY);
             ctx.fillOval(x, y, diameterVector.magnitude(), diameterVector.magnitude());
@@ -207,17 +207,17 @@ public class SkyCanvasPainter {
      */
     public void skyCanvasPaint(ObservedSky sky, StereographicProjection projection, Transform transform){
         clear();
-        drawStars(sky, transform);
-        drawPlanets(sky, transform);
-        drawSun(sky, transform);
-        drawMoon(sky, transform);
+        drawStars(sky, projection, transform);
+        drawPlanets(sky, projection, transform);
+        drawSun(sky, projection, transform);
+        drawMoon(sky, projection, transform);
         drawHorizon(projection, transform);
     }
 
-    private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, Transform transform){
+    private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){
         double planetSize = interval.clip(celestialObjectMagnitude);
         double sizeFactor = (99 - 17*planetSize) / 140;
-        double diameter = sizeFactor * 2*Math.tan(Angle.ofDeg(0.5)/4);
+        double diameter = sizeFactor * projection.applyToAngle(Angle.ofDeg(0.5));
         return transform.deltaTransform(0, diameter);
     }
 }
