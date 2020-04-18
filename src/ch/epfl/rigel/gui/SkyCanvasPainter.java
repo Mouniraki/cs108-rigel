@@ -61,7 +61,10 @@ public class SkyCanvasPainter {
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedCoord.getX() - diameterVector.magnitude()/2, transformedCoord.getY() - diameterVector.magnitude()/2, diameterVector.magnitude(), diameterVector.magnitude());
+        ctx.fillOval(transformedCoord.getX() - diameterVector.magnitude()/2,
+                transformedCoord.getY() - diameterVector.magnitude()/2,
+                diameterVector.magnitude(),
+                diameterVector.magnitude());
     }
 
     /**
@@ -135,7 +138,10 @@ public class SkyCanvasPainter {
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
             ctx.setFill(color);
-            ctx.fillOval(x - diameterVector.magnitude()/2, y - diameterVector.magnitude()/2, diameterVector.magnitude(), diameterVector.magnitude());
+            ctx.fillOval(x - diameterVector.magnitude()/2,
+                    y - diameterVector.magnitude()/2,
+                    diameterVector.magnitude(),
+                    diameterVector.magnitude());
         }
     }
 
@@ -153,13 +159,22 @@ public class SkyCanvasPainter {
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         ctx.setFill(Color.YELLOW);
-        ctx.fillOval(transformedCoord.getX() - (diameterVector.magnitude() + 2)/2, transformedCoord.getY() - (diameterVector.magnitude() + 2)/2, diameterVector.magnitude()+2, diameterVector.magnitude()+2);
+        ctx.fillOval(transformedCoord.getX() - (diameterVector.magnitude() + 2)/2,
+                transformedCoord.getY() - (diameterVector.magnitude() + 2)/2,
+                diameterVector.magnitude()+2,
+                diameterVector.magnitude()+2);
 
         ctx.setFill(Color.YELLOW.deriveColor(1, 1, 1, 0.25));
-        ctx.fillOval(transformedCoord.getX() - (diameterVector.magnitude() * 2.2)/2, transformedCoord.getY() - (diameterVector.magnitude() * 2.2)/2, diameterVector.magnitude()*2.2, diameterVector.magnitude()*2.2);
+        ctx.fillOval(transformedCoord.getX() - (diameterVector.magnitude() * 2.2)/2,
+                transformedCoord.getY() - (diameterVector.magnitude() * 2.2)/2,
+                diameterVector.magnitude()*2.2,
+                diameterVector.magnitude()*2.2);
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedCoord.getX() - diameterVector.magnitude()/2, transformedCoord.getY() - diameterVector.magnitude()/2, diameterVector.magnitude(), diameterVector.magnitude());
+        ctx.fillOval(transformedCoord.getX() - diameterVector.magnitude()/2,
+                transformedCoord.getY() - diameterVector.magnitude()/2,
+                diameterVector.magnitude(),
+                diameterVector.magnitude());
     }
 
     /**
