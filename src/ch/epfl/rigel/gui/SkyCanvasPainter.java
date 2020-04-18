@@ -53,12 +53,6 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawMoon(ObservedSky sky, Transform transform){
-        /*
-        EquatorialCoordinates moonEquPos = sky.moon().equatorialPos();
-        EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-        HorizontalCoordinates horCoord = equToHorConv.apply(moonEquPos);
-        CartesianCoordinates projCoord = projection.apply(horCoord);
-        */
         CartesianCoordinates moonCoords = sky.moonPosition();
         Point2D transformedCoord = transform.transform(moonCoords.x(), moonCoords.y());
 
@@ -113,9 +107,9 @@ public class SkyCanvasPainter {
      */
     public void drawStars(ObservedSky sky, Transform transform){
         Iterator<Asterism> asterismsIterator = sky.asterisms().iterator();
-        /*
-        EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-        */
+        double[] transformedPoints = new double[sky.starPositions().length];
+        transform.transform2DPoints(sky.starPositions(), 0, transformedPoints, 0, transformedPoints.length/2);
+
         ctx.setLineWidth(1.0);
         ctx.setStroke(Color.BLUE);
         ctx.setLineJoin(StrokeLineJoin.ROUND);
@@ -124,44 +118,24 @@ public class SkyCanvasPainter {
             Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
             ctx.beginPath();
             for(int starIndex : sky.asterismsIndices(asterism)){
-                double x = sky.starPositions()[2*starIndex];
-                double y = sky.starPositions()[2*starIndex + 1];
-                Point2D transformedCoord = transform.transform(x, y);
-                ctx.lineTo(transformedCoord.getX(), transformedCoord.getY());
-                ctx.moveTo(transformedCoord.getX(), transformedCoord.getY());
+                double x = transformedPoints[2*starIndex];
+                double y = transformedPoints[2*starIndex + 1];
+                ctx.lineTo(x, y);
+                ctx.moveTo(x, y);
             }
             ctx.stroke();
             ctx.closePath();
         }
-        /*
-        while(asterismsIterator.hasNext()){ //there is no condition regarding containing two stars, but for now there are no problems
-            Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
-            ctx.beginPath();
-
-            for (Star star : asterism.stars()){
-                HorizontalCoordinates horCoord = equToHorConv.apply(star.equatorialPos());
-                CartesianCoordinates projectedCoord = projection.apply(horCoord);
-
-                Point2D transformedCoord = transform.transform(projectedCoord.x(), projectedCoord.y());
-                ctx.lineTo(transformedCoord.getX(), transformedCoord.getY());
-                ctx.moveTo(transformedCoord.getX(), transformedCoord.getY());
-            }
-            ctx.stroke();
-            ctx.closePath();
-        }
-        */
 
         for(Star star : sky.stars()) {
             int starIndex = sky.stars().indexOf(star);
-            double xCoord = sky.starPositions()[2*starIndex];
-            double yCoord = sky.starPositions()[2*starIndex + 1];
-            Point2D transformedCoord = transform.transform(xCoord, yCoord);
+            double x = transformedPoints[2*starIndex];
+            double y = transformedPoints[2*starIndex + 1];
             Point2D diameterVector = transformedSizeBasedOnMagnitude(star.magnitude(), transform);
-
             Color color = BlackBodyColor.colorForTemperature(star.colorTemperature());
 
             ctx.setFill(color);
-            ctx.fillOval(transformedCoord.getX() - diameterVector.magnitude()/2, transformedCoord.getY() - diameterVector.magnitude()/2, diameterVector.magnitude(), diameterVector.magnitude());
+            ctx.fillOval(x - diameterVector.magnitude()/2, y - diameterVector.magnitude()/2, diameterVector.magnitude(), diameterVector.magnitude());
         }
     }
 
@@ -172,16 +146,6 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawSun(ObservedSky sky, Transform transform){
-        /*
-        EclipticCoordinates sunPos = sky.sun().eclipticPos();
-        EclipticToEquatorialConversion eclToEquConv = new EclipticToEquatorialConversion(sky.observationInstant());
-        EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
-
-        HorizontalCoordinates horCoord = equToHorConv.apply(eclToEquConv.apply(sunPos));
-
-        CartesianCoordinates projCoord = projection.apply(horCoord);
-         */
-
         CartesianCoordinates sunCoords = sky.sunPosition();
         Point2D transformedCoord = transform.transform(sunCoords.x(), sunCoords.y());
 
@@ -205,31 +169,18 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawPlanets(ObservedSky sky, Transform transform) {
-        //EquatorialToHorizontalConversion equToHorConv = new EquatorialToHorizontalConversion(sky.observationInstant(), sky.observationPos());
+        double[] transformedPoints = new double[sky.planetPositions().length];
+        transform.transform2DPoints(sky.planetPositions(), 0, transformedPoints, 0, transformedPoints.length/2);
 
         for(Planet planet : sky.planets()){
             int planetIndex = sky.planets().indexOf(planet);
-            double x = sky.planetPositions()[2*planetIndex];
-            double y = sky.planetPositions()[2*planetIndex + 1];
-            Point2D transformedCoord = transform.transform(x, y);
+            double x = transformedPoints[2*planetIndex];
+            double y = transformedPoints[2*planetIndex + 1];
             Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), transform);
 
             ctx.setFill(Color.LIGHTGRAY);
-            ctx.fillOval(transformedCoord.getX(), transformedCoord.getY(), diameterVector.magnitude(), diameterVector.magnitude());
+            ctx.fillOval(x, y, diameterVector.magnitude(), diameterVector.magnitude());
         }
-
-        /*
-        for(Planet planet : sky.planets()){
-            HorizontalCoordinates horCoord = equToHorConv.apply(planet.equatorialPos());
-            CartesianCoordinates projCoord = projection.apply(horCoord);
-
-            Point2D transformedCoord = transform.transform(projCoord.x(), projCoord.y());
-            Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), transform);
-
-            ctx.setFill(Color.LIGHTGRAY);
-            ctx.fillOval(transformedCoord.getX(), transformedCoord.getY(), diameterVector.magnitude(), diameterVector.magnitude());
-        }
-        */
     }
 
     /**
