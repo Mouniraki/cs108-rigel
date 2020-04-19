@@ -24,7 +24,6 @@ import java.util.Iterator;
  * @author Mounir Raki (310287)
  */
 public class SkyCanvasPainter {
-    final private ClosedInterval interval;
     final private Canvas canvas;
     final private GraphicsContext ctx;
 
@@ -36,7 +35,6 @@ public class SkyCanvasPainter {
     public SkyCanvasPainter(Canvas canvas){
         this.canvas = canvas;
         this.ctx = canvas.getGraphicsContext2D();
-        this.interval = ClosedInterval.of(-2, 5);
     }
 
     /**
@@ -216,6 +214,7 @@ public class SkyCanvasPainter {
     }
 
     private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){
+        ClosedInterval interval = ClosedInterval.of(-2, 5);
         double planetSize = interval.clip(celestialObjectMagnitude);
         double sizeFactor = (99 - 17*planetSize) / 140;
         double diameter = sizeFactor * projection.applyToAngle(Angle.ofDeg(0.5));
