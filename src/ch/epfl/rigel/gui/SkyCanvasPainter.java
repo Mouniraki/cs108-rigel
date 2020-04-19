@@ -21,6 +21,7 @@ import java.util.Iterator;
  * Generates an image of the sky.
  *
  * @author Nicolas Szwajcok (315213)
+ * @author Mounir Raki (310287)
  */
 public class SkyCanvasPainter {
     final private ClosedInterval interval;
@@ -78,9 +79,9 @@ public class SkyCanvasPainter {
         CartesianCoordinates centerCoord = projection.circleCenterForParallel(horizonCoord);
         Point2D transformedCenterCoord = transform.transform(centerCoord.x(), centerCoord.y());
 
-        double circleRadious = projection.circleRadiusForParallel(horizonCoord);
-        Point2D transformedCircleRadious = transform.deltaTransform(circleRadious, circleRadious);
-        double moveFactor = Math.abs(transformedCircleRadious.getY())*2;
+        double circleRadius = projection.circleRadiusForParallel(horizonCoord);
+        Point2D transformedCircleRadius = transform.deltaTransform(circleRadius, circleRadius);
+        double moveFactor = Math.abs(transformedCircleRadius.getY())*2;
 
         ctx.setLineWidth(2.0);
         ctx.setStroke(Color.RED);
