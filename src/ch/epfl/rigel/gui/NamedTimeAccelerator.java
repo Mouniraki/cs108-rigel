@@ -3,7 +3,7 @@ package ch.epfl.rigel.gui;
 import java.time.Duration;
 
 /**
- * CLASSDESCRIPTION
+ * A named Time Accelerator.
  *
  * @author Mounir Raki (310287)
  */
@@ -27,13 +27,29 @@ public enum NamedTimeAccelerator {
         this.accelerator = accelerator;
     }
 
+    /**
+     * Getter for the name of the accelerator.
+     *
+     * @return the name of the accelerator
+     */
     public String getName(){
         return name;
     }
+
+    /**
+     * Getter for the accelerator.
+     *
+     * @return the accelerator
+     */
     public TimeAccelerator getAccelerator(){
         return accelerator;
     }
 
+    /**
+     * Redefines the toString method in java.lang.Object to return the name of the accelerator.
+     *
+     * @return the name of the accelerator
+     */
     @Override
     public String toString() {
         return name;
