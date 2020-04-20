@@ -9,16 +9,18 @@ import java.time.ZonedDateTime;
  * @author Mounir Raki (310287)
  */
 @FunctionalInterface
-public interface TimeAccelerator {
+public interface TimeAccelerator { //NEED TO BE SURE THAT IT IS CORRECT
     ZonedDateTime adjust(ZonedDateTime simulatedInitTime, long realElapsedTime);
 
     static TimeAccelerator continuous(int speedFactor) {
-        return (simulatedInitTime, realElapsedTime) -> simulatedInitTime.plusNanos(speedFactor * realElapsedTime);
+        return (simulatedInitTime, realElapsedTime) ->
+            simulatedInitTime.plusNanos(speedFactor * realElapsedTime);
     }
 
     static TimeAccelerator discrete(int runningFrequency, Duration step) {
-        return (simulatedInitTime, realElapsedTime) -> simulatedInitTime.plus(
-                step.multipliedBy((long) Math.floor(runningFrequency * realElapsedTime))
-        );
+        double nanosInSeconds = 1e9;
+        return (simulatedInitTime, realElapsedTime) -> simulatedInitTime.plusNanos(
+                    step.toNanos() * (long) Math.floor(runningFrequency/nanosInSeconds * realElapsedTime)
+            );
     }
 }

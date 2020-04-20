@@ -12,9 +12,9 @@ public enum NamedTimeAccelerator {
     TIMES_30("30×", TimeAccelerator.continuous(30)),
     TIMES_300("300×", TimeAccelerator.continuous(300)),
     TIMES_3000("3000×", TimeAccelerator.continuous(3000)),
-    DAY("jour", TimeAccelerator.discrete(1/60, Duration.ofHours(24))),
+    DAY("jour", TimeAccelerator.discrete(60, Duration.ofHours(24))),
     SIDEREAL_DAY("jour sidéral",
-            TimeAccelerator.discrete(1/60, Duration
+            TimeAccelerator.discrete(60, Duration
             .ofHours(23)
             .plusMinutes(56)
             .plusSeconds(4)));
