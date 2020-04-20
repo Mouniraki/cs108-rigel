@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
  * @author Mounir Raki (310287)
  */
 @FunctionalInterface
-public interface TimeAccelerator { //NEED TO BE SURE THAT IT IS CORRECT
+public interface TimeAccelerator {
     ZonedDateTime adjust(ZonedDateTime simulatedInitTime, long realElapsedTime);
 
     static TimeAccelerator continuous(int speedFactor) {
