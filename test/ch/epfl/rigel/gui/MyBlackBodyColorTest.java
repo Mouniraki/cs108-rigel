@@ -35,7 +35,6 @@ class MyBlackBodyColorTest {
 
     @Test
     void colorForTemperatureFailsOnInvalidValues(){
-        Color color = Color.web("#c8d9ff");
         var rng = TestRandomizer.newRandom();
         for(int i=0; i<1000; ++i){
             int randomNegativeTemp = rng.nextInt(40001, 100000);
