@@ -1,5 +1,6 @@
 package ch.epfl.rigel.math;
 
+import static ch.epfl.rigel.Preconditions.checkArgument;
 import static ch.epfl.rigel.Preconditions.checkInInterval;
 
 /**
@@ -66,6 +67,7 @@ public final class Angle {
      * @return the converted angle (in radians)
      */
     public static double ofDMS(int deg, int min, double sec){
+        checkArgument(deg >= 0);
         checkInInterval(RightOpenInterval.of(0, 60), min);
         checkInInterval(RightOpenInterval.of(0, 60), sec);
         return Math.toRadians(deg + min*DEG_PER_MIN + sec*DEG_PER_SEC);
