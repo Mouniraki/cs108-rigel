@@ -10,7 +10,6 @@ public final class DateTimeBean {
     private ObjectProperty<LocalTime> time;
     private ObjectProperty<ZoneId> zone;
 
-
     public DateTimeBean(){
         this.date = null;
         this.time = null;
@@ -26,7 +25,12 @@ public final class DateTimeBean {
     }
 
     public void setDate(LocalDate date){
-        this.date = new SimpleObjectProperty<>(date);
+        if(this.date == null) {
+            this.date = new SimpleObjectProperty<>(date);
+        }
+        else{
+            this.date.setValue(date);
+        }
     }
 
     public ObjectProperty<LocalTime> timeProperty(){
@@ -38,7 +42,12 @@ public final class DateTimeBean {
     }
 
     public void setTime(LocalTime time){
-        this.time = new SimpleObjectProperty<>(time);
+        if(this.time == null) {
+            this.time = new SimpleObjectProperty<>(time);
+        }
+        else{
+            this.time.setValue(time);
+        }
     }
 
     public ObjectProperty<ZoneId> zoneProperty(){
@@ -50,13 +59,18 @@ public final class DateTimeBean {
     }
 
     public void setZone(ZoneId zone){
-        this.zone = new SimpleObjectProperty<>(zone);
+        if(this.zone == null) {
+            this.zone = new SimpleObjectProperty<>(zone);
+        }
+        else{
+            this.zone.setValue(zone);
+        }
     }
 
     public ZonedDateTime getZonedDateTime(){
-        LocalDateTime ldt = LocalDateTime.of(date.get(), time.get());
+        LocalDateTime ldt = LocalDateTime.of(getDate(), getTime());
 
-        return ZonedDateTime.of(ldt, zone.get());
+        return ZonedDateTime.of(ldt, getZone());
     }
 
     public void setZonedDateTime(ZonedDateTime zdt){

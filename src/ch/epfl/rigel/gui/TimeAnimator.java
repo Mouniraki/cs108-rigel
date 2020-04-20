@@ -6,34 +6,47 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public final class TimeAnimator extends AnimationTimer {
     private DateTimeBean dateTimeBean;
     private ObjectProperty<TimeAccelerator> accelerator;
     private SimpleBooleanProperty running;
+    private int counter = 0;
+    private List<Long> times = new ArrayList<>(Arrays.asList(0L, 0L));
 
-    TimeAnimator(DateTimeBean dateTimeBean){
+
+    public TimeAnimator(DateTimeBean dateTimeBean){
         this.dateTimeBean = dateTimeBean;
         accelerator = null;
     }
 
-
-
-
-
-
-
-
     @Override
     public void handle(long l) {
-        long copyOfL = l;
-
-        if (copyOfL  >= l){
-            long firstL = l;
+        if(counter == 0){
+            long initialValue = l;
         }
 
-        long deltaTime;
+        int cValue = counter % 2;
 
+        long deltaTime = 0;
+        times.set(cValue, l);
 
+        if(counter != 0){
+            if (cValue == 0) {
+                deltaTime = l - times.get(1);
+            } else {
+                deltaTime = l - times.get(0);
+            }
+        }
+
+        ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
+        dateTimeBean.setZonedDateTime(newZonedDateTime);
+
+        ++counter;
     }
 
     public void start(){
@@ -56,8 +69,12 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     public void setAccelerator(TimeAccelerator accelerator){
-        this.accelerator = new SimpleObjectProperty<>(accelerator);
-    }
+        if(this.accelerator == null) {
+            this.accelerator = new SimpleObjectProperty<>(accelerator);
+        }
+        else{
+            this.accelerator.setValue(accelerator);
+        }    }
 
     public ReadOnlyBooleanProperty runningProperty(){
         return running;
@@ -68,6 +85,11 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     public void setRunning(Boolean running){
-        this.running = new SimpleBooleanProperty(running);
+        if(this.running == null) {
+            this.running = new SimpleBooleanProperty(running);
+        }
+        else {
+            this.running.setValue(running);
+        }
     }
 }
