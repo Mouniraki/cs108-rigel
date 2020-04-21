@@ -45,8 +45,9 @@ public interface TimeAccelerator {
      */
     static TimeAccelerator discrete(int runningFrequency, Duration step) {
         double nanosInSeconds = 1e9;
-        return (simulatedInitTime, realElapsedTime) -> simulatedInitTime.plusNanos(
+        return (simulatedInitTime, realElapsedTime) ->
+                simulatedInitTime.plusNanos(
                     step.toNanos() * (long) Math.floor(runningFrequency/nanosInSeconds * realElapsedTime)
-            );
+                );
     }
 }
