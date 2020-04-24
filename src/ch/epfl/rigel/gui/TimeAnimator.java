@@ -21,8 +21,8 @@ public final class TimeAnimator extends AnimationTimer {
     private DateTimeBean dateTimeBean;
     private ObjectProperty<TimeAccelerator> accelerator;
     private SimpleBooleanProperty running;
-    private int counter = 0;
-    private List<Long> times = new ArrayList<>(Arrays.asList(0L, 0L));
+    private int counter;
+    private List<Long> times;
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.
@@ -32,6 +32,8 @@ public final class TimeAnimator extends AnimationTimer {
     public TimeAnimator(DateTimeBean dateTimeBean){
         this.dateTimeBean = dateTimeBean;
         accelerator = null;
+        counter = 0;
+        times = new ArrayList<>(Arrays.asList(0L, 0L));
     }
 
     /**
@@ -67,7 +69,6 @@ public final class TimeAnimator extends AnimationTimer {
     public void start(){
         super.start();
         setRunning(true);
-
     }
 
     /**
