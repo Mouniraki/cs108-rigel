@@ -123,14 +123,14 @@ public final class TimeAnimator extends AnimationTimer {
      *
      * @return The read-only boolean object telling if the time animator is currently running
      */
-    public ReadOnlyBooleanProperty getRunning(){//not sure if correct, but avoids of being modified
-        return running;
+    public boolean getRunning(){//not sure if correct, but avoids of being modified
+        return running.get();
     }
 
     /**
      * Sets the read-only boolean property telling if the time animator is currently running.
      */
-    public void setRunning(Boolean running){
+    private void setRunning(Boolean running){
         if(this.running == null) {
             this.running = new SimpleBooleanProperty(running);
         }

@@ -116,13 +116,22 @@ public class SkyCanvasPainter {
         ctx.setStroke(Color.BLUE);
         ctx.setLineJoin(StrokeLineJoin.ROUND);
 
-        while(asterismsIterator.hasNext()){//there is no condition regarding containing two stars, but for now there are no problems
-            Asterism asterism = asterismsIterator.next(); //take it into account if there are some random lines
+        while(asterismsIterator.hasNext()){
+            Asterism asterism = asterismsIterator.next();
             ctx.beginPath();
-            for(int starIndex : sky.asterismsIndices(asterism)){
-                double x = transformedPoints[2*starIndex];
-                double y = transformedPoints[2*starIndex + 1];
-                ctx.lineTo(x, y);
+
+            double x = transformedPoints[2*sky.asterismsIndices(asterism).get(0)];
+            double y = transformedPoints[2*sky.asterismsIndices(asterism).get(0) + 1];
+            ctx.moveTo(x, y);
+            boolean lastPointWasInCanvas = canvas.getBoundsInLocal().contains(x, y);
+
+            for(int starIndex : sky.asterismsIndices(asterism).subList(1, sky.asterismsIndices(asterism).size())){
+                x = transformedPoints[2*starIndex];
+                y = transformedPoints[2*starIndex + 1];
+                if(canvas.getBoundsInLocal().contains(x, y) || lastPointWasInCanvas){
+                    ctx.lineTo(x, y);
+                }
+                lastPointWasInCanvas = canvas.getBoundsInLocal().contains(x, y);
                 ctx.moveTo(x, y);
             }
             ctx.stroke();
