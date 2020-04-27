@@ -20,9 +20,9 @@ public final class DateTimeBean {
      * Creates an instance of a time animator by initializing it's parameters.
      */
     public DateTimeBean(){
-        this.date = null;
-        this.time = null;
-        this.zone = null;
+        this.date = new SimpleObjectProperty<>();
+        this.time = new SimpleObjectProperty<>();
+        this.zone = new SimpleObjectProperty<>();
     }
 
     /**
@@ -49,12 +49,7 @@ public final class DateTimeBean {
      * @param date The local date to be set
      */
     public void setDate(LocalDate date){
-        if(this.date == null) {
-            this.date = new SimpleObjectProperty<>(date);
-        }
-        else{
-            this.date.setValue(date);
-        }
+        this.date.setValue(date);
     }
 
     /**
@@ -81,12 +76,7 @@ public final class DateTimeBean {
      * @param time The local time to be set
      */
     public void setTime(LocalTime time){
-        if(this.time == null) {
-            this.time = new SimpleObjectProperty<>(time);
-        }
-        else{
-            this.time.setValue(time);
-        }
+        this.time.setValue(time);
     }
 
     /**
@@ -113,12 +103,7 @@ public final class DateTimeBean {
      * @param zoneId The zone id value to be set
      */
     public void setZone(ZoneId zoneId){
-        if(this.zone == null) {
-            this.zone = new SimpleObjectProperty<>(zoneId);
-        }
-        else{
-            this.zone.setValue(zoneId);
-        }
+        this.zone.setValue(zoneId);
     }
 
     /**

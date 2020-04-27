@@ -123,15 +123,15 @@ public class SkyCanvasPainter {
             double x = transformedPoints[2*sky.asterismsIndices(asterism).get(0)];
             double y = transformedPoints[2*sky.asterismsIndices(asterism).get(0) + 1];
             ctx.moveTo(x, y);
-            boolean lastPointWasInCanvas = canvas.getBoundsInLocal().contains(x, y);
+            boolean wasLastPointInCanvas = canvas.getBoundsInLocal().contains(x, y);
 
             for(int starIndex : sky.asterismsIndices(asterism).subList(1, sky.asterismsIndices(asterism).size())){
                 x = transformedPoints[2*starIndex];
                 y = transformedPoints[2*starIndex + 1];
-                if(canvas.getBoundsInLocal().contains(x, y) || lastPointWasInCanvas){
+                if(canvas.getBoundsInLocal().contains(x, y) || wasLastPointInCanvas){
                     ctx.lineTo(x, y);
                 }
-                lastPointWasInCanvas = canvas.getBoundsInLocal().contains(x, y);
+                wasLastPointInCanvas = canvas.getBoundsInLocal().contains(x, y);
                 ctx.moveTo(x, y);
             }
             ctx.stroke();
