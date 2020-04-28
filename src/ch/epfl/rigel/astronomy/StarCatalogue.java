@@ -39,7 +39,7 @@ public final class StarCatalogue {
                 starIndexes.add(index);
             }
 
-            tempMap.put(asterism, starIndexes);
+            tempMap.put(asterism, List.copyOf(starIndexes));
         }
 
         this.map = Map.copyOf(tempMap);

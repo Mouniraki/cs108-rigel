@@ -167,6 +167,7 @@ public class StarCatalogueTest {
         for (var asterism : asterisms) {
             try {
                 c.asterismIndices(asterism).clear();
+                System.out.println(c.asterismIndices(asterism));
             } catch (UnsupportedOperationException e) {
                 // If UOE is thrown, the list is unmodifiable, which is correct.
             }
