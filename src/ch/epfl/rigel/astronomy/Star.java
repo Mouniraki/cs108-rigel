@@ -39,7 +39,6 @@ public final class Star extends CelestialObject {
         this.hipparcosId = hipparcosId;
         this.factorColorIndex = 0.92*colorIndex;
         this.colorTemperature = 4600 * ((1 / (factorColorIndex + 1.7)) + (1 / (factorColorIndex + 0.62)));
-
     }
 
     /**

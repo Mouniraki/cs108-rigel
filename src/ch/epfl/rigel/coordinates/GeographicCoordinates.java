@@ -43,7 +43,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @return true if the longitude is valid, false otherwise
      */
     public static boolean isValidLonDeg(double lonDeg){
-        return (lonDeg >= -180 && lonDeg < 180);
+        return (-180 <= lonDeg && lonDeg < 180);
     }
 
     /**
@@ -54,7 +54,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @return true if the latitude is valid, false otherwise
      */
     public static boolean isValidLatDeg(double latDeg){
-        return (latDeg >= -90 && latDeg <= 90);
+        return (-90 <= latDeg && latDeg <= 90);
     }
 
     /**

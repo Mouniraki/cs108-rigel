@@ -15,7 +15,6 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     private final double localSiderealTime;
     private final double cosPlaceLat;
     private final double sinPlaceLat;
-    //private final GeographicCoordinates place;
 
     /**
      * Constructs a conversion from Equatorial to Horizontal Coordinates.
@@ -27,7 +26,6 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
         localSiderealTime = SiderealTime.local(when, where);
         cosPlaceLat = Math.cos(where.lat());
         sinPlaceLat = Math.sin(where.lat());
-        //place = where;
     }
 
     /**

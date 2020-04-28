@@ -32,20 +32,27 @@ public enum HygDatabaseLoader implements StarCatalogue.Loader{
             while((line = r.readLine()) != null) {
                 String[] strArray = line.split(",");
 
+                String hip = strArray[ColName.HIP.ordinal()];
+                String mag = strArray[ColName.MAG.ordinal()];
+                String ci = strArray[ColName.CI.ordinal()];
+                String bay = strArray[ColName.BAYER.ordinal()];
+                String pro = strArray[ColName.PROPER.ordinal()];
+                String con = strArray[ColName.CON.ordinal()];
+
                 double ra = Double.parseDouble(strArray[ColName.RARAD.ordinal()]);
                 double dec = Double.parseDouble(strArray[ColName.DECRAD.ordinal()]);
-                String con = strArray[ColName.CON.ordinal()];
+
                 EquatorialCoordinates equatorialPos = EquatorialCoordinates.of(ra, dec);
 
-                int hipparcosId = !(strArray[ColName.HIP.ordinal()].isEmpty()) ? Integer.parseInt(strArray[ColName.HIP.ordinal()]) : 0;
+                int hipparcosId = !(hip.isEmpty()) ? Integer.parseInt(hip) : 0;
 
-                double magnitude = !(strArray[ColName.MAG.ordinal()].isEmpty()) ? Double.parseDouble(strArray[ColName.MAG.ordinal()]) : 0;
+                double magnitude = !(mag.isEmpty()) ? Double.parseDouble(mag) : 0;
 
-                double colorIndex = !(strArray[ColName.CI.ordinal()].isEmpty()) ? Double.parseDouble(strArray[ColName.CI.ordinal()]) : 0;
+                double colorIndex = !(ci.isEmpty()) ? Double.parseDouble(ci) : 0;
 
-                String bayer = !(strArray[ColName.BAYER.ordinal()].isEmpty()) ? strArray[ColName.BAYER.ordinal()] : "?";
+                String bayer = !(bay.isEmpty()) ? bay : "?";
 
-                String proper = !(strArray[ColName.PROPER.ordinal()].isEmpty()) ? strArray[ColName.PROPER.ordinal()] : bayer + " " + con;
+                String proper = !(pro.isEmpty()) ? pro : bayer + " " + con;
 
                 builder.addStar(new Star(hipparcosId, proper, equatorialPos, (float) magnitude, (float) colorIndex));
             }

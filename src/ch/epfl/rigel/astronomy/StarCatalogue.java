@@ -13,7 +13,6 @@ import java.util.*;
  */
 public final class StarCatalogue {
     private final List<Star> stars;
-    private final List<Asterism> asterisms;
     private final Map<Asterism, List<Integer>> map;
 
     /**
@@ -24,19 +23,27 @@ public final class StarCatalogue {
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) {
         Map<Asterism, List<Integer>> tempMap = new HashMap<>();
-        for(Asterism asterism : asterisms) {
-            Preconditions.checkArgument(stars.containsAll(asterism.stars()));
-            List<Integer> indexes = new ArrayList<>();
+        Map<Star, Integer> starIndexMap = new HashMap<>();
 
-            for(Star s : asterism.stars()) {
-                indexes.add(stars.indexOf(s));
+        int i=0;
+        for(Star s : stars){
+            starIndexMap.put(s, i);
+            ++i;
+        }
+
+        for(Asterism asterism : asterisms){
+            List<Integer> starIndexes = new ArrayList<>();
+            for(Star as : asterism.stars()){
+                Integer index = starIndexMap.get(as);
+                Preconditions.checkArgument(index != null);
+                starIndexes.add(index);
             }
-            tempMap.put(asterism, List.copyOf(indexes));
+
+            tempMap.put(asterism, starIndexes);
         }
 
         this.map = Map.copyOf(tempMap);
         this.stars = List.copyOf(stars);
-        this.asterisms = List.copyOf(asterisms);
     }
 
     /**
@@ -65,7 +72,7 @@ public final class StarCatalogue {
      * @return The list of indices in the star catalogue of the stars constituting a given asterism
      */
     public List<Integer> asterismIndices(Asterism asterism){
-        Preconditions.checkArgument(asterisms.contains(asterism));
+        Preconditions.checkArgument(map.containsKey(asterism));
         return map.get(asterism);
     }
 

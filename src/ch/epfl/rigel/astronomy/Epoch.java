@@ -12,15 +12,15 @@ import java.time.temporal.ChronoUnit;
 public enum Epoch {
     J2000(ZonedDateTime.of(
             LocalDate.of(2000, Month.JANUARY, 1),
-            LocalTime.of(12, 0),
+            LocalTime.NOON,
             ZoneOffset.UTC)),
 
     J2010(ZonedDateTime.of(
             LocalDate.of(2010, Month.JANUARY, 1).minusDays(1),
-            LocalTime.of(0, 0),
+            LocalTime.MIDNIGHT,
             ZoneOffset.UTC));
 
-    private ZonedDateTime date;
+    private final ZonedDateTime date;
 
     private static final double MS_PER_DAY = 1000 * 60 * 60 * 24;
     private static final double MS_PER_CENTURY = MS_PER_DAY * 365.25 * 100;

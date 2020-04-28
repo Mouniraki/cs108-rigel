@@ -58,7 +58,7 @@ public final class RightOpenInterval extends Interval{
         return low() + floorMod(v - low(), high() - low());
     }
 
-    private double floorMod(double a, double b) {
+    private static double floorMod(double a, double b) {
         return a - b*Math.floor(a / b);
     }
 
@@ -80,7 +80,7 @@ public final class RightOpenInterval extends Interval{
      */
     @Override
     public boolean contains(double v) {
-        return (v < high() && v >= low());
+        return (low() <= v && v < high());
     }
 
 }
