@@ -11,7 +11,9 @@ import ch.epfl.rigel.math.ClosedInterval;
  */
 public final class Star extends CelestialObject {
     private final int hipparcosId;
-    private final float colorIndex;
+    private final double factorColorIndex;
+    private final double colorTemperature;
+    private final static ClosedInterval COLORINDEX_INTERVAL = ClosedInterval.of(-0.5, 5.5);
 
     /**
      * Constructs a new star.
@@ -33,9 +35,11 @@ public final class Star extends CelestialObject {
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude, float colorIndex){
         super(name, equatorialPos, 0, magnitude);
         Preconditions.checkArgument(hipparcosId >= 0);
-        Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
+        Preconditions.checkInInterval(COLORINDEX_INTERVAL, colorIndex);
         this.hipparcosId = hipparcosId;
-        this.colorIndex = colorIndex;
+        this.factorColorIndex = 0.92*colorIndex;
+        this.colorTemperature = 4600 * ((1 / (factorColorIndex + 1.7)) + (1 / (factorColorIndex + 0.62)));
+
     }
 
     /**
@@ -54,7 +58,6 @@ public final class Star extends CelestialObject {
      * @return the color temperature of the Star
      */
     public int colorTemperature(){
-        double temperature = 4600 * ((1 / (0.92*colorIndex + 1.7)) + (1 / (0.92*colorIndex + 0.62)));
-        return (int) Math.floor(temperature);
+        return (int) colorTemperature;
     }
 }

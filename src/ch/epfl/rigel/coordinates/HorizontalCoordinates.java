@@ -13,6 +13,9 @@ import java.util.Locale;
  * @author Mounir Raki (310287)
  */
 public final class HorizontalCoordinates extends SphericalCoordinates {
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.of(0, 360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private HorizontalCoordinates(double az, double alt){
         super(az, alt);
     }
@@ -32,8 +35,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates of(double az, double alt) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), Angle.toDeg(az));
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), Angle.toDeg(alt));
+        Preconditions.checkInInterval(LONDEG_INTERVAL, Angle.toDeg(az));
+        Preconditions.checkInInterval(LATDEG_INTERVAL, Angle.toDeg(alt));
         return new HorizontalCoordinates(az, alt);
     }
 
@@ -52,8 +55,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg);
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), altDeg);
+        Preconditions.checkInInterval(LONDEG_INTERVAL, azDeg);
+        Preconditions.checkInInterval(LATDEG_INTERVAL, altDeg);
         return new HorizontalCoordinates(Angle.ofDeg(azDeg), Angle.ofDeg(altDeg));
     }
 
@@ -107,7 +110,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the textual representation of the octant in which the azimuth value is localized.
      */
-    public String azOctantName(String n, String e, String s, String w) {
+    public String azOctantName(String n, String e, String s, String w) { //TO MODIFY SEEMINGLY
         if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) return n+e;
         else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) return e;
         else if(RightOpenInterval.of(112.5, 157.5).contains(azDeg())) return s+e;

@@ -13,6 +13,9 @@ import java.util.Locale;
  * @author Mounir Raki (310287)
  */
 public final class EclipticCoordinates extends SphericalCoordinates {
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.of(0, 360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private EclipticCoordinates(double lon, double lat){
         super(lon, lat);
     }
@@ -32,8 +35,8 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      * @return a new set of ecliptic coordinates
      */
     public static EclipticCoordinates of(double lon, double lat) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), Angle.toDeg(lon));
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), Angle.toDeg(lat));
+        Preconditions.checkInInterval(LONDEG_INTERVAL, Angle.toDeg(lon));
+        Preconditions.checkInInterval(LATDEG_INTERVAL, Angle.toDeg(lat));
         return new EclipticCoordinates(lon, lat);
     }
 
@@ -42,6 +45,7 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the longitude (in radians)
      */
+    @Override
     public double lon() {
         return super.lon();
     }
@@ -51,6 +55,7 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the longitude (in degrees)
      */
+    @Override
     public double lonDeg() {
         return super.lonDeg();
     }
@@ -60,6 +65,7 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the latitude (in radians)
      */
+    @Override
     public double lat() {
         return super.lat();
     }
@@ -69,6 +75,7 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the latitude (in degrees)
      */
+    @Override
     public double latDeg() {
         return super.latDeg();
     }

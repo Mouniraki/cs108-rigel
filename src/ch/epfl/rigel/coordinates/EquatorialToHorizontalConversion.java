@@ -13,7 +13,9 @@ import java.util.function.Function;
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
     private final double localSiderealTime;
-    private final GeographicCoordinates place;
+    private final double cosPlaceLat;
+    private final double sinPlaceLat;
+    //private final GeographicCoordinates place;
 
     /**
      * Constructs a conversion from Equatorial to Horizontal Coordinates.
@@ -23,7 +25,9 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where){
         localSiderealTime = SiderealTime.local(when, where);
-        place = where;
+        cosPlaceLat = Math.cos(where.lat());
+        sinPlaceLat = Math.sin(where.lat());
+        //place = where;
     }
 
     /**
@@ -37,13 +41,11 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
 
         double sinEquDec = Math.sin(equ.dec());
         double cosEquDec = Math.cos(equ.dec());
-        double sinGeoLat = Math.sin(place.lat());
-        double cosGeoLat = Math.cos(place.lat());
 
-        double alt = Math.asin(sinEquDec*sinGeoLat + cosEquDec*cosGeoLat*Math.cos(hourAngle));
+        double alt = Math.asin(sinEquDec*sinPlaceLat + cosEquDec*cosPlaceLat*Math.cos(hourAngle));
         double az = Math.atan2(
-                -cosEquDec * cosGeoLat * Math.sin(hourAngle),
-                sinEquDec - sinGeoLat*Math.sin(alt));
+                -cosEquDec * cosPlaceLat * Math.sin(hourAngle),
+                sinEquDec - sinPlaceLat*Math.sin(alt));
 
         return HorizontalCoordinates.of(Angle.normalizePositive(az), alt);
     }

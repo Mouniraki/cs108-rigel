@@ -8,7 +8,7 @@ import static ch.epfl.rigel.Preconditions.checkArgument;
  * @author Mounir Raki  (310287)
  */
 public final class Polynomial {
-    private double[] coefficientsTable;
+    private final double[] coefficientsTable;
 
     private Polynomial(double coefficientN, double... coefficients){
         coefficientsTable = new double [coefficients.length + 1];

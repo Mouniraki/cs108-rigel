@@ -13,6 +13,9 @@ import java.util.Locale;
  * @author Nicolas Szwajcok (315213)
  */
 public final class GeographicCoordinates extends SphericalCoordinates{
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.symmetric(360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
     }
@@ -26,8 +29,8 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @return a new instance of Geographic Coordinates
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg){
-        Preconditions.checkInInterval(RightOpenInterval.symmetric(360), lonDeg);
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), latDeg);
+        Preconditions.checkInInterval(LONDEG_INTERVAL, lonDeg);
+        Preconditions.checkInInterval(LATDEG_INTERVAL, latDeg);
 
         return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }

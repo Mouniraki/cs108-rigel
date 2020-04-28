@@ -22,11 +22,10 @@ public final class Angle {
     private static final double DEG_PER_MIN = 1.0 / 60.0;
     private static final double DEG_PER_SEC = 1.0 / 3600.0;
 
+    private static final double MIN_PER_HR_OR_SEC_PER_MIN = 60;
 
-    private static double floorMod(double a, double b) {
-        return a - b*Math.floor(a / b);
-    }
-
+    private final static RightOpenInterval INTERVAL = RightOpenInterval.of(0, MIN_PER_HR_OR_SEC_PER_MIN);
+    private final static RightOpenInterval INTERVAL_TWO = RightOpenInterval.of(0, TAU);
     /**
      * Normalizes an angle in the interval going from 0 (included) to TAU (excluded).
      *
@@ -36,7 +35,7 @@ public final class Angle {
      * @return the normalized angle (in radians)
      */
     public static double normalizePositive(double rad) {
-        return floorMod(rad, TAU);
+        return INTERVAL_TWO.reduce(rad);
     }
 
     /**
@@ -68,8 +67,8 @@ public final class Angle {
      */
     public static double ofDMS(int deg, int min, double sec){
         checkArgument(deg >= 0);
-        checkInInterval(RightOpenInterval.of(0, 60), min);
-        checkInInterval(RightOpenInterval.of(0, 60), sec);
+        checkInInterval(INTERVAL, min);
+        checkInInterval(INTERVAL, sec);
         return Math.toRadians(deg + min*DEG_PER_MIN + sec*DEG_PER_SEC);
     }
 
