@@ -57,7 +57,7 @@ public final class DrawSky extends Application {
             SkyCanvasPainter painter =
                     new SkyCanvasPainter(canvas);
 
-            painter.skyCanvasPaint(sky, projection, planeToCanvas);
+            painter.paint(sky, projection, planeToCanvas);
 
             WritableImage fxImage =
                     canvas.snapshot(null, null);

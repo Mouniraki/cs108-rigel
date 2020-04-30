@@ -213,7 +213,7 @@ public class SkyCanvasPainter {
      * @param projection The projection used to project given coordinates into a two-dimensional plane.
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
-    public void skyCanvasPaint(ObservedSky sky, StereographicProjection projection, Transform transform){
+    public void paint(ObservedSky sky, StereographicProjection projection, Transform transform){
         clear();
         drawStars(sky, projection, transform);
         drawPlanets(sky, projection, transform);

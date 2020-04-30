@@ -46,7 +46,7 @@ public class ViewingParametersBean {
      *
      * @param fieldOfViewDeg The field of view value (in degrees) to be set
      */
-    public void setDate(Integer fieldOfViewDeg){
+    public void setFieldOfViewDeg(Integer fieldOfViewDeg){
         this.fieldOfViewDeg.setValue(fieldOfViewDeg);
     }
 
