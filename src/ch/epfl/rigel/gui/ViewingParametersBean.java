@@ -1,10 +1,7 @@
 package ch.epfl.rigel.gui;
 
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 /**
  * The bean containing the part of sky visible on the generated image.
@@ -12,14 +9,14 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Nicolas Szwajcok (315213)
  */
 public class ViewingParametersBean {
-    private IntegerProperty fieldOfViewDeg;
+    private DoubleProperty fieldOfViewDeg;
     private ObjectProperty<HorizontalCoordinates> center;
 
     /**
      * Creates an instance of the viewing parameters bean by initializing its internal parameters.
      */
     public ViewingParametersBean(){
-        this.fieldOfViewDeg = new SimpleIntegerProperty();
+        this.fieldOfViewDeg = new SimpleDoubleProperty();
         this.center = new SimpleObjectProperty<>();
     }
 
@@ -28,7 +25,7 @@ public class ViewingParametersBean {
      *
      * @return The object property of the field of view (in degrees)
      */
-    public IntegerProperty fieldOfViewDegProperty(){
+    public DoubleProperty fieldOfViewDegProperty(){
         return fieldOfViewDeg;
     }
 
@@ -37,7 +34,7 @@ public class ViewingParametersBean {
      *
      * @return The field of view (in degrees)
      */
-    public Integer getfieldOfViewDeg(){
+    public double getfieldOfViewDeg(){
         return fieldOfViewDeg.get();
     }
 
@@ -46,7 +43,7 @@ public class ViewingParametersBean {
      *
      * @param fieldOfViewDeg The field of view value (in degrees) to be set
      */
-    public void setFieldOfViewDeg(Integer fieldOfViewDeg){
+    public void setFieldOfViewDeg(double fieldOfViewDeg){
         this.fieldOfViewDeg.setValue(fieldOfViewDeg);
     }
 

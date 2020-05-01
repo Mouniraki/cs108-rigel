@@ -41,7 +41,7 @@ public class ObserverLocationBean {
      *
      * @return The longitude in degrees
      */
-    public Double getLonDeg(){
+    public double getLonDeg(){
         return lonDeg.get();
     }
 
@@ -50,7 +50,7 @@ public class ObserverLocationBean {
      *
      * @param lonDeg The longitude in degrees to be set
      */
-    public void setLonDeg(Double lonDeg){
+    public void setLonDeg(double lonDeg){
         this.lonDeg.setValue(lonDeg);
     }
 
@@ -68,7 +68,7 @@ public class ObserverLocationBean {
      *
      * @return The latitude (in degrees)
      */
-    public Double getLatDeg(){
+    public double getLatDeg(){
         return latDeg.get();
     }
 
@@ -77,7 +77,7 @@ public class ObserverLocationBean {
      *
      * @param latDeg The latitude in degrees to be set
      */
-    public void setLatDeg(Double latDeg){
+    public void setLatDeg(double latDeg){
         this.latDeg.setValue(latDeg);
     }
 
