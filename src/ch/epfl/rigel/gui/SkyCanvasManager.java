@@ -20,28 +20,40 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
 /**
- * CLASSDESCRIPTION
+ * A canvas manager where the sky is drawn.
  *
  * @author Mounir Raki (310287)
  */
 public class SkyCanvasManager {
-    private ObjectBinding<StereographicProjection> projection; //OK
-    private ObjectBinding<Transform> planeToCanvas; //OK
-    private ObjectBinding<ObservedSky> observedSky; //OK
-    private ObjectProperty<CartesianCoordinates> mousePosition; //OK
-    private ObjectBinding<HorizontalCoordinates> mouseHorizontalPosition; //OK
+    private final ObjectBinding<StereographicProjection> projection;
+    private final ObjectBinding<Transform> planeToCanvas;
+    private final ObjectBinding<ObservedSky> observedSky;
+    private final ObjectProperty<CartesianCoordinates> mousePosition;
+    private final ObjectBinding<HorizontalCoordinates> mouseHorizontalPosition;
 
-    private DoubleBinding mouseAzDeg;
-    private DoubleBinding mouseAltDeg;
-    private ObjectBinding<CelestialObject> objectUnderMouse; //OK
+    private final DoubleBinding mouseAzDeg;
+    private final DoubleBinding mouseAltDeg;
+    private final ObjectBinding<CelestialObject> objectUnderMouse;
 
-    private Canvas canvas;
+    private final Canvas canvas;
 
     private final static int AZDEG_INCREMENT = 10;
     private final static int ALTDEG_INCREMENT = 5;
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
 
+    /**
+     * Constructs a canvas manager from a star catalogue and beans containing time, location and viewing informations.
+     *
+     * @param catalogue
+     *          the catalogue of stars and asterisms
+     * @param dateTimeBean
+     *          the bean containing the ZonedDateTime of the observation
+     * @param observerLocationBean
+     *          the bean containing the informations in regard to the location of the observation
+     * @param viewingParametersBean
+     *          the bean containing the informations in regard to the field of view and center of projection
+     */
     public SkyCanvasManager(StarCatalogue catalogue,
                             DateTimeBean dateTimeBean,
                             ObserverLocationBean observerLocationBean,
@@ -108,7 +120,6 @@ public class SkyCanvasManager {
             if(m.isPrimaryButtonDown()) canvas.requestFocus();
         });
 
-
         canvas.setOnKeyPressed(k -> {
             switch(k.getCode()){
                 case LEFT:
@@ -135,18 +146,38 @@ public class SkyCanvasManager {
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
 
+    /**
+     * Getter for the objectUnderMouse binding.
+     *
+     * @return the objectUnderMouse binding
+     */
     public ObjectBinding<CelestialObject> objectUnderMouseProperty(){
         return objectUnderMouse;
     }
 
+    /**
+     * Getter for the mouseAzDeg binding.
+     *
+     * @return the mouseAzDeg binding
+     */
     public DoubleBinding mouseAzDegProperty(){
         return mouseAzDeg;
     }
 
+    /**
+     * Getter for the mouseAltDeg binding.
+     *
+     * @return the mouseAltDeg binding
+     */
     public DoubleBinding mouseAltDegProperty(){
         return mouseAltDeg;
     }
 
+    /**
+     * Getter for the canvas where the elements are drawn to.
+     *
+     * @return the canvas
+     */
     public Canvas canvas(){
         return canvas;
     }
@@ -166,8 +197,11 @@ public class SkyCanvasManager {
         double imageWidth = projection.get()
                 .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
         double scaleFactor = canvas.getWidth() / imageWidth;
+        System.out.println(scaleFactor);
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
+        System.out.println(translationXFactor + ", " + translationYFactor);
+        System.out.println();
         Transform translation = Transform.translate(translationXFactor, translationYFactor);
         return translation.createConcatenation(Transform.scale(scaleFactor, -scaleFactor));
     }
