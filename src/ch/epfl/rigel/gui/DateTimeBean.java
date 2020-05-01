@@ -12,9 +12,9 @@ import java.time.*;
  * @author Nicolas Szwajcok (315213)
  */
 public final class DateTimeBean {
-    private ObjectProperty<LocalDate> date;
-    private ObjectProperty<LocalTime> time;
-    private ObjectProperty<ZoneId> zone;
+    private final ObjectProperty<LocalDate> date;
+    private final ObjectProperty<LocalTime> time;
+    private final ObjectProperty<ZoneId> zone;
 
     /**
      * Creates an instance of a time animator by initializing it's parameters.
@@ -49,7 +49,7 @@ public final class DateTimeBean {
      * @param date The local date to be set
      */
     public void setDate(LocalDate date){
-        this.date.setValue(date);
+        this.date.set(date);
     }
 
     /**
@@ -76,7 +76,7 @@ public final class DateTimeBean {
      * @param time The local time to be set
      */
     public void setTime(LocalTime time){
-        this.time.setValue(time);
+        this.time.set(time);
     }
 
     /**
@@ -103,7 +103,7 @@ public final class DateTimeBean {
      * @param zoneId The zone id value to be set
      */
     public void setZone(ZoneId zoneId){
-        this.zone.setValue(zoneId);
+        this.zone.set(zoneId);
     }
 
     /**

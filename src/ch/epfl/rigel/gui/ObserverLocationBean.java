@@ -11,9 +11,9 @@ import javafx.beans.property.*;
  * @author Nicolas Szwajcok (315213)
  */
 public class ObserverLocationBean {
-    private DoubleProperty lonDeg;
-    private DoubleProperty latDeg;
-    private ObjectBinding<GeographicCoordinates> coordinates;
+    private final DoubleProperty lonDeg;
+    private final DoubleProperty latDeg;
+    private final ObjectBinding<GeographicCoordinates> coordinates;
 
     /**
      * Creates an instance of observation location bean by initializing its internal parameters.
@@ -21,9 +21,9 @@ public class ObserverLocationBean {
     public ObserverLocationBean(){
         this.lonDeg = new SimpleDoubleProperty();
         this.latDeg = new SimpleDoubleProperty();
-
         this.coordinates = Bindings.createObjectBinding(
-                () -> GeographicCoordinates.ofDeg(getLonDeg(), getLatDeg()), lonDeg, latDeg
+                () -> GeographicCoordinates.ofDeg(getLonDeg(), getLatDeg()),
+                lonDeg, latDeg
         );
     }
 
@@ -51,7 +51,7 @@ public class ObserverLocationBean {
      * @param lonDeg The longitude in degrees to be set
      */
     public void setLonDeg(double lonDeg){
-        this.lonDeg.setValue(lonDeg);
+        this.lonDeg.set(lonDeg);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ObserverLocationBean {
      * @param latDeg The latitude in degrees to be set
      */
     public void setLatDeg(double latDeg){
-        this.latDeg.setValue(latDeg);
+        this.latDeg.set(latDeg);
     }
 
     /**
@@ -105,7 +105,7 @@ public class ObserverLocationBean {
      * @param coordinates The geographic coordinates of the observation to be set
      */
     public void setCoordinates(GeographicCoordinates coordinates){
+        setLonDeg(coordinates.lonDeg());
         setLatDeg(coordinates.latDeg());
-        setLonDeg(coordinates.latDeg());
     }
 }

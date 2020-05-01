@@ -9,8 +9,8 @@ import javafx.beans.property.*;
  * @author Nicolas Szwajcok (315213)
  */
 public class ViewingParametersBean {
-    private DoubleProperty fieldOfViewDeg;
-    private ObjectProperty<HorizontalCoordinates> center;
+    private final DoubleProperty fieldOfViewDeg;
+    private final ObjectProperty<HorizontalCoordinates> center;
 
     /**
      * Creates an instance of the viewing parameters bean by initializing its internal parameters.
@@ -44,7 +44,7 @@ public class ViewingParametersBean {
      * @param fieldOfViewDeg The field of view value (in degrees) to be set
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg){
-        this.fieldOfViewDeg.setValue(fieldOfViewDeg);
+        this.fieldOfViewDeg.set(fieldOfViewDeg);
     }
 
     /**
@@ -71,6 +71,6 @@ public class ViewingParametersBean {
      * @param center The horizontal coordinates of the center of the generated image of the sky to be set
      */
     public void setCenter(HorizontalCoordinates center){
-        this.center.setValue(center);
+        this.center.set(center);
     }
 }

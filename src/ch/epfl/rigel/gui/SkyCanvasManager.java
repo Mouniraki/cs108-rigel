@@ -37,6 +37,7 @@ public class SkyCanvasManager {
 
     private final Canvas canvas;
 
+    private final static int MAX_DISTANCE = 10;
     private final static int AZDEG_INCREMENT = 10;
     private final static int ALTDEG_INCREMENT = 5;
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
@@ -65,10 +66,11 @@ public class SkyCanvasManager {
 
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
-                viewingParametersBean.centerProperty());
+                viewingParametersBean.centerProperty()
+        );
 
         planeToCanvas = Bindings.createObjectBinding(
-                () -> applyTransform(viewingParametersBean),
+                () -> setTransform(viewingParametersBean),
                 projection, viewingParametersBean.fieldOfViewDegProperty(), canvas.widthProperty(), canvas.heightProperty()
         );
 
@@ -98,11 +100,12 @@ public class SkyCanvasManager {
         );
 
         objectUnderMouse = Bindings.createObjectBinding(
-                () -> {
-                    double maxDistance = 10;
-                    return observedSky.get().objectClosestTo(cartMousePos(), maxDistance).get();
-                }, observedSky, mousePosition, planeToCanvas
+                () -> observedSky.get()
+                        .objectClosestTo(cartMousePos(), MAX_DISTANCE)
+                        .get(),
+                observedSky, mousePosition, planeToCanvas
         );
+
 
         canvas.setOnMouseMoved(m -> mousePosition.setValue(CartesianCoordinates.of(m.getX(), m.getY())));
 
@@ -193,15 +196,12 @@ public class SkyCanvasManager {
         return HorizontalCoordinates.ofDeg(viewingParametersBean.getCenter().azDeg(), newAltDeg);
     }
 
-    private Transform applyTransform(ViewingParametersBean viewingParametersBean){
+    private Transform setTransform(ViewingParametersBean viewingParametersBean){
         double imageWidth = projection.get()
                 .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
         double scaleFactor = canvas.getWidth() / imageWidth;
-        System.out.println(scaleFactor);
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
-        System.out.println(translationXFactor + ", " + translationYFactor);
-        System.out.println();
         Transform translation = Transform.translate(translationXFactor, translationYFactor);
         return translation.createConcatenation(Transform.scale(scaleFactor, -scaleFactor));
     }
