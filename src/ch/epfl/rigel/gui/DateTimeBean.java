@@ -114,7 +114,6 @@ public final class DateTimeBean {
      */
     public ZonedDateTime getZonedDateTime(){
         LocalDateTime ldt = LocalDateTime.of(getDate(), getTime());
-
         return ZonedDateTime.of(ldt, getZone());
     }
 
