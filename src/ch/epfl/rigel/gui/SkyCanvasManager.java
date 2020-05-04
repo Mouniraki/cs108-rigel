@@ -62,7 +62,7 @@ public class SkyCanvasManager {
         canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
-        mousePosition = new SimpleObjectProperty<>();
+        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(1, 1));
 
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
