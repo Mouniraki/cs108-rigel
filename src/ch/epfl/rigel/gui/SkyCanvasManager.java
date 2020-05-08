@@ -39,11 +39,13 @@ public class SkyCanvasManager {
 
     private final Canvas canvas;
 
-    private final static int MAX_DISTANCE = 10;
+    private final static int MAX_DISTANCE_IN_CANVAS = 10;
     private final static int AZDEG_INCREMENT = 10;
     private final static int ALTDEG_INCREMENT = 5;
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
+
+    private double scaleFactor;
 
     /**
      * Constructs a canvas manager from a star catalogue and beans containing time, location and viewing informations.
@@ -84,7 +86,7 @@ public class SkyCanvasManager {
                 observerLocationBean.coordinatesProperty(), projection
         );
 
-        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(1, 1));
+        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
 
         mouseHorizontalPosition = Bindings.createObjectBinding(
                 () -> projection.get().inverseApply(cartMousePos()),
@@ -103,8 +105,9 @@ public class SkyCanvasManager {
 
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
+                    double maxDistanceInPlane = MAX_DISTANCE_IN_CANVAS / scaleFactor;
                     Optional<CelestialObject> object = observedSky.get()
-                                .objectClosestTo(cartMousePos(), MAX_DISTANCE);
+                                .objectClosestTo(cartMousePos(), maxDistanceInPlane);
                     return object.orElse(null); },
                 observedSky, mousePosition, planeToCanvas
         );
@@ -197,12 +200,11 @@ public class SkyCanvasManager {
         return HorizontalCoordinates.ofDeg(viewingParametersBean.getCenter().azDeg(), newAltDeg);
     }
 
-    //TODO : Check why the transform seems a bit weird
     private Transform setTransform(ViewingParametersBean viewingParametersBean){
         double fieldOfViewRad = Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg());
         double imageWidth = projection.get()
                 .applyToAngle(fieldOfViewRad);
-        double scaleFactor = canvas.getWidth() / imageWidth;
+        scaleFactor = canvas.getWidth() / imageWidth;
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
         Transform translation = Transform.translate(translationXFactor, translationYFactor);
@@ -215,7 +217,7 @@ public class SkyCanvasManager {
             mousePosInPlane = planeToCanvas.get().inverseTransform(mousePosition.get().x(), mousePosition.get().y());
         }
         catch(NonInvertibleTransformException e){
-            mousePosInPlane = new Point2D(1, 1);
+            mousePosInPlane = new Point2D(0, 0);
         }
         return CartesianCoordinates.of(mousePosInPlane.getX(), mousePosInPlane.getY());
     }

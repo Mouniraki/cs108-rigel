@@ -37,7 +37,7 @@ import java.util.function.UnaryOperator;
 
 /**
  * TODO : 1) Corriger l'erreur du "select-binding" (dans timeAnimation())
- *        2) Corriger l'erreur du objectClosestTo() (lié à la transformation)
+ *        2) Corriger l'erreur du objectClosestTo() (lié à la transformation) (ALMOST DONE)
  */
 
 /**
@@ -129,7 +129,7 @@ public class Main extends Application {
         latFormatter.valueProperty().bindBidirectional(observerLocationBean.latDegProperty());
         latField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
 
-        HBox observationPos = new HBox(lonLabel, lonField, latLabel, latField, VERTICAL_SEPARATOR);
+        HBox observationPos = new HBox(lonLabel, lonField, latLabel, latField);
         observationPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         return observationPos;
     }
@@ -163,7 +163,7 @@ public class Main extends Application {
         timeField.disableProperty().bind(timeAnimator.runningProperty());
         zoneBox.disableProperty().bind(timeAnimator.runningProperty());
 
-        HBox observationInstant = new HBox(dateLabel, datePicker, timeLabel, timeField, zoneBox, VERTICAL_SEPARATOR);
+        HBox observationInstant = new HBox(dateLabel, datePicker, timeLabel, timeField, zoneBox);
         observationInstant.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         return observationInstant;
     }
@@ -225,18 +225,14 @@ public class Main extends Application {
         ObjectBinding<CelestialObject> objectClosestBinding = manager.objectUnderMouseProperty();
 
         fovText.textProperty().bind(fovExpression);
-        mousePositionText.textProperty().bind(mousePositionExpression);
-
-        objectClosestBinding.addListener( //CHECK WHY IT DOESNT PRINT "NULL" (MAYBE WITH PLANETOCANVAS)
+        objectClosestBinding.addListener(
                 (p, o, n) -> {
                     CelestialObject objectClosest = objectClosestBinding.get();
-                    if(objectClosest == null)
-                        System.out.println("NULL");
-                    else
-                    objectClosestText.setText(
-                            objectClosest.info());
+                    objectClosestText.setText(objectClosest != null ? objectClosest.info() : "");
                 }
         );
+        mousePositionText.textProperty().bind(mousePositionExpression);
+
         BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;

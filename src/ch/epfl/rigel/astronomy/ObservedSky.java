@@ -73,13 +73,26 @@ public class ObservedSky {
      * @return the closest celestial object if there is one, or null if there are no close object
      *         with a distance to the point that is closer than the maximal distance
      */
+    //TODO : Find out why the old implementation is incorrect (has surely to do with the intervals)
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(maxDistance > 0 || c != null);
+        Preconditions.checkArgument(c != null);
         double minDistance = maxDistance * maxDistance;
+        CelestialObject closestObject = null;
+        for(CelestialObject o : map.keySet()){
+            double distance = c.squareDistanceTo(map.get(o));
+            if(distance < minDistance){
+                minDistance = distance;
+                closestObject = o;
+            }
+        }
+
+        if(closestObject != null)
+            return Optional.of(closestObject);
+        else
+            return Optional.empty();
+        /*
         ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
         ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
-
-        CelestialObject closestObject = null;
 
         for(CelestialObject o : map.keySet()){
             CartesianCoordinates cartesian = map.get(o);
@@ -96,11 +109,7 @@ public class ObservedSky {
                 }
             }
         }
-
-        if(closestObject != null)
-            return Optional.of(closestObject);
-        else
-            return Optional.empty();
+        */
     }
 
     /**

@@ -137,7 +137,7 @@ class MyObservedSkyTest {
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
             System.out.println(cartesian.toString());
-            double maxDistance = 100; //TO CHANGE
+            double maxDistance = 0.0000001;
             
             Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
             assertEquals("Rigel", o.get().name());
@@ -165,7 +165,7 @@ class MyObservedSkyTest {
             var horCoords = equToHor.apply(equCoords);
             var cartesian = stereographic.apply(horCoords);
             System.out.println(cartesian.toString());
-            double maxDistance = 100; //TO CHANGE
+            double maxDistance = 0.0000001;
 
             Optional<CelestialObject> o = observedSky.objectClosestTo(cartesian, maxDistance);
             assertEquals("Betelgeuse", o.get().name());
