@@ -37,8 +37,7 @@ import java.util.function.UnaryOperator;
 
 /**
  * TODO : 1) Corriger l'erreur du "select-binding" (dans timeAnimation())
- *        2) Corriger l'erreur du "equals" de StereographicProjection
- *        3) Corriger l'erreur du objectClosestTo() (lié à la transformation)
+ *        2) Corriger l'erreur du objectClosestTo() (lié à la transformation)
  */
 
 /**
