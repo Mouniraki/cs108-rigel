@@ -36,8 +36,8 @@ import java.util.Locale;
 import java.util.function.UnaryOperator;
 
 /**
- * TODO : 1) Corriger l'erreur du "select-binding" (dans timeAnimation())
- *        2) Corriger l'erreur du objectClosestTo() (lié à la transformation) (ALMOST DONE)
+ * TODO : 1) Corriger l'erreur du objectClosestTo() (lié à la transformation) (ALMOST DONE)
+ *        2) Voir pourquoi le champ de vue change seulement comme un entier (à confirmer)
  */
 
 /**
@@ -46,7 +46,6 @@ import java.util.function.UnaryOperator;
  * @author Mounir Raki (310287)
  */
 public class Main extends Application {
-    private final static Separator VERTICAL_SEPARATOR = new Separator(Orientation.VERTICAL);
     private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
             LocalDate.now(),
             LocalTime.now(),
@@ -87,8 +86,8 @@ public class Main extends Application {
             TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
 
             HBox controlBar = new HBox(
-                    observationPos(observerLocationBean),
-                    observationInstant(dateTimeBean, timeAnimator),
+                    observationPos(observerLocationBean), new Separator(Orientation.VERTICAL),
+                    observationInstant(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
                     timeAnimation(dateTimeBean, timeAnimator)
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
@@ -176,9 +175,8 @@ public class Main extends Application {
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>();
         timeChoice.setItems(accelerators);
-
-        timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
         timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
+        timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             Font buttonFont = Font.loadFont(fontStream, 15);
