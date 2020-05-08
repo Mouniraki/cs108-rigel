@@ -115,7 +115,7 @@ public class Main extends Application {
             primaryStage.setY(100);
             primaryStage.setScene(scene);
             primaryStage.show();
-            primaryStage.requestFocus();
+            skyCanvas.requestFocus();
         }
     }
 
