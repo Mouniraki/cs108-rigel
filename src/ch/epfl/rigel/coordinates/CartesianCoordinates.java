@@ -48,18 +48,18 @@ public final class CartesianCoordinates {
 
 
     /**
-     * Calculates the distance between two points in Cartesian Coordinates.
+     * Calculates the squared distance between two points in Cartesian Coordinates.
      *
      * @param c
-     *          the point to which the distance must be calculated.
+     *          the point to which the squared distance must be calculated.
      *
-     * @return the calculated distance
+     * @return the calculated squared distance
      */
-    public double distanceTo(CartesianCoordinates c){
+    public double squareDistanceTo(CartesianCoordinates c){
         double xTerm = (c.x()-this.x()) * (c.x()-this.x());
         double yTerm = (c.y()-this.y()) * (c.y()-this.y());
 
-        return Math.sqrt(xTerm + yTerm);
+        return xTerm + yTerm;
     }
 
     /**

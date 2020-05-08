@@ -69,40 +69,30 @@ public class ObservedSky {
      * @param maxDistance
      *          the maximal distance to which the searching process will be conducted
      * @throws IllegalArgumentException
-     *          if the maximal distance is negative (or 0), or if the cartesian coordinates are null
+     *          if the maximal distance is negative or 0, or if the cartesian coordinates are null
      * @return the closest celestial object if there is one, or null if there are no close object
      *         with a distance to the point that is closer than the maximal distance
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(maxDistance >= 0 || c != null);
-        double minDistance = maxDistance;
-        ClosedInterval xInterval = null, yInterval = null; //NOT SURE ABOUT THE CASE (maxDistance == 0), IF IT HAS TO BE TAKEN INTO ACCOUNT OR NOT
-        if(maxDistance != 0) { //NOT SURE ABOUT THE CASE (maxDistance == 0), IF IT HAS TO BE TAKEN INTO ACCOUNT OR NOT
-            xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-            yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
-        }
+        Preconditions.checkArgument(maxDistance > 0 || c != null);
+        double minDistance = maxDistance * maxDistance;
+        ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+        ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
 
         CelestialObject closestObject = null;
 
         for(CelestialObject o : map.keySet()){
             CartesianCoordinates cartesian = map.get(o);
-            if(minDistance == 0){ //NOT SURE ABOUT THE CASE (maxDistance == 0), IF IT HAS TO BE TAKEN INTO ACCOUNT OR NOT
-                if(cartesian.x() == c.x() && cartesian.y() == c.y()){
-                    closestObject = o;
-                }
-            }
 
-            else {
-                if (xInterval.contains(cartesian.x()) && yInterval.contains(cartesian.y())) {
-                    double distance = c.distanceTo(cartesian);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        if (minDistance != 0) {
-                            xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-                            yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
-                        }
-                        closestObject = o;
+            if (xInterval.contains(cartesian.x()) && yInterval.contains(cartesian.y())) {
+                double distance = c.squareDistanceTo(cartesian);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    if (minDistance > 0) {
+                        xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+                        yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
                     }
+                    closestObject = o;
                 }
             }
         }

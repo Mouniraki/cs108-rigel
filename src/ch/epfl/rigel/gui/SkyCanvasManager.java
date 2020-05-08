@@ -19,6 +19,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
+import java.util.Optional;
+
 /**
  * A canvas manager where the sky is drawn.
  *
@@ -62,8 +64,6 @@ public class SkyCanvasManager {
         canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
-        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(1, 1));
-
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
                 viewingParametersBean.centerProperty()
@@ -84,6 +84,8 @@ public class SkyCanvasManager {
                 observerLocationBean.coordinatesProperty(), projection
         );
 
+        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(1, 1));
+
         mouseHorizontalPosition = Bindings.createObjectBinding(
                 () -> projection.get().inverseApply(cartMousePos()),
                 mousePosition, projection, planeToCanvas
@@ -100,12 +102,12 @@ public class SkyCanvasManager {
         );
 
         objectUnderMouse = Bindings.createObjectBinding(
-                () -> observedSky.get()
-                        .objectClosestTo(cartMousePos(), MAX_DISTANCE)
-                        .get(),
+                () -> {
+                    Optional<CelestialObject> object = observedSky.get()
+                                .objectClosestTo(cartMousePos(), MAX_DISTANCE);
+                    return object.orElse(null); },
                 observedSky, mousePosition, planeToCanvas
         );
-
 
         canvas.setOnMouseMoved(m -> mousePosition.setValue(CartesianCoordinates.of(m.getX(), m.getY())));
 
@@ -147,6 +149,7 @@ public class SkyCanvasManager {
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         projection.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
+
     }
 
     /**
@@ -196,9 +199,11 @@ public class SkyCanvasManager {
         return HorizontalCoordinates.ofDeg(viewingParametersBean.getCenter().azDeg(), newAltDeg);
     }
 
+    //TODO : Check why the transform seems a bit weird
     private Transform setTransform(ViewingParametersBean viewingParametersBean){
+        double fieldOfViewRad = Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg());
         double imageWidth = projection.get()
-                .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
+                .applyToAngle(fieldOfViewRad);
         double scaleFactor = canvas.getWidth() / imageWidth;
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
@@ -206,8 +211,14 @@ public class SkyCanvasManager {
         return translation.createConcatenation(Transform.scale(scaleFactor, -scaleFactor));
     }
 
-    private CartesianCoordinates cartMousePos() throws NonInvertibleTransformException { //TO CHECK FOR THE EXCEPTION
-        Point2D mousePosInPlane = planeToCanvas.get().inverseTransform(mousePosition.get().x(), mousePosition.get().y());
+    private CartesianCoordinates cartMousePos() {
+        Point2D mousePosInPlane;
+        try {
+            mousePosInPlane = planeToCanvas.get().inverseTransform(mousePosition.get().x(), mousePosition.get().y());
+        }
+        catch(NonInvertibleTransformException e){
+            mousePosInPlane = new Point2D(1, 1);
+        }
         return CartesianCoordinates.of(mousePosInPlane.getX(), mousePosInPlane.getY());
     }
 }

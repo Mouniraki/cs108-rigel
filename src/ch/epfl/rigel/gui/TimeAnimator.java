@@ -18,11 +18,12 @@ import java.util.List;
  * @author Nicolas Szwajcok (315213)
  */
 public final class TimeAnimator extends AnimationTimer {
-    private DateTimeBean dateTimeBean;
-    private ObjectProperty<TimeAccelerator> accelerator;
-    private SimpleBooleanProperty running;
+    private final DateTimeBean dateTimeBean;
+    private final SimpleBooleanProperty running;
+    private final List<Long> times;
+    private final ObjectProperty<TimeAccelerator> accelerator;
     private int counter;
-    private List<Long> times;
+
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.
@@ -31,9 +32,10 @@ public final class TimeAnimator extends AnimationTimer {
      */
     public TimeAnimator(DateTimeBean dateTimeBean){
         this.dateTimeBean = dateTimeBean;
-        accelerator = null;
+        accelerator = new SimpleObjectProperty<>(null);
         counter = 0;
         times = new ArrayList<>(Arrays.asList(0L, 0L));
+        running = new SimpleBooleanProperty(false);
     }
 
     /**
@@ -102,12 +104,7 @@ public final class TimeAnimator extends AnimationTimer {
      * Sets the value of a time accelerator.
      */
     public void setAccelerator(TimeAccelerator accelerator){
-        if(this.accelerator == null) {
-            this.accelerator = new SimpleObjectProperty<>(accelerator);
-        }
-        else{
-            this.accelerator.setValue(accelerator);
-        }
+        this.accelerator.setValue(accelerator);
     }
 
     /**
@@ -124,19 +121,14 @@ public final class TimeAnimator extends AnimationTimer {
      *
      * @return The read-only boolean object telling if the time animator is currently running
      */
-    public boolean getRunning(){//not sure if correct, but avoids of being modified
+    public boolean getRunning(){
         return running.get();
     }
 
     /**
      * Sets the read-only boolean property telling if the time animator is currently running.
      */
-    private void setRunning(Boolean running){
-        if(this.running == null) {
-            this.running = new SimpleBooleanProperty(running);
-        }
-        else {
-            this.running.setValue(running);
-        }
+    private void setRunning(boolean running){
+        this.running.setValue(running);
     }
 }

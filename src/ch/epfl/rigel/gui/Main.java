@@ -36,12 +36,18 @@ import java.util.Locale;
 import java.util.function.UnaryOperator;
 
 /**
+ * TODO : 1) Corriger l'erreur du "select-binding" (dans timeAnimation())
+ *        2) Corriger l'erreur du "equals" de StereographicProjection
+ *        3) Corriger l'erreur du objectClosestTo() (lié à la transformation)
+ */
+
+/**
  * CLASSDESCRIPTION
  *
  * @author Mounir Raki (310287)
  */
 public class Main extends Application {
-    private final static Separator VERTICAL_SEPARATOR = new Separator();
+    private final static Separator VERTICAL_SEPARATOR = new Separator(Orientation.VERTICAL);
     private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
             LocalDate.now(),
             LocalTime.now(),
@@ -71,7 +77,7 @@ public class Main extends Application {
             ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
             HorizontalCoordinates centerCoordinates = HorizontalCoordinates.ofDeg(180.000000000001, 15);
             viewingParametersBean.setCenter(centerCoordinates);
-            viewingParametersBean.setFieldOfViewDeg(128.2);
+            viewingParametersBean.setFieldOfViewDeg(100.0);
 
             SkyCanvasManager canvasManager = new SkyCanvasManager(
                     catalogue,
@@ -79,11 +85,7 @@ public class Main extends Application {
                     observerLocationBean,
                     viewingParametersBean);
 
-
             TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
-            timeAnimator.stop();
-
-            VERTICAL_SEPARATOR.setOrientation(Orientation.VERTICAL);
 
             HBox controlBar = new HBox(
                     observationPos(observerLocationBean),
@@ -95,14 +97,12 @@ public class Main extends Application {
 
             Canvas sky = canvasManager.canvas();
             Pane canvasPane = new Pane(sky);
-
             BorderPane mainPane = new BorderPane(
                     canvasPane,
                     controlBar, null,
                     informationBar(canvasManager, viewingParametersBean),
                     null
             );
-
             sky.widthProperty().bind(mainPane.widthProperty());
             sky.heightProperty().bind(mainPane.heightProperty());
 
@@ -170,38 +170,40 @@ public class Main extends Application {
     }
 
     private HBox timeAnimation(DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException{
-        String resetString = "\uf0e2";
         String playString = "\uf04b";
         String pauseString = "\uf04c";
+        String resetString = "\uf0e2";
 
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>();
         timeChoice.setItems(accelerators);
+
+        timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
         timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
-        //timeChoice.valueProperty().bind(Bindings.select(timeAnimator.acceleratorProperty(), "accelerator")); //NOT WORKING PROPERLY
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             Font buttonFont = Font.loadFont(fontStream, 15);
 
             Button resetButton = new Button(resetString);
-            Button playPauseButton = new Button();
-            playPauseButton.setText(playString);
+            Button playPauseButton = new Button(playString);
+            resetButton.setFont(buttonFont);
+            playPauseButton.setFont(buttonFont);
 
             resetButton.setOnAction(e -> dateTimeBean.setZonedDateTime(ACTUAL_TIME));
 
             playPauseButton.setOnAction(e -> {
-                if(timeAnimator.getRunning()) {
-                    playPauseButton.setText(pauseString);
+                if(!timeAnimator.getRunning())
                     timeAnimator.start();
-                }
-                else {
-                    playPauseButton.setText(playString);
+                else
                     timeAnimator.stop();
-                }
             });
 
-            resetButton.setFont(buttonFont);
-            playPauseButton.setFont(buttonFont);
+            timeAnimator.runningProperty().addListener((p, o, n) -> {
+                if(n)
+                    playPauseButton.setText(pauseString);
+                else
+                    playPauseButton.setText(playString);
+            });
 
             HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
             timeAnimation.setStyle("-fx-spacing: inherit;");
@@ -210,7 +212,9 @@ public class Main extends Application {
     }
 
     private BorderPane informationBar(SkyCanvasManager manager, ViewingParametersBean viewingParametersBean){
-        ObjectBinding<CelestialObject> objectClosestBinding = manager.objectUnderMouseProperty();
+        Text fovText = new Text();
+        Text objectClosestText = new Text();
+        Text mousePositionText = new Text();
 
         StringExpression fovExpression = Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
                 viewingParametersBean.fieldOfViewDegProperty());
@@ -219,19 +223,21 @@ public class Main extends Application {
                 "Azimut : %.2f°, hauteur : %.2f°",
                 manager.mouseAzDegProperty(), manager.mouseAltDegProperty());
 
-        Text fovText = new Text();
-        Text objectClosestText = new Text();
-        Text mousePositionText = new Text();
+        ObjectBinding<CelestialObject> objectClosestBinding = manager.objectUnderMouseProperty();
 
-        fovExpression.addListener((p, o, n) -> fovText.setText(n)); //DOESNT CHANGE THE VALUE
+        fovText.textProperty().bind(fovExpression);
+        mousePositionText.textProperty().bind(mousePositionExpression);
 
-        objectClosestBinding.addListener(
-                (p, o, n) -> objectClosestText.setText(
-                objectClosestBinding.get() != null ? objectClosestBinding.get().info() : "")
+        objectClosestBinding.addListener( //CHECK WHY IT DOESNT PRINT "NULL" (MAYBE WITH PLANETOCANVAS)
+                (p, o, n) -> {
+                    CelestialObject objectClosest = objectClosestBinding.get();
+                    if(objectClosest == null)
+                        System.out.println("NULL");
+                    else
+                    objectClosestText.setText(
+                            objectClosest.info());
+                }
         );
-
-        mousePositionExpression.addListener((p, o, n) -> mousePositionText.setText(n)); //DOESNT CHANGE THE VALUE
-
         BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;
@@ -242,20 +248,20 @@ public class Main extends Application {
         NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
 
         UnaryOperator<TextFormatter.Change> coordFilter = (change -> {
-                    try {
-                        String newText = change.getControlNewText();
-                        double newCoordDeg = stringConverter.fromString(newText).doubleValue();
-                        boolean checkType = false;
+            try {
+                String newText = change.getControlNewText();
+                double newCoordDeg = stringConverter.fromString(newText).doubleValue();
+                boolean checkType = false;
 
-                        if(coordType.equals("lon"))
-                            checkType = GeographicCoordinates.isValidLonDeg(newCoordDeg);
-                        else if(coordType.equals("lat"))
-                            checkType = GeographicCoordinates.isValidLatDeg(newCoordDeg);
+                if(coordType.equals("lon"))
+                    checkType = GeographicCoordinates.isValidLonDeg(newCoordDeg);
+                else if(coordType.equals("lat"))
+                    checkType = GeographicCoordinates.isValidLatDeg(newCoordDeg);
 
-                        return checkType ? change : null;
-                    } catch (Exception e){
-                        return null;
-                    }
+                return checkType ? change : null;
+            } catch (Exception e){
+                return null;
+            }
         });
 
         return new TextFormatter<>(stringConverter, 0, coordFilter);
