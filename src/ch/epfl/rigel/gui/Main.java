@@ -208,6 +208,9 @@ public class Main extends Application {
                     playPauseButton.setText(playString);
             });
 
+            timeChoice.disableProperty().bind(timeAnimator.runningProperty());
+            resetButton.disableProperty().bind(timeAnimator.runningProperty());
+
             HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
             timeAnimation.setStyle("-fx-spacing: inherit;");
             return timeAnimation;
