@@ -55,11 +55,11 @@ public final class CartesianCoordinates {
      *
      * @return the calculated squared distance
      */
-    public double squareDistanceTo(CartesianCoordinates c){
+    public double distanceTo(CartesianCoordinates c){
         double xTerm = (c.x()-this.x()) * (c.x()-this.x());
         double yTerm = (c.y()-this.y()) * (c.y()-this.y());
 
-        return xTerm + yTerm;
+        return Math.sqrt(xTerm + yTerm);
     }
 
     /**

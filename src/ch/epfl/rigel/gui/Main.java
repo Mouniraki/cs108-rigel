@@ -36,8 +36,11 @@ import java.util.Locale;
 import java.util.function.UnaryOperator;
 
 /**
- * TODO : 1) Corriger l'erreur du objectClosestTo() (lié à la transformation) (ALMOST DONE)
+ * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
+ *           bindBidirectional ensuite
  *        2) Voir pourquoi le champ de vue change seulement comme un entier (à confirmer)
+ *        3) Essayer de trouver une manière plus élégante de généraliser la méthode coordFormatter()
+ *
  */
 
 /**
@@ -118,6 +121,8 @@ public class Main extends Application {
         TextField lonField = new TextField();
         TextFormatter<Number> lonFormatter = coordFormatter("lon");
         lonField.setTextFormatter(lonFormatter);
+        //lonFormatter.setValue(6.57);
+        //observerLocationBean.lonDegProperty().bind(lonFormatter.valueProperty());
         lonFormatter.valueProperty().bindBidirectional(observerLocationBean.lonDegProperty());
         lonField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
 
@@ -125,6 +130,8 @@ public class Main extends Application {
         TextField latField = new TextField();
         TextFormatter<Number> latFormatter = coordFormatter("lat");
         latField.setTextFormatter(latFormatter);
+        //latFormatter.setValue(46.52);
+        //observerLocationBean.latDegProperty().bind(latFormatter.valueProperty());
         latFormatter.valueProperty().bindBidirectional(observerLocationBean.latDegProperty());
         latField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
 
@@ -224,10 +231,7 @@ public class Main extends Application {
 
         fovText.textProperty().bind(fovExpression);
         objectClosestBinding.addListener(
-                (p, o, n) -> {
-                    CelestialObject objectClosest = objectClosestBinding.get();
-                    objectClosestText.setText(objectClosest != null ? objectClosest.info() : "");
-                }
+                (p, o, n) -> objectClosestText.setText(n != null ? n.info() : "")
         );
         mousePositionText.textProperty().bind(mousePositionExpression);
 

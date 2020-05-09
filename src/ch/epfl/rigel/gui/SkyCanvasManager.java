@@ -105,7 +105,7 @@ public class SkyCanvasManager {
 
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    double maxDistanceInPlane = MAX_DISTANCE_IN_CANVAS / scaleFactor;
+                    double maxDistanceInPlane = Math.abs(MAX_DISTANCE_IN_CANVAS / scaleFactor);
                     Optional<CelestialObject> object = observedSky.get()
                                 .objectClosestTo(cartMousePos(), maxDistanceInPlane);
                     return object.orElse(null); },
