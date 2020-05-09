@@ -18,12 +18,11 @@ import java.util.List;
  * @author Nicolas Szwajcok (315213)
  */
 public final class TimeAnimator extends AnimationTimer {
-    private final DateTimeBean dateTimeBean;
-    private final SimpleBooleanProperty running;
-    private final List<Long> times;
-    private final ObjectProperty<TimeAccelerator> accelerator;
+    private DateTimeBean dateTimeBean;
+    private ObjectProperty<TimeAccelerator> accelerator;
+    private SimpleBooleanProperty running;
     private int counter;
-
+    private List<Long> times;
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.
@@ -32,10 +31,10 @@ public final class TimeAnimator extends AnimationTimer {
      */
     public TimeAnimator(DateTimeBean dateTimeBean){
         this.dateTimeBean = dateTimeBean;
-        accelerator = new SimpleObjectProperty<>(null);
+        accelerator = new SimpleObjectProperty<>();
+        running = new SimpleBooleanProperty();
         counter = 0;
         times = new ArrayList<>(Arrays.asList(0L, 0L));
-        running = new SimpleBooleanProperty(false);
     }
 
     /**
@@ -59,6 +58,8 @@ public final class TimeAnimator extends AnimationTimer {
         }
 
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
+//        System.out.println(getAccelerator() == null);
+//        System.out.println(accelerator);
         dateTimeBean.setZonedDateTime(newZonedDateTime);
 
         ++counter;
@@ -128,7 +129,7 @@ public final class TimeAnimator extends AnimationTimer {
     /**
      * Sets the read-only boolean property telling if the time animator is currently running.
      */
-    private void setRunning(boolean running){
+    private void setRunning(Boolean running){
         this.running.setValue(running);
     }
 }
