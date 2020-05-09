@@ -41,7 +41,14 @@ import java.util.Set;
 import java.util.function.DoublePredicate;
 import java.util.function.UnaryOperator;
 
-/**
+=======
+/*
+ * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
+ *           bindBidirectional ensuite
+ *        2) Voir pourquoi le champ de vue change seulement comme un entier
+ *        3) Essayer de trouver une manière plus élégante de généraliser la méthode coordFormatter()
+ */
+ /*
  * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
  *
  * @author Nicolas Szwajcok (315213)
@@ -112,13 +119,37 @@ public class Main extends Application {
 
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
-            primaryStage.setY(100);
+            //primaryStage.setY(100);
             primaryStage.setScene(scene);
             primaryStage.show();
             skyCanvas.requestFocus();
         }
     }
 
+    private HBox observationPos(ObserverLocationBean observerLocationBean){
+        Label lonLabel = new Label("Longitude (°) :");
+        TextField lonField = new TextField();
+        TextFormatter<Number> lonFormatter = coordFormatter("lon");
+        lonField.setTextFormatter(lonFormatter);
+        //lonFormatter.setValue(6.57);
+        //observerLocationBean.lonDegProperty().bind(lonFormatter.valueProperty());
+        lonFormatter.valueProperty().bindBidirectional(observerLocationBean.lonDegProperty());
+        lonField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+
+        Label latLabel = new Label("Latitude (°) :");
+        TextField latField = new TextField();
+        TextFormatter<Number> latFormatter = coordFormatter("lat");
+        latField.setTextFormatter(latFormatter);
+        //latFormatter.setValue(46.52);
+        //observerLocationBean.latDegProperty().bind(latFormatter.valueProperty());
+        latFormatter.valueProperty().bindBidirectional(observerLocationBean.latDegProperty());
+        latField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+
+        HBox observationPos = new HBox(lonLabel, lonField, latLabel, latField);
+        observationPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        return observationPos;
+    }
+  /*
     private HBox topBar(ObserverLocationBean observerLocationBean, DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
         HBox toolbar = new HBox();
         toolbar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
@@ -137,6 +168,7 @@ public class Main extends Application {
 
         return toolbar;
     }
+    
 
     private HBox positionBox(ObserverLocationBean observerLocationBean){
         HBox positionBox = new HBox();
@@ -149,7 +181,7 @@ public class Main extends Application {
         positionBox.getChildren().addAll(latNodes);
         return positionBox;
     }
-
+    */
     private  HBox observationInstant(DateTimeBean dateTimeBean, TimeAnimator timeAnimator){
         HBox observationInstantBox = new HBox();
         observationInstantBox.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
@@ -181,7 +213,7 @@ public class Main extends Application {
 
         return observationInstantBox;
     }
-
+/*
     private HBox playBox(DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
         HBox playBox = new HBox();
         playBox.setStyle("-fx-spacing: inherit;"); //.setitems to arraylist -> observable, default value with choicebox.setvalue
@@ -224,9 +256,18 @@ public class Main extends Application {
                 playBox.getChildren().add(startButton);
             });
 
+            timeChoice.disableProperty().bind(timeAnimator.runningProperty());
+            resetButton.disableProperty().bind(timeAnimator.runningProperty());
+
+            HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
+            timeAnimation.setStyle("-fx-spacing: inherit;");
+            return timeAnimation;
+            
+            /*
             playBox.getChildren().add(timeAcceleratorsBox);
             playBox.getChildren().add(resetButton);
             playBox.getChildren().add(startButton);
+            */
         }
 
         return playBox;
@@ -242,14 +283,10 @@ public class Main extends Application {
         Text objUnderMouse = new Text();
         ObjectBinding<CelestialObject> objUnderMouseBinding = skyCanvasManager.objectUnderMouseProperty();
 
-        objUnderMouseBinding.addListener(
-                (p, o, n) -> {
-                    CelestialObject closestObject = objUnderMouseBinding.get();
-                    if(closestObject != null)
-                        objUnderMouse.setText(
-                                closestObject.info());
-                }
-        );
+
+        fovText.textProperty().bind(fovExpression);
+        objectClosestBinding.addListener(
+                (p, o, n) -> objectClosestText.setText(n != null ? n.info() : "");
 
         StringExpression azAltBind = Bindings.format(Locale.ROOT, "Azimut : %.1f°, hauteur : %.1f°", skyCanvasManager.mouseAzDegProperty(), skyCanvasManager.mouseAltDegProperty());
         Text azimuthAltitude = new Text();

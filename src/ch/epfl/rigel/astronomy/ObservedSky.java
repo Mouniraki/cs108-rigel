@@ -73,16 +73,34 @@ public class ObservedSky {
      * @return the closest celestial object if there is one, or null if there are no close object
      *         with a distance to the point that is closer than the maximal distance
      */
-    //TODO : Find out why the old implementation is incorrect (has surely to do with the intervals)
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(c != null);
-        double minDistance = maxDistance * maxDistance;
+        Preconditions.checkArgument(maxDistance >= 0 && c != null);
         CelestialObject closestObject = null;
-        for(CelestialObject o : map.keySet()){
-            double distance = c.squareDistanceTo(map.get(o));
-            if(distance < minDistance){
-                minDistance = distance;
-                closestObject = o;
+
+        if(maxDistance > 0){
+            double minDistance = maxDistance;
+            ClosedInterval xInterval = ClosedInterval.of(c.x() - maxDistance, c.x() + maxDistance);
+            ClosedInterval yInterval = ClosedInterval.of(c.y() - maxDistance, c.y() + maxDistance);
+
+            for(CelestialObject o : map.keySet()){
+                CartesianCoordinates cartCoords = map.get(o);
+                if(xInterval.contains(cartCoords.x()) && yInterval.contains(cartCoords.y())){
+                    double distance = c.distanceTo(cartCoords);
+                    if(distance < minDistance) {
+                        minDistance = distance;
+                        xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
+                        yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
+                        closestObject = o;
+                    }
+                }
+            }
+        }
+
+        else {
+            for(CelestialObject o : map.keySet()){
+                CartesianCoordinates cartCoords = map.get(o);
+                if(c.x() == cartCoords.x() && c.y() == cartCoords.y())
+                    closestObject = o;
             }
         }
 
@@ -90,26 +108,6 @@ public class ObservedSky {
             return Optional.of(closestObject);
         else
             return Optional.empty();
-        /*
-        ClosedInterval xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-        ClosedInterval yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
-
-        for(CelestialObject o : map.keySet()){
-            CartesianCoordinates cartesian = map.get(o);
-
-            if (xInterval.contains(cartesian.x()) && yInterval.contains(cartesian.y())) {
-                double distance = c.squareDistanceTo(cartesian);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    if (minDistance > 0) {
-                        xInterval = ClosedInterval.of(c.x() - minDistance, c.x() + minDistance);
-                        yInterval = ClosedInterval.of(c.y() - minDistance, c.y() + minDistance);
-                    }
-                    closestObject = o;
-                }
-            }
-        }
-        */
     }
 
     /**
