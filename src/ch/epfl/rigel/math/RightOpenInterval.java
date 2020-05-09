@@ -10,7 +10,9 @@ import java.util.Locale;
  * @author Mounir Raki (310287)
  */
 public final class RightOpenInterval extends Interval{
-    private RightOpenInterval(double low, double high){super(low, high);}
+    private RightOpenInterval(double low, double high){
+        super(low, high);
+    }
 
     /**
      * Constructs a right-open interval from a lower bound and an upper bound.
@@ -41,7 +43,7 @@ public final class RightOpenInterval extends Interval{
      */
     public static RightOpenInterval symmetric(double size){
         checkArgument(size > 0);
-        return new RightOpenInterval(-(size/2), size/2);
+        return new RightOpenInterval(-(size / 2), size / 2);
     }
 
     /**
@@ -52,9 +54,13 @@ public final class RightOpenInterval extends Interval{
      *
      * @return the reduced argument to the interval
      */
-    public double reduce(double v) {return low()+floorMod(v-low(), high()-low());}
+    public double reduce(double v) {
+        return low() + floorMod(v - low(), high() - low());
+    }
 
-    private double floorMod(double a, double b) {return a - b*Math.floor(a/b);}
+    private static double floorMod(double a, double b) {
+        return a - b*Math.floor(a / b);
+    }
 
     /**
      * Redefines the toString method from java.lang.Object to construct
@@ -63,7 +69,9 @@ public final class RightOpenInterval extends Interval{
      * @return the textual representation of a closed interval
      */
     @Override
-    public String toString() {return String.format(Locale.ROOT, "[%s,%s[", low(), high());}
+    public String toString() {
+        return String.format(Locale.ROOT, "[%s,%s[", low(), high());
+    }
 
     /**
      * Redefines the contains method from the Interval class to check if a value is contained in the interval.
@@ -71,6 +79,8 @@ public final class RightOpenInterval extends Interval{
      * @return true if the value is contained in the interval, false otherwise
      */
     @Override
-    public boolean contains(double v) {return (v<high() && v>=low());}
+    public boolean contains(double v) {
+        return (low() <= v && v < high());
+    }
 
 }

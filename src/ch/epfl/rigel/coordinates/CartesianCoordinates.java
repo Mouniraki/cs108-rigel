@@ -8,8 +8,8 @@ import java.util.Locale;
  * @author Nicolas Szwajcok (315213)
  */
 public final class CartesianCoordinates {
-    final double x;
-    final double y;
+    private final double x;
+    private final double y;
 
     private CartesianCoordinates(double x, double y){
         this.x = x;
@@ -17,10 +17,12 @@ public final class CartesianCoordinates {
     }
 
     /**
-     * Allows to create cartesian coordinates.
+     * Creates an instance of the cartesian coordinates.
+     *
      * @param x x coordinate (abscissa)
      * @param y y coordinate (ordinate)
-     * @return A point expressed using the cartesian coordinates.
+     *
+     * @return A point expressed using the cartesian coordinates
      */
     public static CartesianCoordinates of(double x, double y){
         return new CartesianCoordinates(x, y);
@@ -28,36 +30,55 @@ public final class CartesianCoordinates {
 
     /**
      * Getter of the x value (abscissa).
+     *
      * @return the x value of the coordinates (abscissa)
      */
     public double x(){
-        return this.x;
+        return x;
     }
 
     /**
-     * Getter of the y value (ordinate)
+     * Getter of the y value (ordinate).
+     *
      * @return the y value of the coordinates (ordinate)
      */
     public double y(){
-        return this.y;
+        return y;
+    }
+
+
+    /**
+     * Calculates the squared distance between two points in Cartesian Coordinates.
+     *
+     * @param c
+     *          the point to which the squared distance must be calculated.
+     *
+     * @return the calculated squared distance
+     */
+    public double squareDistanceTo(CartesianCoordinates c){
+        double xTerm = (c.x()-this.x()) * (c.x()-this.x());
+        double yTerm = (c.y()-this.y()) * (c.y()-this.y());
+
+        return xTerm + yTerm;
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
-    final public boolean equals(Object obj){
+    @Override
+    public final boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 

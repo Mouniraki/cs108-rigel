@@ -6,51 +6,61 @@ import ch.epfl.rigel.math.Polynomial;
 
 import java.time.ZonedDateTime;
 import java.util.function.Function;
-import java.util.stream.Stream;
+
+import static java.lang.Math.*;
 
 /**
- * Class allowing the conversion from ecliptic to equatorial coordinates.
+ * The conversion from ecliptic to equatorial coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates> {
-
-    final private double epsilon;
-    final private double cosEpsilon;
-    final private double sinEpsilon;
+    private final double cosEclObl;
+    private final double sinEclObl;
+    private final static Polynomial P = Polynomial.of(
+            Angle.ofArcsec(0.00181),
+            -Angle.ofArcsec(0.0006),
+            -Angle.ofArcsec(46.815),
+            Angle.ofDMS(23, 26, 21.45));
 
     /**
      * Constructs a conversion from ecliptic to equatorial coordinates.
-     * @param when The date and time of the conversion
+     *
+     * @param when The date and time at the moment of the conversion
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
-        double T = Epoch.J2000.julianCenturiesUntil(when);
-        epsilon = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006), -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(T);
-        cosEpsilon = Math.cos(epsilon);
-        sinEpsilon = Math.sin(epsilon);
+        double julianCenturiesUntilJ2000 = Epoch.J2000.julianCenturiesUntil(when);
+        double eclObliquity = P.at(julianCenturiesUntilJ2000);
+        cosEclObl = cos(eclObliquity);
+        sinEclObl = sin(eclObliquity);
     }
 
     /**
      * Applies the conversion from ecliptic to equatorial coordinates.
-     * @param ecl The ecliptic coordinates to convert
-     * @return The converted equatorial coordinates
+     *
+     * @param ecl The ecliptic coordinates to convert into equatorial coordinates
+     *
+     * @return The equatorial coordinates obtained from a conversion of the ecliptic coordinates
      */
     public EquatorialCoordinates apply(EclipticCoordinates ecl){
-        double lambda = ecl.lon();
-        double beta = ecl.lat();
-        double sinLambda = Math.sin(lambda);
+        double eclLon = ecl.lon();
+        double eclLat = ecl.lat();
+        double sinEclLon = sin(eclLon);
 
-        double alpha = Angle.normalizePositive(Math.atan2(sinLambda * cosEpsilon - Math.tan(beta) * sinEpsilon, Math.cos(lambda)));
-        double delta = Math.asin(Math.sin(beta) * cosEpsilon + Math.cos(beta) * sinEpsilon * sinLambda);
+        double ra = atan2(
+                        sinEclLon*cosEclObl - tan(eclLat)*sinEclObl,
+                        cos(eclLon));
+        double dec = asin(sin(eclLat)*cosEclObl + cos(eclLat)*sinEclObl*sinEclLon);
 
-        return EquatorialCoordinates.of(alpha, delta);
+        return EquatorialCoordinates.of(Angle.normalizePositive(ra), dec);
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
+    @Override
     final public boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
@@ -58,7 +68,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
     final public int hashCode(){

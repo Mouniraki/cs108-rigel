@@ -13,12 +13,15 @@ import java.util.Locale;
  * @author Mounir Raki (310287)
  */
 public final class HorizontalCoordinates extends SphericalCoordinates {
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.of(0, 360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private HorizontalCoordinates(double az, double alt){
         super(az, alt);
     }
 
     /**
-     * Constructs a set of horizontal coordinates from a value of azimuth (in radians)
+     * Constructs a set of Horizontal Coordinates from a value of azimuth (in radians)
      * and a value of altitude (in radians).
      *
      * @param az
@@ -29,16 +32,16 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *          if the azimuth isn't in the interval [0°,360°[
      *          or if the altitude isn't in the interval [-90°,90°]
      *
-     * @return a new set of horizontal coordinates
+     * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates of(double az, double alt) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), Angle.toDeg(az));
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), Angle.toDeg(alt));
+        Preconditions.checkInInterval(LONDEG_INTERVAL, Angle.toDeg(az));
+        Preconditions.checkInInterval(LATDEG_INTERVAL, Angle.toDeg(alt));
         return new HorizontalCoordinates(az, alt);
     }
 
     /**
-     * Constructs a set of horizontal coordinates from a value of azimuth (in degrees)
+     * Constructs a set of Horizontal Coordinates from a value of azimuth (in degrees)
      * and a value of altitude (in degrees).
      *
      * @param azDeg
@@ -49,11 +52,11 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *          if the azimuth isn't in the interval [0°,360°[
      *          or if the altitude isn't in the interval [-90°,90°]
      *
-     * @return a new set of horizontal coordinates
+     * @return a new set of Horizontal Coordinates
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), azDeg);
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), altDeg);
+        Preconditions.checkInInterval(LONDEG_INTERVAL, azDeg);
+        Preconditions.checkInInterval(LATDEG_INTERVAL, altDeg);
         return new HorizontalCoordinates(Angle.ofDeg(azDeg), Angle.ofDeg(altDeg));
     }
 
@@ -62,28 +65,36 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the value of the azimuth (in radians).
      */
-    public double az() {return super.lon();}
+    public double az() {
+        return super.lon();
+    }
 
     /**
      * Getter for the azimuth in degrees.
      *
      * @return the value of the azimuth (in degrees).
      */
-    public double azDeg() {return super.lonDeg();}
+    public double azDeg() {
+        return super.lonDeg();
+    }
 
     /**
      * Getter for the altitude in radians.
      *
      * @return the value of the altitude (in radians).
      */
-    public double alt() {return super.lat();}
+    public double alt() {
+        return super.lat();
+    }
 
     /**
      * Getter for the altitude in degrees.
      *
      * @return the value of the altitude (in degrees).
      */
-    public double altDeg() {return super.latDeg();}
+    public double altDeg() {
+        return super.latDeg();
+    }
 
     /**
      * Constructs the textual representation of the octant in which the azimuth value is localized.
@@ -99,7 +110,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the textual representation of the octant in which the azimuth value is localized.
      */
-    public String azOctantName(String n, String e, String s, String w) {
+    public String azOctantName(String n, String e, String s, String w) { //TO MODIFY SEEMINGLY
         if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) return n+e;
         else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) return e;
         else if(RightOpenInterval.of(112.5, 157.5).contains(azDeg())) return s+e;
@@ -111,7 +122,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
     }
 
     /**
-     * Calculates the angular distance between two points expressed in the horizontal coordinates.
+     * Calculates the angular distance between two points expressed in the Horizontal Coordinates.
      *
      * @param that
      *          the point to compare with (in horizontal coordinates)
@@ -119,14 +130,14 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      * @return the angular distance between the two points (in radians)
      */
     public double angularDistanceTo(HorizontalCoordinates that) {
-        return Math.acos(Math.sin(this.alt()) * Math.sin(that.alt()) + Math.cos(this.alt()) * Math.cos(that.alt()) * Math.cos(this.az() - that.az()));
+        return Math.acos(Math.sin(this.alt())*Math.sin(that.alt()) + Math.cos(this.alt())*Math.cos(that.alt())*Math.cos(this.az() - that.az()));
     }
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a point
-     * expressed in the horizontal coordinates.
+     * expressed in the Horizontal Coordinates.
      *
-     * @return the textual representation of the point in the horizontal coordinates
+     * @return the textual representation of the point in the Horizontal Coordinates
      */
     @Override
     public String toString() {

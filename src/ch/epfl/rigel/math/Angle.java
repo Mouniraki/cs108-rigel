@@ -1,5 +1,6 @@
 package ch.epfl.rigel.math;
 
+import static ch.epfl.rigel.Preconditions.checkArgument;
 import static ch.epfl.rigel.Preconditions.checkInInterval;
 
 /**
@@ -13,17 +14,18 @@ public final class Angle {
     /**
      * Defines the constant TAU.
      */
-    public final static double TAU = 2*Math.PI;
+    public final static double TAU = 2 * Math.PI;
 
     private static final double HR_PER_RAD = 24 / TAU;
     private static final double RAD_PER_HR = TAU / 24;
 
-    private static final double DEG_PER_MIN = 1.0/60.0;
-    private static final double DEG_PER_SEC = 1.0/3600.0;
+    private static final double DEG_PER_MIN = 1.0 / 60.0;
+    private static final double DEG_PER_SEC = 1.0 / 3600.0;
 
+    private static final double MIN_PER_HR_OR_SEC_PER_MIN = 60;
 
-    private static double floorMod(double a, double b) {return a - b * Math.floor(a/b);}
-
+    private final static RightOpenInterval INTERVAL = RightOpenInterval.of(0, MIN_PER_HR_OR_SEC_PER_MIN);
+    private final static RightOpenInterval INTERVAL_TWO = RightOpenInterval.of(0, TAU);
     /**
      * Normalizes an angle in the interval going from 0 (included) to TAU (excluded).
      *
@@ -32,7 +34,9 @@ public final class Angle {
      *
      * @return the normalized angle (in radians)
      */
-    public static double normalizePositive(double rad) {return floorMod(rad, TAU);}
+    public static double normalizePositive(double rad) {
+        return INTERVAL_TWO.reduce(rad);
+    }
 
     /**
      * Converts an angle from arc seconds to radians.
@@ -42,7 +46,9 @@ public final class Angle {
      *
      * @return the converted angle (in radians)
      */
-    public static double ofArcsec(double sec) {return Math.toRadians(sec * DEG_PER_SEC);}
+    public static double ofArcsec(double sec) {
+        return Math.toRadians(sec * DEG_PER_SEC);
+    }
 
     /**
      * Converts an angle from degrees minutes seconds to radians.
@@ -60,9 +66,10 @@ public final class Angle {
      * @return the converted angle (in radians)
      */
     public static double ofDMS(int deg, int min, double sec){
-        checkInInterval(RightOpenInterval.of(0, 60), min);
-        checkInInterval(RightOpenInterval.of(0, 60), sec);
-        return Math.toRadians(deg + min * DEG_PER_MIN + sec * DEG_PER_SEC);
+        checkArgument(deg >= 0);
+        checkInInterval(INTERVAL, min);
+        checkInInterval(INTERVAL, sec);
+        return Math.toRadians(deg + min*DEG_PER_MIN + sec*DEG_PER_SEC);
     }
 
     /**
@@ -73,7 +80,9 @@ public final class Angle {
      *
      * @return the converted angle (in radians)
      */
-    public static double ofDeg(double deg) {return Math.toRadians(deg);}
+    public static double ofDeg(double deg) {
+        return Math.toRadians(deg);
+    }
 
     /**
      * Converts an angle from radians to degrees.
@@ -83,7 +92,9 @@ public final class Angle {
      *
      * @return the converted angle (in degrees)
      */
-    public static double toDeg(double rad) {return Math.toDegrees(rad);}
+    public static double toDeg(double rad) {
+        return Math.toDegrees(rad);
+    }
 
     /**
      * Converts an angle from hours to radians.
@@ -93,7 +104,9 @@ public final class Angle {
      *
      * @return the converted angle (in radians)
      */
-    public static double ofHr(double hr) {return hr * RAD_PER_HR;}
+    public static double ofHr(double hr) {
+        return hr * RAD_PER_HR;
+    }
 
     /**
      * Converts an angle from radians to hours.
@@ -103,5 +116,7 @@ public final class Angle {
      *
      * @return the converted angle (in hours)
      */
-    public static double toHr(double rad) {return rad * HR_PER_RAD;}
+    public static double toHr(double rad) {
+        return rad * HR_PER_RAD;
+    }
 }

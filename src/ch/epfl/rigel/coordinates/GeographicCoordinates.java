@@ -8,49 +8,58 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * Class allowing the creation of the geographic coordinates.
+ * A specific type of Spherical Coordinates : Geographic Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
-final public class GeographicCoordinates extends SphericalCoordinates{
+public final class GeographicCoordinates extends SphericalCoordinates{
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.symmetric(360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
 
     private GeographicCoordinates(double lon, double lat) {
         super(lon, lat);
     }
 
     /**
-     * Constructs geographic coordinates.
+     * Constructs new Geographic Coordinates.
+     *
      * @param lonDeg longitude expressed in degrees
      * @param latDeg latitude expressed in degrees
-     * @return Geographic coordinates
+     *
+     * @return a new instance of Geographic Coordinates
      */
     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg){
-        Preconditions.checkInInterval(RightOpenInterval.symmetric(360), lonDeg);
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), latDeg);
+        Preconditions.checkInInterval(LONDEG_INTERVAL, lonDeg);
+        Preconditions.checkInInterval(LATDEG_INTERVAL, latDeg);
 
         return new GeographicCoordinates(Angle.ofDeg(lonDeg), Angle.ofDeg(latDeg));
     }
 
     /**
-     * Verifies if the angle (expressed in degrees) represents a valid longitude.
+     * Checks if the angle (expressed in degrees) represents a valid longitude.
+     *
      * @param lonDeg the longitude expressed in degrees
+     *
      * @return true if the longitude is valid, false otherwise
      */
     public static boolean isValidLonDeg(double lonDeg){
-        return (lonDeg >= -180 && lonDeg < 180);
+        return (-180 <= lonDeg && lonDeg < 180);
     }
 
     /**
-     * Verifies if the angle (expressed in degrees) represents a valid latitude.
+     * Checks if the angle (expressed in degrees) represents a valid latitude.
+     *
      * @param latDeg the latitude expressed in degrees
+     *
      * @return true if the latitude is valid, false otherwise
      */
     public static boolean isValidLatDeg(double latDeg){
-        return (latDeg >= -90 && latDeg <= 90);
+        return (-90 <= latDeg && latDeg <= 90);
     }
 
     /**
      * Returns the longitude.
+     *
      * @return the longitude
      */
     @Override
@@ -60,6 +69,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the longitude expressed in degrees.
+     *
      * @return the longitude (in degrees)
      */
     @Override
@@ -69,6 +79,7 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the latitude.
+     *
      * @return the latitude
      */
     @Override
@@ -78,7 +89,8 @@ final public class GeographicCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the latitude expressed in degrees.
-     * @return the latitude in degrees
+     *
+     * @return the latitude (in degrees)
      */
     @Override
     public double latDeg(){
@@ -86,8 +98,10 @@ final public class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Prints the geographic coordinates.
-     * @return print of the geographic coordinates
+     * Redefines the toString method in java.lang.Object to construct the textual representation of a point
+     * expressed in the Geographic Coordinates.
+     *
+     * @return the textual representation of the point in the Geographic Coordinates
      */
     @Override
     public String toString(){

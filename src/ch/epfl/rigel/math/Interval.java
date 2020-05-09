@@ -31,7 +31,9 @@ public abstract class Interval {
      *          if the method is called
      */
     @Override
-    public final boolean equals(Object obj) {throw new UnsupportedOperationException();}
+    public final boolean equals(Object obj) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Redefines the hashCode method from java.lang.Object to throw an error.
@@ -40,26 +42,34 @@ public abstract class Interval {
      *          if the method is called
      */
     @Override
-    public final int hashCode() {throw new UnsupportedOperationException();}
+    public final int hashCode() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Getter for the lower bound of the interval.
      *
      * @return the lower bound of the interval
      */
-    public double low() {return low;}
+    public double low() {
+        return low;
+    }
 
     /**
      * Getter for the upper bound of the interval.
      *
      * @return the upper bound of the interval
      */
-    public double high() {return high;}
+    public double high() {
+        return high;
+    }
 
     /**
      * Getter for the size of the interval.
      *
      * @return the size of the interval
      */
-    public double size() {return high-low;}
+    public double size() {
+        return high - low;
+    }
 }

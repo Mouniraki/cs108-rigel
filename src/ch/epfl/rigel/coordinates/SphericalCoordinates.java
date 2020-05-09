@@ -3,7 +3,7 @@ package ch.epfl.rigel.coordinates;
 import ch.epfl.rigel.math.Angle;
 
 /**
- * Mother class for all types of spherical coordinates.
+ * Mother class for all types of Spherical Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -26,7 +26,7 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Returns the longitude in degrees.
+     * Returns the longitude expressed in degrees.
      *
      * @return the longitude (in degrees)
      */
@@ -44,7 +44,7 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Returns the latitude in degrees.
+     * Returns the latitude expressed in degrees.
      *
      * @return the latitude (in degrees)
      */
@@ -55,19 +55,20 @@ abstract class SphericalCoordinates {
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
-    final public boolean equals(Object obj){
+    @Override
+    public final boolean equals(Object obj){
         throw new UnsupportedOperationException();
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 }

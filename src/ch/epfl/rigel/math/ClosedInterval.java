@@ -11,7 +11,9 @@ import static ch.epfl.rigel.Preconditions.checkArgument;
  */
 public final class ClosedInterval extends Interval{
 
-    private ClosedInterval(double low, double high) {super(low, high);}
+    private ClosedInterval(double low, double high) {
+        super(low, high);
+    }
 
     /**
      * Constructs a closed interval from a lower bound and an upper bound.
@@ -42,7 +44,7 @@ public final class ClosedInterval extends Interval{
      */
     public static ClosedInterval symmetric(double size){
         checkArgument(size > 0);
-        return new ClosedInterval(-(size/2), size/2);
+        return new ClosedInterval(-(size / 2), size / 2);
     }
 
     /**
@@ -54,7 +56,7 @@ public final class ClosedInterval extends Interval{
      * @return the clipped argument to the interval
      */
     public double clip(double v){
-        if(v<=low()) return low();
+        if(v <= low()) return low();
         else return Math.min(v, high());
     }
 
@@ -64,7 +66,9 @@ public final class ClosedInterval extends Interval{
      * @return the textual representation of a closed interval
      */
     @Override
-    public String toString() {return String.format(Locale.ROOT, "[%s,%s]", low(), high());}
+    public String toString() {
+        return String.format(Locale.ROOT, "[%s,%s]", low(), high());
+    }
 
     /**
      * Redefines the contains method from the Interval class to check if a value is contained in the interval.
@@ -72,6 +76,8 @@ public final class ClosedInterval extends Interval{
      * @return true if the value is contained in the interval, false otherwise
      */
     @Override
-    public boolean contains(double v) {return (v<=high() && v>=low());}
+    public boolean contains(double v) {
+        return (low() <= v && v <= high());
+    }
 
 }

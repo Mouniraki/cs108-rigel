@@ -1,0 +1,217 @@
+package ch.epfl.rigel.gui;
+
+import ch.epfl.rigel.astronomy.CelestialObject;
+import ch.epfl.rigel.astronomy.ObservedSky;
+import ch.epfl.rigel.astronomy.StarCatalogue;
+import ch.epfl.rigel.coordinates.CartesianCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
+import ch.epfl.rigel.coordinates.StereographicProjection;
+import ch.epfl.rigel.math.Angle;
+import ch.epfl.rigel.math.ClosedInterval;
+import ch.epfl.rigel.math.RightOpenInterval;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.transform.NonInvertibleTransformException;
+import javafx.scene.transform.Transform;
+
+/**
+ * A canvas manager where the sky is drawn.
+ *
+ * @author Mounir Raki (310287)
+ */
+public class SkyCanvasManager {
+    private final ObjectBinding<StereographicProjection> projection;
+    private final ObjectBinding<Transform> planeToCanvas;
+    private final ObjectBinding<ObservedSky> observedSky;
+    private final ObjectProperty<CartesianCoordinates> mousePosition;
+    private final ObjectBinding<HorizontalCoordinates> mouseHorizontalPosition;
+
+    private final DoubleBinding mouseAzDeg;
+    private final DoubleBinding mouseAltDeg;
+    private final ObjectBinding<CelestialObject> objectUnderMouse;
+
+    private final Canvas canvas;
+
+    private final static int MAX_DISTANCE = 10;
+    private final static int AZDEG_INCREMENT = 10;
+    private final static int ALTDEG_INCREMENT = 5;
+    private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
+    private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
+
+    /**
+     * Constructs a canvas manager from a star catalogue and beans containing time, location and viewing informations.
+     *
+     * @param catalogue
+     *          the catalogue of stars and asterisms
+     * @param dateTimeBean
+     *          the bean containing the ZonedDateTime of the observation
+     * @param observerLocationBean
+     *          the bean containing the informations in regard to the location of the observation
+     * @param viewingParametersBean
+     *          the bean containing the informations in regard to the field of view and center of projection
+     */
+    public SkyCanvasManager(StarCatalogue catalogue,
+                            DateTimeBean dateTimeBean,
+                            ObserverLocationBean observerLocationBean,
+                            ViewingParametersBean viewingParametersBean){
+        canvas = new Canvas();
+        SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
+
+        mousePosition = new SimpleObjectProperty<CartesianCoordinates>(CartesianCoordinates.of(0, 0));
+
+        projection = Bindings.createObjectBinding(
+                () -> new StereographicProjection(viewingParametersBean.getCenter()),
+                viewingParametersBean.centerProperty()
+        );
+
+        planeToCanvas = Bindings.createObjectBinding(//TODO transform max distance
+                () -> setTransform(viewingParametersBean),
+                projection, viewingParametersBean.fieldOfViewDegProperty(), canvas.widthProperty(), canvas.heightProperty()
+        );
+
+        observedSky = Bindings.createObjectBinding(
+                () -> new ObservedSky(
+                        dateTimeBean.getZonedDateTime(),
+                        observerLocationBean.getCoordinates(),
+                        projection.get(),
+                        catalogue),
+                dateTimeBean.dateProperty(), dateTimeBean.timeProperty(), dateTimeBean.zoneProperty(),
+                observerLocationBean.coordinatesProperty(), projection
+        );
+
+        mouseHorizontalPosition = Bindings.createObjectBinding(
+                () -> projection.get().inverseApply(cartMousePos()),
+                mousePosition, projection, planeToCanvas
+        );
+
+        mouseAzDeg = Bindings.createDoubleBinding(
+                () -> mouseHorizontalPosition.get().azDeg(),
+                mouseHorizontalPosition
+        );
+
+        mouseAltDeg = Bindings.createDoubleBinding(
+                () -> mouseHorizontalPosition.get().altDeg(),
+                mouseHorizontalPosition
+        );
+
+        objectUnderMouse = Bindings.createObjectBinding(
+                () -> observedSky.get()
+                        .objectClosestTo(cartMousePos(), MAX_DISTANCE)
+                        .get(),
+                observedSky, mousePosition, planeToCanvas
+        );
+
+
+        canvas.setOnMouseMoved(m -> mousePosition.setValue(CartesianCoordinates.of(m.getX(), m.getY())));
+
+        canvas.setOnScroll(m -> {
+            double deltaFOV;
+            double fov = viewingParametersBean.getfieldOfViewDeg();
+            if(Math.abs(m.getDeltaX()) > Math.abs(m.getDeltaY()))
+                deltaFOV = m.getDeltaX();
+            else
+                deltaFOV = m.getDeltaY();
+            viewingParametersBean.setFieldOfViewDeg(Math.abs(fov + deltaFOV) % 360);
+        });
+
+        canvas.setOnMousePressed(m -> {
+            if(m.isPrimaryButtonDown()) canvas.requestFocus();
+        });
+
+        canvas.setOnKeyPressed(k -> {
+            switch(k.getCode()){
+                case LEFT:
+                    k.consume();
+                    viewingParametersBean.setCenter(azMod(viewingParametersBean, -AZDEG_INCREMENT));
+                    break;
+                case RIGHT:
+                    k.consume();
+                    viewingParametersBean.setCenter(azMod(viewingParametersBean, AZDEG_INCREMENT));
+                    break;
+                case DOWN:
+                    k.consume();
+                    viewingParametersBean.setCenter(altMod(viewingParametersBean, -ALTDEG_INCREMENT));
+                    break;
+                case UP:
+                    k.consume();
+                    viewingParametersBean.setCenter(altMod(viewingParametersBean, ALTDEG_INCREMENT));
+                    break;
+            }
+        });
+
+        observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
+        projection.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
+        planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
+    }
+
+    /**
+     * Getter for the objectUnderMouse binding.
+     *
+     * @return the objectUnderMouse binding
+     */
+    public ObjectBinding<CelestialObject> objectUnderMouseProperty(){
+        return objectUnderMouse;
+    }
+
+    /**
+     * Getter for the mouseAzDeg binding.
+     *
+     * @return the mouseAzDeg binding
+     */
+    public DoubleBinding mouseAzDegProperty(){
+        return mouseAzDeg;
+    }
+
+    /**
+     * Getter for the mouseAltDeg binding.
+     *
+     * @return the mouseAltDeg binding
+     */
+    public DoubleBinding mouseAltDegProperty(){
+        return mouseAltDeg;
+    }
+
+    /**
+     * Getter for the canvas where the elements are drawn to.
+     *
+     * @return the canvas
+     */
+    public Canvas canvas(){
+        return canvas;
+    }
+
+    private HorizontalCoordinates azMod(ViewingParametersBean viewingParametersBean, int azDegIncrement){
+        double newAzDeg = AZDEG_INTERVAL.reduce(viewingParametersBean.getCenter().azDeg() + azDegIncrement);
+        return HorizontalCoordinates.ofDeg(newAzDeg, viewingParametersBean.getCenter().altDeg());
+    }
+
+    private HorizontalCoordinates altMod(ViewingParametersBean viewingParametersBean, int altDegIncrement){
+        double newAltDeg = ALTDEG_INTERVAL.clip(viewingParametersBean.getCenter().altDeg() + altDegIncrement);
+        return HorizontalCoordinates.ofDeg(viewingParametersBean.getCenter().azDeg(), newAltDeg);
+    }
+
+    private Transform setTransform(ViewingParametersBean viewingParametersBean){
+        double imageWidth = projection.get()
+                .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
+        double scaleFactor = canvas.getWidth() / imageWidth;
+        double translationXFactor = canvas.getWidth() / 2;
+        double translationYFactor = canvas.getHeight() / 2;
+        Transform translation = Transform.translate(translationXFactor, translationYFactor);
+        return translation.createConcatenation(Transform.scale(scaleFactor, -scaleFactor));
+    }
+
+    private CartesianCoordinates cartMousePos() { //TO CHECK FOR THE EXCEPTION
+        try{
+            Point2D mousePosInPlane = planeToCanvas.get().inverseTransform(mousePosition.get().x(), mousePosition.get().y());
+            return CartesianCoordinates.of(mousePosInPlane.getX(), mousePosInPlane.getY());
+        }
+        catch (NonInvertibleTransformException exception){
+            return CartesianCoordinates.of(0, 0);
+        }
+    }
+}

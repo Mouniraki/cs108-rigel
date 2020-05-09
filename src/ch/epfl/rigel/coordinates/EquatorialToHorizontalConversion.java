@@ -7,58 +7,62 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
- * Class allowing the conversion from equatorial to horizontal coordinates.
+ * The conversion from Equatorial to Horizontal Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
 public final class EquatorialToHorizontalConversion implements Function<EquatorialCoordinates, HorizontalCoordinates> {
-
-    final private double localSiderealTime;
-    final private GeographicCoordinates place;
+    private final double localSiderealTime;
+    private final double cosPlaceLat;
+    private final double sinPlaceLat;
 
     /**
-     * Constructs a conversion from equatorial to horizontal coordinates
-     * @param when the date and time
-     * @param where the place
+     * Constructs a conversion from Equatorial to Horizontal Coordinates.
+     *
+     * @param when The date and time at the moment of the conversion
+     * @param where The geographic coordinates of the place of the conversion
      */
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where){
         localSiderealTime = SiderealTime.local(when, where);
-        place = where;
+        cosPlaceLat = Math.cos(where.lat());
+        sinPlaceLat = Math.sin(where.lat());
     }
 
     /**
-     * Applies the conversion from equatorial to horizontal coordinates
-     * @param equ The equatorial coordinates to convert
-     * @return Converted horizontal coordinates
+     * Applies the conversion from Equatorial to Horizontal Coordinates.
+     *
+     * @param equ The Equatorial Coordinates to convert into Horizontal Coordinates
+     * @return The Horizontal Coordinates obtained from a conversion of the Equatorial Coordinates
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ){
-        double H = localSiderealTime - equ.ra();
+        double hourAngle = localSiderealTime - equ.ra();
 
-        double sinDelta = Math.sin(equ.dec());
-        double cosDelta = Math.cos(equ.dec());
-        double sinPhi = Math.sin(place.lat());
-        double cosPhi = Math.cos(place.lat());
+        double sinEquDec = Math.sin(equ.dec());
+        double cosEquDec = Math.cos(equ.dec());
 
-        double h = Math.asin(sinDelta * sinPhi + cosDelta * cosPhi * Math.cos(H));
-        double A = Angle.normalizePositive(Math.atan2(-cosDelta * cosPhi * Math.sin(H), sinDelta - sinPhi * Math.sin(h)));
+        double alt = Math.asin(sinEquDec*sinPlaceLat + cosEquDec*cosPlaceLat*Math.cos(hourAngle));
+        double az = Math.atan2(
+                -cosEquDec * cosPlaceLat * Math.sin(hourAngle),
+                sinEquDec - sinPlaceLat*Math.sin(alt));
 
-        return HorizontalCoordinates.of(A, h);
+        return HorizontalCoordinates.of(Angle.normalizePositive(az), alt);
     }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the equals() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
-    final public boolean equals(Object obj){ throw new UnsupportedOperationException(); }
+    @Override
+    public final boolean equals(Object obj){ throw new UnsupportedOperationException(); }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
      *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The use of the hashCode() method is not supported.
      */
     @Override
-    final public int hashCode(){
+    public final int hashCode(){
         throw new UnsupportedOperationException();
     }
 }

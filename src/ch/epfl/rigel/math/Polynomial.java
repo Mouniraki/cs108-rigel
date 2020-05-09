@@ -8,10 +8,10 @@ import static ch.epfl.rigel.Preconditions.checkArgument;
  * @author Mounir Raki  (310287)
  */
 public final class Polynomial {
-    private double[] coefficientsTable;
+    private final double[] coefficientsTable;
 
     private Polynomial(double coefficientN, double... coefficients){
-        coefficientsTable = new double[coefficients.length+1];
+        coefficientsTable = new double [coefficients.length + 1];
         coefficientsTable[0] = coefficientN;
         System.arraycopy(coefficients, 0, coefficientsTable, 1, coefficients.length);
     }
@@ -31,20 +31,23 @@ public final class Polynomial {
     }
 
     /**
-     * Evaluates a polynomial
+     * Evaluates a polynomial at at value specified in parameters, calculated using the Horner method.
+     *
      * @param x
-     * @return
+     *          the value at which the polynomial has to be evaluated
+     * @return the value of the evaluation of the polynomial at the value in parameters
      */
     public double at(double x){
         double result = coefficientsTable[0];
-        for(int i=1; i<coefficientsTable.length; ++i){
-            result = result * x + coefficientsTable[i];
+        for(int i = 1; i < coefficientsTable.length; ++i){
+            result = result*x + coefficientsTable[i];
         }
         return result;
     }
 
     /**
      * Redefines the toString method from Objects to construct the textual representation of a polynomial.
+     *
      * @return the textual representation of the polynomial.
      */
     @Override
@@ -52,24 +55,47 @@ public final class Polynomial {
         StringBuilder string = new StringBuilder();
         for(int i = 0; i < coefficientsTable.length; ++i){
             if(coefficientsTable[i] != 0) {
-                if (coefficientsTable[i] > 0 && i > 0 && i <= coefficientsTable.length - 1) string.append("+");
-                if (Math.abs(coefficientsTable[i]) != 1.0) string.append(coefficientsTable[i]);
-                else if (coefficientsTable[i] == -1.0) string.append("-");
-                if (i < coefficientsTable.length - 2) string.append("x^").append(coefficientsTable.length - i - 1);
-                else if (i < coefficientsTable.length - 1) string.append("x");
+                if (coefficientsTable[i] > 0 && i > 0 && i <= coefficientsTable.length - 1)
+                    string.append("+");
+
+                if (Math.abs(coefficientsTable[i]) != 1.0)
+                    string.append(coefficientsTable[i]);
+
+                else if (coefficientsTable[i] == -1.0)
+                    string.append("-");
+
+                if (i < coefficientsTable.length - 2)
+                    string.append("x^")
+                            .append(coefficientsTable.length - i - 1);
+
+                else if (i < coefficientsTable.length - 1)
+                    string.append("x");
             }
         }
         return string.toString();
     }
 
     /**
-     * Redefines
+     * Redefines the equals method from java.lang.Object to throw an error.
+     *
      * @param obj
-     * @return
+     *          the interval to compare with this one (doesn't matter here)
+     * @throws UnsupportedOperationException
+     *          if the method is called
      */
     @Override
-    public boolean equals(Object obj) {throw new UnsupportedOperationException();}
+    public boolean equals(Object obj) {
+        throw new UnsupportedOperationException();
+    }
 
+    /**
+     * Redefines the hashCode method from java.lang.Object to throw an error.
+     *
+     * @throws UnsupportedOperationException
+     *          if the method is called
+     */
     @Override
-    public int hashCode() {throw new UnsupportedOperationException();}
+    public int hashCode() {
+        throw new UnsupportedOperationException();
+    }
 }

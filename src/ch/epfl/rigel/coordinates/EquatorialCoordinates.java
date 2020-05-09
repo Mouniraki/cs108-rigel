@@ -8,30 +8,36 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import java.util.Locale;
 
 /**
- * Class allowing the creation of the equatorial coordinates.
+ * A specific type of Spherical Coordinates : Equatorial Coordinates.
  *
  * @author Nicolas Szwajcok (315213)
  */
-final public class EquatorialCoordinates extends SphericalCoordinates{
+public final class EquatorialCoordinates extends SphericalCoordinates{
+    private final static RightOpenInterval RAHR_INTERVAL = RightOpenInterval.of(0, 24);
+    private final static ClosedInterval DECDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private EquatorialCoordinates(double ra, double dec) {
         super(ra, dec);
     }
 
     /**
-     * Constructs equatorial coordinates.
+     * Constructs the equatorial coordinates.
+     *
      * @param ra the right ascension (in radians)
      * @param dec the declination (in radians)
-     * @return Equatorial coordinates
+     *
+     * @return a new instance of Equatorial Coordinates
      */
     public static EquatorialCoordinates of(double ra, double dec){
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 24), Angle.toHr(ra));
-        Preconditions.checkInInterval(ClosedInterval.of(-90, 90), Angle.toDeg(dec));
+        Preconditions.checkInInterval(RAHR_INTERVAL, Angle.toHr(ra));
+        Preconditions.checkInInterval(DECDEG_INTERVAL, Angle.toDeg(dec));
 
         return new EquatorialCoordinates(ra, dec);
     }
 
     /**
      * Returns the right ascension.
+     *
      * @return the right ascension
      */
     public double ra(){
@@ -40,6 +46,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the right ascension expressed in degrees.
+     *
      * @return the right ascension (in degrees)
      */
     public double raDeg(){
@@ -48,13 +55,16 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the right ascension expressed in hours.
+     *
      * @return the right ascension (in hours)
      */
-    public double raHr(){return Angle.toHr(super.lon());
+    public double raHr(){
+        return Angle.toHr(super.lon());
     }
 
     /**
      * Returns the declination.
+     *
      * @return the declination
      */
     public double dec(){
@@ -63,6 +73,7 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
 
     /**
      * Returns the declination expressed in degrees.
+     *
      * @return the declination (in degrees)
      */
     public double decDeg(){
@@ -71,7 +82,8 @@ final public class EquatorialCoordinates extends SphericalCoordinates{
 
     /**
      * Prints the equatorial coordinates.
-     * @return print of the equatorial coordinates
+     *
+     * @return a string containing information about this instance of equatorial coordinates
      */
     @Override
     public String toString(){

@@ -13,6 +13,9 @@ import java.util.Locale;
  * @author Mounir Raki (310287)
  */
 public final class EclipticCoordinates extends SphericalCoordinates {
+    private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.of(0, 360);
+    private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+
     private EclipticCoordinates(double lon, double lat){
         super(lon, lat);
     }
@@ -32,8 +35,8 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      * @return a new set of ecliptic coordinates
      */
     public static EclipticCoordinates of(double lon, double lat) {
-        Preconditions.checkInInterval(RightOpenInterval.of(0, 360), Angle.toDeg(lon));
-        Preconditions.checkInInterval(ClosedInterval.symmetric(180), Angle.toDeg(lat));
+        Preconditions.checkInInterval(LONDEG_INTERVAL, Angle.toDeg(lon));
+        Preconditions.checkInInterval(LATDEG_INTERVAL, Angle.toDeg(lat));
         return new EclipticCoordinates(lon, lat);
     }
 
@@ -42,34 +45,46 @@ public final class EclipticCoordinates extends SphericalCoordinates {
      *
      * @return the value of the longitude (in radians)
      */
-    public double lon() {return super.lon();}
+    @Override
+    public double lon() {
+        return super.lon();
+    }
 
     /**
      * Getter for the value of the longitude (in degrees).
      *
      * @return the value of the longitude (in degrees)
      */
-    public double lonDeg() {return super.lonDeg();}
+    @Override
+    public double lonDeg() {
+        return super.lonDeg();
+    }
 
     /**
      * Getter for the value of the latitude (in radians).
      *
      * @return the value of the latitude (in radians)
      */
-    public double lat() {return super.lat();}
+    @Override
+    public double lat() {
+        return super.lat();
+    }
 
     /**
      * Getter for the value of the latitude (in degrees).
      *
      * @return the value of the latitude (in degrees)
      */
-    public double latDeg() {return super.latDeg();}
+    @Override
+    public double latDeg() {
+        return super.latDeg();
+    }
 
     /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of a point
-     * expressed in the ecliptic coordinates.
+     * expressed in the Ecliptic Coordinates.
      *
-     * @return the textual representation of the point in the ecliptic coordinates
+     * @return the textual representation of the point in the Ecliptic Coordinates
      */
     @Override
     public String toString() {
