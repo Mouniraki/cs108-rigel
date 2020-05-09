@@ -38,9 +38,8 @@ import java.util.function.UnaryOperator;
 /**
  * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
  *           bindBidirectional ensuite
- *        2) Voir pourquoi le champ de vue change seulement comme un entier (à confirmer)
+ *        2) Voir pourquoi le champ de vue change seulement comme un entier
  *        3) Essayer de trouver une manière plus élégante de généraliser la méthode coordFormatter()
- *
  */
 
 /**
