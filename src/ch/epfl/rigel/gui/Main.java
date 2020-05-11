@@ -10,12 +10,9 @@ import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringExpression;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -35,101 +32,94 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.function.DoublePredicate;
 import java.util.function.UnaryOperator;
 
-=======
-/*
+/**
  * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
  *           bindBidirectional ensuite
  *        2) Voir pourquoi le champ de vue change seulement comme un entier
  *        3) Essayer de trouver une manière plus élégante de généraliser la méthode coordFormatter()
  */
- /*
- * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
+
+/**
+ * CLASSDESCRIPTION
  *
- * @author Nicolas Szwajcok (315213)
+ * @author Mounir Raki (310287)
  */
 public class Main extends Application {
-    private final static ZonedDateTime CURRENT_TIME = ZonedDateTime.of(
+    private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
             LocalDate.now(),
             LocalTime.now(),
             ZoneId.systemDefault()
     );
-
     public static void main(String[] args){
         launch(args);
     }
 
-    private InputStream resourceStream() {
-        return getClass().getResourceAsStream("/hygdata_v3.csv");
-    }
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage) throws Exception {
+        try(InputStream catalogueStream = getClass().getResourceAsStream("/hygdata_v3.csv");
+            InputStream asterismStream = getClass().getResourceAsStream("/asterisms.txt")){
 
-        try (InputStream hs = resourceStream()) {
-            InputStream asterismStream = getClass().getResourceAsStream("/asterisms.txt");
             StarCatalogue catalogue = new StarCatalogue.Builder()
-                    .loadFrom(hs, HygDatabaseLoader.INSTANCE)
+                    .loadFrom(catalogueStream, HygDatabaseLoader.INSTANCE)
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
+
+            DateTimeBean dateTimeBean = new DateTimeBean();
+            dateTimeBean.setZonedDateTime(ACTUAL_TIME);
 
             ObserverLocationBean observerLocationBean = new ObserverLocationBean();
             GeographicCoordinates observerLocation = GeographicCoordinates.ofDeg(6.57, 46.52);
             observerLocationBean.setCoordinates(observerLocation);
 
             ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
-            HorizontalCoordinates centerCoord = HorizontalCoordinates.ofDeg(180.000000000001, 15);
-            viewingParametersBean.setCenter(centerCoord);
+            HorizontalCoordinates centerCoordinates = HorizontalCoordinates.ofDeg(180.000000000001, 15);
+            viewingParametersBean.setCenter(centerCoordinates);
             viewingParametersBean.setFieldOfViewDeg(100.0);
 
-            DateTimeBean dateTimeBean = new DateTimeBean();
-            dateTimeBean.setZonedDateTime(CURRENT_TIME);
-
-            BorderPane borderPane = new BorderPane();
-
-            SkyCanvasManager skyCanvasManager = new SkyCanvasManager(
+            SkyCanvasManager canvasManager = new SkyCanvasManager(
                     catalogue,
                     dateTimeBean,
                     observerLocationBean,
                     viewingParametersBean);
 
-            skyCanvasManager.objectUnderMouseProperty().addListener(
-                    (p, o, n) -> {
-                        if (n != null) System.out.println(n);
-                    });
             TimeAnimator timeAnimator = new TimeAnimator(dateTimeBean);
 
-            Canvas skyCanvas = skyCanvasManager.canvas();
-            skyCanvas.widthProperty().bind(borderPane.widthProperty());
-            skyCanvas.heightProperty().bind(borderPane.heightProperty());
+            HBox controlBar = new HBox(
+                    observationPos(observerLocationBean), new Separator(Orientation.VERTICAL),
+                    observationInstant(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
+                    timeAnimation(dateTimeBean, timeAnimator)
+            );
+            controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
-            HBox topBar = topBar(observerLocationBean, dateTimeBean, timeAnimator);
 
-            Scene scene = new Scene(borderPane);
-            Pane pane = new Pane(skyCanvas);
+            Canvas sky = canvasManager.canvas();
+            Pane canvasPane = new Pane(sky);
+            BorderPane mainPane = new BorderPane(
+                    canvasPane,
+                    controlBar, null,
+                    informationBar(canvasManager, viewingParametersBean),
+                    null
+            );
+            sky.widthProperty().bind(mainPane.widthProperty());
+            sky.heightProperty().bind(mainPane.heightProperty());
 
-            borderPane.setTop(topBar);
-            borderPane.setCenter(pane);
-            borderPane.setBottom(bottomPane(skyCanvasManager, viewingParametersBean));
-
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
-            //primaryStage.setY(100);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            skyCanvas.requestFocus();
+            stage.setTitle("Rigel");
+            stage.setMinWidth(800);
+            stage.setMinHeight(600);
+            stage.setScene(new Scene(mainPane));
+            stage.show();
+            sky.requestFocus();
         }
     }
 
     private HBox observationPos(ObserverLocationBean observerLocationBean){
         Label lonLabel = new Label("Longitude (°) :");
         TextField lonField = new TextField();
-        TextFormatter<Number> lonFormatter = coordFormatter("lon");
+        TextFormatter<Number> lonFormatter = coordFormatter(GeographicCoordinates::isValidLonDeg);
         lonField.setTextFormatter(lonFormatter);
         //lonFormatter.setValue(6.57);
         //observerLocationBean.lonDegProperty().bind(lonFormatter.valueProperty());
@@ -138,7 +128,7 @@ public class Main extends Application {
 
         Label latLabel = new Label("Latitude (°) :");
         TextField latField = new TextField();
-        TextFormatter<Number> latFormatter = coordFormatter("lat");
+        TextFormatter<Number> latFormatter = coordFormatter(GeographicCoordinates::isValidLatDeg);
         latField.setTextFormatter(latFormatter);
         //latFormatter.setValue(46.52);
         //observerLocationBean.latDegProperty().bind(latFormatter.valueProperty());
@@ -149,111 +139,74 @@ public class Main extends Application {
         observationPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         return observationPos;
     }
-  /*
-    private HBox topBar(ObserverLocationBean observerLocationBean, DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
-        HBox toolbar = new HBox();
-        toolbar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
-        Separator separator = new Separator();
-        separator.setOrientation(Orientation.VERTICAL);
-
-        Separator separator2 = new Separator();
-        separator2.setOrientation(Orientation.VERTICAL);
-
-        toolbar.getChildren().add(positionBox(observerLocationBean));
-        toolbar.getChildren().add(separator);
-        toolbar.getChildren().add(observationInstant(dateTimeBean, timeAnimator));
-        toolbar.getChildren().add(separator2);
-        toolbar.getChildren().add(playBox(dateTimeBean, timeAnimator));
-
-        return toolbar;
-    }
-    
-
-    private HBox positionBox(ObserverLocationBean observerLocationBean){
-        HBox positionBox = new HBox();
-        positionBox.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
-
-        List<Node> lonNodes = positionFormatter("Longitude (°) :", observerLocationBean.lonDegProperty(), GeographicCoordinates::isValidLonDeg);
-        List<Node> latNodes = positionFormatter("Latitude (°) :", observerLocationBean.latDegProperty(), GeographicCoordinates::isValidLatDeg);
-
-        positionBox.getChildren().addAll(lonNodes);
-        positionBox.getChildren().addAll(latNodes);
-        return positionBox;
-    }
-    */
-    private  HBox observationInstant(DateTimeBean dateTimeBean, TimeAnimator timeAnimator){
-        HBox observationInstantBox = new HBox();
-        observationInstantBox.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
-
+    private HBox observationInstant(DateTimeBean dateTimeBean, TimeAnimator timeAnimator){
         Label dateLabel = new Label("Date :");
-
-        DatePicker datePicker = new DatePicker(dateTimeBean.getDate());
-        dateTimeBean.dateProperty().bindBidirectional(datePicker.valueProperty());
-        datePicker.disableProperty().bind(timeAnimator.runningProperty());
+        DatePicker datePicker = new DatePicker();
+        datePicker.valueProperty().bindBidirectional(dateTimeBean.dateProperty());
         datePicker.setStyle("-fx-pref-width: 120;");
 
-        List<Node> timeNodes = timeFormatter(dateTimeBean.timeProperty(), timeAnimator);
-        Set<String> zoneIds = ZoneId.getAvailableZoneIds();
+        DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
+        TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
 
-        ObservableList<ZoneId> obsList = FXCollections.observableArrayList();
-        for(String zoneId : zoneIds){
-            obsList.add(ZoneId.of(zoneId));
+        Label timeLabel = new Label("Heure :");
+        TextField timeField = new TextField();
+        timeField.setTextFormatter(timeFormatter);
+        timeFormatter.valueProperty().bindBidirectional(dateTimeBean.timeProperty());
+        timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+
+        ObservableList<ZoneId> zoneIds = FXCollections.observableArrayList();
+        for(String zoneIdName : ZoneId.getAvailableZoneIds()) {
+            zoneIds.add(ZoneId.of(zoneIdName));
         }
-        ComboBox<ZoneId> timeZones = new ComboBox<>(obsList.sorted());
-        timeZones.setValue(ZoneId.of(dateTimeBean.getZone().getId()));
-        timeZones.valueProperty().bindBidirectional(dateTimeBean.zoneProperty());
-        timeZones.disableProperty().bind(timeAnimator.runningProperty());
-        timeZones.setStyle("-fx-pref-width: 180;");
 
-        observationInstantBox.getChildren().add(dateLabel);
-        observationInstantBox.getChildren().add(datePicker);
-        observationInstantBox.getChildren().addAll(timeNodes);
-        observationInstantBox.getChildren().add(timeZones);
+        ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds.sorted());
+        zoneBox.valueProperty().bindBidirectional(dateTimeBean.zoneProperty());
+        zoneBox.setStyle("-fx-pref-width: 180;");
 
-        return observationInstantBox;
+        datePicker.disableProperty().bind(timeAnimator.runningProperty());
+        timeField.disableProperty().bind(timeAnimator.runningProperty());
+        zoneBox.disableProperty().bind(timeAnimator.runningProperty());
+
+        HBox observationInstant = new HBox(dateLabel, datePicker, timeLabel, timeField, zoneBox);
+        observationInstant.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        return observationInstant;
     }
-/*
-    private HBox playBox(DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException {
-        HBox playBox = new HBox();
-        playBox.setStyle("-fx-spacing: inherit;"); //.setitems to arraylist -> observable, default value with choicebox.setvalue
 
-        ObservableList<NamedTimeAccelerator> timeAccelerators = FXCollections.observableArrayList(NamedTimeAccelerator.TIMES_1,
-                NamedTimeAccelerator.TIMES_30, NamedTimeAccelerator.TIMES_300, NamedTimeAccelerator.TIMES_3000, NamedTimeAccelerator.SIDEREAL_DAY, NamedTimeAccelerator.DAY);
+    private HBox timeAnimation(DateTimeBean dateTimeBean, TimeAnimator timeAnimator) throws IOException{
+        String playString = "\uf04b";
+        String pauseString = "\uf04c";
+        String resetString = "\uf0e2";
 
-        ChoiceBox<NamedTimeAccelerator> timeAcceleratorsBox = new ChoiceBox<>(timeAccelerators);
-        timeAcceleratorsBox.setValue(NamedTimeAccelerator.TIMES_1);
-
-        ObjectProperty<TimeAccelerator> currentAccelerator = timeAnimator.acceleratorProperty();
-        currentAccelerator.bind(Bindings.select(timeAcceleratorsBox.valueProperty(), "accelerator"));
-        timeAcceleratorsBox.disableProperty().bind(timeAnimator.runningProperty());
+        ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
+        ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>();
+        timeChoice.setItems(accelerators);
+        timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
+        timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
-            Font fontAwesome = Font.loadFont(fontStream, 15);
+            Font buttonFont = Font.loadFont(fontStream, 15);
 
-            Button resetButton = new Button("\uf0e2");
-            Button startButton = new Button("\uf04b");
-            Button stopButton = new Button("\uf04c");
-            resetButton.setFont(fontAwesome);
-            resetButton.defaultButtonProperty();
-            startButton.setFont(fontAwesome);
-            stopButton.setFont(fontAwesome);
+            Button resetButton = new Button(resetString);
+            Button playPauseButton = new Button(playString);
+            resetButton.setFont(buttonFont);
+            playPauseButton.setFont(buttonFont);
 
-            resetButton.setOnAction(event -> {
-                dateTimeBean.setZonedDateTime(ZonedDateTime.now());
-                resetButton.disableProperty().bind(timeAnimator.runningProperty());
+            resetButton.setOnAction(e -> dateTimeBean.setZonedDateTime(ACTUAL_TIME));
+
+            playPauseButton.setOnAction(e -> {
+                if(!timeAnimator.getRunning())
+                    timeAnimator.start();
+                else
+                    timeAnimator.stop();
             });
 
-            startButton.setOnAction(event -> {
-                timeAnimator.start();
-                playBox.getChildren().remove(startButton);
-                playBox.getChildren().add(stopButton);
-
-            });
-            stopButton.setOnAction(event -> {
-                timeAnimator.stop();
-                playBox.getChildren().remove(stopButton);
-                playBox.getChildren().add(startButton);
+            timeAnimator.runningProperty().addListener((p, o, n) -> {
+                if(n)
+                    playPauseButton.setText(pauseString);
+                else
+                    playPauseButton.setText(playString);
             });
 
             timeChoice.disableProperty().bind(timeAnimator.runningProperty());
@@ -262,95 +215,48 @@ public class Main extends Application {
             HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
             timeAnimation.setStyle("-fx-spacing: inherit;");
             return timeAnimation;
-            
-            /*
-            playBox.getChildren().add(timeAcceleratorsBox);
-            playBox.getChildren().add(resetButton);
-            playBox.getChildren().add(startButton);
-            */
         }
-
-        return playBox;
     }
 
-    private BorderPane bottomPane(SkyCanvasManager skyCanvasManager, ViewingParametersBean viewingParametersBean){
-        BorderPane bottomPane = new BorderPane();
-        bottomPane.setStyle("-fx-padding: 4; -fx-background-color: white;");
-        StringExpression dynamicFOV = Bindings.format("Champ de vue : %.1f°", viewingParametersBean.fieldOfViewDegProperty());
-        Text fieldOfView = new Text();//dynamicFOV.getValue()
-        fieldOfView.textProperty().bind(dynamicFOV);
+    private BorderPane informationBar(SkyCanvasManager manager, ViewingParametersBean viewingParametersBean){
+        Text fovText = new Text();
+        Text objectClosestText = new Text();
+        Text mousePositionText = new Text();
 
-        Text objUnderMouse = new Text();
-        ObjectBinding<CelestialObject> objUnderMouseBinding = skyCanvasManager.objectUnderMouseProperty();
+        StringExpression fovExpression = Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
+                viewingParametersBean.fieldOfViewDegProperty());
 
+        StringExpression mousePositionExpression = Bindings.format(Locale.ROOT,
+                "Azimut : %.2f°, hauteur : %.2f°",
+                manager.mouseAzDegProperty(), manager.mouseAltDegProperty());
+
+        ObjectBinding<CelestialObject> objectClosestBinding = manager.objectUnderMouseProperty();
 
         fovText.textProperty().bind(fovExpression);
         objectClosestBinding.addListener(
-                (p, o, n) -> objectClosestText.setText(n != null ? n.info() : "");
+                (p, o, n) -> objectClosestText.setText(n != null ? n.info() : "")
+        );
+        mousePositionText.textProperty().bind(mousePositionExpression);
 
-        StringExpression azAltBind = Bindings.format(Locale.ROOT, "Azimut : %.1f°, hauteur : %.1f°", skyCanvasManager.mouseAzDegProperty(), skyCanvasManager.mouseAltDegProperty());
-        Text azimuthAltitude = new Text();
-        azimuthAltitude.textProperty().bind(azAltBind);
-
-        bottomPane.setLeft(fieldOfView);
-        bottomPane.setCenter(objUnderMouse);
-        bottomPane.setRight(azimuthAltitude);
-
-        return bottomPane;
+        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
+        informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
+        return informationBar;
     }
 
-    private List<Node> timeFormatter(ObjectProperty<LocalTime> time, TimeAnimator timeAnimator){
-        DateTimeFormatter hmsFormatter =
-                DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTimeStringConverter stringConverter =
-                new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
-        TextFormatter<LocalTime> timeFormatter =
-                new TextFormatter<>(stringConverter);
+    private TextFormatter<Number> coordFormatter(DoublePredicate predicate){
+        NumberStringConverter stringConverter = new NumberStringConverter("#0.00");
 
-        TextField textField =
-                new TextField();
-        textField.setTextFormatter(timeFormatter);
-        textField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
-        textField.disableProperty().bind(timeAnimator.runningProperty());
-
-        timeFormatter.valueProperty().bindBidirectional(time);
-
-        Label label = new Label("Heure :");
-
-        return List.of(label, textField);
-    }
-
-    private List<Node> positionFormatter(String string, DoubleProperty doubleProperty, DoublePredicate predicate){
-        NumberStringConverter stringConverter =
-                new NumberStringConverter("#0.00");
-
-        UnaryOperator<TextFormatter.Change> lonFilter = (change -> {
+        UnaryOperator<TextFormatter.Change> coordFilter = (change -> {
             try {
-                String newText =
-                        change.getControlNewText();
-                double newDeg =
-                        stringConverter.fromString(newText).doubleValue();
+                String newText = change.getControlNewText();
+                double newCoordDeg = stringConverter.fromString(newText).doubleValue();
 
-                return predicate.test(newDeg)
-                        ? change
-                        : null;
-            } catch (Exception e) {
+                return predicate.test(newCoordDeg) ? change : null;
+            } catch (Exception e){
                 return null;
             }
         });
 
-        TextFormatter<Number> textFormatter =
-                new TextFormatter<>(stringConverter, 0, lonFilter);
-
-        TextField textField =
-                new TextField();
-        textField.setTextFormatter(textFormatter);
-        textField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
-
-        textFormatter.valueProperty().bindBidirectional(doubleProperty);
-
-        Label label = new Label(string);
-
-        return List.of(label, textField);
+        return new TextFormatter<>(stringConverter, 0, coordFilter);
     }
 }

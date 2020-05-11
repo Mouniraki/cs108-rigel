@@ -19,6 +19,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
+import java.util.Optional;
+
 /**
  * A canvas manager where the sky is drawn.
  *
@@ -37,11 +39,12 @@ public class SkyCanvasManager {
 
     private final Canvas canvas;
 
-    private final static int MAX_DISTANCE = 10;
+    private final static int MAX_DISTANCE_IN_CANVAS = 10;
     private final static int AZDEG_INCREMENT = 10;
     private final static int ALTDEG_INCREMENT = 5;
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
+    private double scaleFactor;
 
     /**
      * Constructs a canvas manager from a star catalogue and beans containing time, location and viewing informations.
@@ -59,17 +62,18 @@ public class SkyCanvasManager {
                             DateTimeBean dateTimeBean,
                             ObserverLocationBean observerLocationBean,
                             ViewingParametersBean viewingParametersBean){
+        scaleFactor = 0;
         canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
-        mousePosition = new SimpleObjectProperty<CartesianCoordinates>(CartesianCoordinates.of(0, 0));
+        mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
 
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
                 viewingParametersBean.centerProperty()
         );
 
-        planeToCanvas = Bindings.createObjectBinding(//TODO transform max distance
+        planeToCanvas = Bindings.createObjectBinding(
                 () -> setTransform(viewingParametersBean),
                 projection, viewingParametersBean.fieldOfViewDegProperty(), canvas.widthProperty(), canvas.heightProperty()
         );
@@ -118,7 +122,7 @@ public class SkyCanvasManager {
                 deltaFOV = m.getDeltaX();
             else
                 deltaFOV = m.getDeltaY();
-            viewingParametersBean.setFieldOfViewDeg(Math.abs(fov + deltaFOV) % 360);
+            viewingParametersBean.setFieldOfViewDeg(fov + deltaFOV);
         });
 
         canvas.setOnMousePressed(m -> {
@@ -147,7 +151,6 @@ public class SkyCanvasManager {
         });
 
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
-        projection.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
 
@@ -200,14 +203,14 @@ public class SkyCanvasManager {
     private Transform setTransform(ViewingParametersBean viewingParametersBean){
         double imageWidth = projection.get()
                 .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
-        double scaleFactor = canvas.getWidth() / imageWidth;
+        scaleFactor = canvas.getWidth() / imageWidth;
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
         Transform translation = Transform.translate(translationXFactor, translationYFactor);
         return translation.createConcatenation(Transform.scale(scaleFactor, -scaleFactor));
     }
 
-    private CartesianCoordinates cartMousePos() { //TO CHECK FOR THE EXCEPTION
+    private CartesianCoordinates cartMousePos() {
         try{
             Point2D mousePosInPlane = planeToCanvas.get().inverseTransform(mousePosition.get().x(), mousePosition.get().y());
             return CartesianCoordinates.of(mousePosInPlane.getX(), mousePosInPlane.getY());
