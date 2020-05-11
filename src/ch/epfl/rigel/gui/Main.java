@@ -43,9 +43,10 @@ import java.util.function.UnaryOperator;
  */
 
 /**
- * CLASSDESCRIPTION
+ * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
  *
  * @author Mounir Raki (310287)
+ * @author Nicolas Szwajcok (315213)
  */
 public class Main extends Application {
     private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
