@@ -38,15 +38,15 @@ import java.util.function.UnaryOperator;
 
 /**
  * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
- *           bindBidirectional ensuite
+ *           bindBidirectional ensuite (même si je pense que la 2e option est meilleure)
  *        2) Voir pourquoi le champ de vue change seulement comme un entier
- *        3) Essayer de trouver une manière plus élégante de généraliser la méthode coordFormatter()
  */
 
 /**
- * CLASSDESCRIPTION
+ * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
  *
  * @author Mounir Raki (310287)
+ * @author Nicolas Szwajcok (315213)
  */
 public class Main extends Application {
     private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
