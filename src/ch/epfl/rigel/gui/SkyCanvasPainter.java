@@ -78,14 +78,15 @@ public class SkyCanvasPainter {
         Point2D transformedCenterCoord = transform.transform(centerCoord.x(), centerCoord.y());
 
         double circleRadius = projection.circleRadiusForParallel(horizonCoord);
-        Point2D transformedCircleRadius = transform.deltaTransform(circleRadius, circleRadius);
-        double moveFactor = Math.abs(transformedCircleRadius.getY())*2;
+        Point2D transformedCircleRadius = transform.deltaTransform(circleRadius, 0);
+        double moveFactor = Math.abs(transformedCircleRadius.getX())*2;
 
         ctx.setLineWidth(2.0);
         ctx.setStroke(Color.RED);
         ctx.setFill(Color.RED);
         ctx.setTextBaseline(VPos.TOP);
-        ctx.strokeOval(transformedCenterCoord.getX() - moveFactor/2, transformedCenterCoord.getY() - moveFactor/2, moveFactor, moveFactor);
+        ctx.strokeOval(transformedCenterCoord.getX() - moveFactor/2, transformedCenterCoord.getY() - moveFactor/2,
+                moveFactor, moveFactor);
 
         String n = "N";
         String e = "E";

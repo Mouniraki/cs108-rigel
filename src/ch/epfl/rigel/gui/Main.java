@@ -95,7 +95,6 @@ public class Main extends Application {
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
 
-
             Canvas sky = canvasManager.canvas();
             Pane canvasPane = new Pane(sky);
             BorderPane mainPane = new BorderPane(
@@ -180,9 +179,9 @@ public class Main extends Application {
         String resetString = "\uf0e2";
 
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
-        ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>();
-        timeChoice.setItems(accelerators);
-        timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
+        ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>(accelerators);
+//        timeChoice.setItems(accelerators);
+        timeChoice.setValue(NamedTimeAccelerator.TIMES_1);
         timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {

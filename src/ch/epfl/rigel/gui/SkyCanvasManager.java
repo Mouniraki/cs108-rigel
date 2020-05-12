@@ -122,7 +122,7 @@ public class SkyCanvasManager {
                 deltaFOV = m.getDeltaX();
             else
                 deltaFOV = m.getDeltaY();
-            viewingParametersBean.setFieldOfViewDeg(fov + deltaFOV);
+            viewingParametersBean.setFieldOfViewDeg(Math.abs(fov + deltaFOV) % 360);
         });
 
         canvas.setOnMousePressed(m -> {
