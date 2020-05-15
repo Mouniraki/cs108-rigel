@@ -44,6 +44,7 @@ public class SkyCanvasManager {
     private final static int ALTDEG_INCREMENT = 5;
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
+    private final static ClosedInterval FOV_INTERVAL = ClosedInterval.of(30, 150);
     private double scaleFactor;
 
     /**
@@ -122,7 +123,8 @@ public class SkyCanvasManager {
                 deltaFOV = m.getDeltaX();
             else
                 deltaFOV = m.getDeltaY();
-            viewingParametersBean.setFieldOfViewDeg(fov + deltaFOV);
+            fov += deltaFOV;
+            viewingParametersBean.setFieldOfViewDeg(FOV_INTERVAL.clip(fov));
         });
 
         canvas.setOnMousePressed(m -> {
