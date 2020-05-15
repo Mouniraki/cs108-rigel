@@ -173,7 +173,7 @@ public class Main extends Application {
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>(accelerators);
 //        timeChoice.setItems(accelerators);
-        timeChoice.setValue(NamedTimeAccelerator.TIMES_1);
+        timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
         timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
@@ -213,7 +213,8 @@ public class Main extends Application {
         Text objectClosestText = new Text();
         Text mousePositionText = new Text();
 
-        StringExpression fovExpression = Bindings.format(Locale.ROOT, "Champ de vue : %.1f°",
+        StringExpression fovExpression = Bindings.format(Locale.ROOT,
+                "Champ de vue : %.1f°",
                 viewingParametersBean.fieldOfViewDegProperty());
 
         StringExpression mousePositionExpression = Bindings.format(Locale.ROOT,
