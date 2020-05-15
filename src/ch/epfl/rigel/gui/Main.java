@@ -36,11 +36,7 @@ import java.util.Locale;
 import java.util.function.DoublePredicate;
 import java.util.function.UnaryOperator;
 
-/**
- * TODO : 1) Savoir si c'est mieux d'initialiser champ par champ ou en instanciant d'abord et en procédant avec des
- *           bindBidirectional ensuite (même si je pense que la 2e option est meilleure)
- *        2) Voir pourquoi le champ de vue change seulement comme un entier
- */
+import static javafx.beans.binding.Bindings.when;
 
 /**
  * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
@@ -78,7 +74,7 @@ public class Main extends Application {
             ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
             HorizontalCoordinates centerCoordinates = HorizontalCoordinates.ofDeg(180.000000000001, 15);
             viewingParametersBean.setCenter(centerCoordinates);
-            viewingParametersBean.setFieldOfViewDeg(100.0);
+            viewingParametersBean.setFieldOfViewDeg(100);
 
             SkyCanvasManager canvasManager = new SkyCanvasManager(
                     catalogue,
@@ -121,8 +117,6 @@ public class Main extends Application {
         TextField lonField = new TextField();
         TextFormatter<Number> lonFormatter = coordFormatter(GeographicCoordinates::isValidLonDeg);
         lonField.setTextFormatter(lonFormatter);
-        //lonFormatter.setValue(6.57);
-        //observerLocationBean.lonDegProperty().bind(lonFormatter.valueProperty());
         lonFormatter.valueProperty().bindBidirectional(observerLocationBean.lonDegProperty());
         lonField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
 
@@ -130,8 +124,6 @@ public class Main extends Application {
         TextField latField = new TextField();
         TextFormatter<Number> latFormatter = coordFormatter(GeographicCoordinates::isValidLatDeg);
         latField.setTextFormatter(latFormatter);
-        //latFormatter.setValue(46.52);
-        //observerLocationBean.latDegProperty().bind(latFormatter.valueProperty());
         latFormatter.valueProperty().bindBidirectional(observerLocationBean.latDegProperty());
         latField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
 
@@ -157,9 +149,9 @@ public class Main extends Application {
         timeField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
 
         ObservableList<ZoneId> zoneIds = FXCollections.observableArrayList();
-        for(String zoneIdName : ZoneId.getAvailableZoneIds()) {
+
+        for(String zoneIdName : ZoneId.getAvailableZoneIds())
             zoneIds.add(ZoneId.of(zoneIdName));
-        }
 
         ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds.sorted());
         zoneBox.valueProperty().bindBidirectional(dateTimeBean.zoneProperty());
@@ -202,12 +194,11 @@ public class Main extends Application {
                     timeAnimator.stop();
             });
 
-            timeAnimator.runningProperty().addListener((p, o, n) -> {
-                if(n)
-                    playPauseButton.setText(pauseString);
-                else
-                    playPauseButton.setText(playString);
-            });
+            playPauseButton.textProperty().bind(
+                    when(timeAnimator.runningProperty())
+                    .then(pauseString)
+                    .otherwise(playString)
+            );
 
             timeChoice.disableProperty().bind(timeAnimator.runningProperty());
             resetButton.disableProperty().bind(timeAnimator.runningProperty());
