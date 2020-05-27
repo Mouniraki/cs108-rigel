@@ -54,6 +54,13 @@ public class Main extends Application {
         launch(args);
     }
 
+    /**
+     * Redefinition of the start() method of Application where the scene graph is defined.
+     *
+     * @param stage
+     *          the stage to where we want to draw our graphical elements
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         try(InputStream catalogueStream = getClass().getResourceAsStream("/hygdata_v3.csv");
