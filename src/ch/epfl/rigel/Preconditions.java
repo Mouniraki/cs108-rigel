@@ -37,8 +37,8 @@ public final class Preconditions {
      * @return the value if it is contained in the interval
      */
     public static double checkInInterval(Interval interval, double value){
-        checkArgument(interval.contains(value));
-        System.out.println("The value is not in the interval !");
+        if(!interval.contains(value))
+            throw new IllegalArgumentException("The value is not contained in the given interval !");
         return value;
     }
 }
