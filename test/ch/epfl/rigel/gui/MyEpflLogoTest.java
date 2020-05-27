@@ -12,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 //TODO THIS CLASS IS ADDED TO GIT AS A REFERENCE AND WILL HAVE TO BE REMOVED BEFORE SUBMISSION
-public class EpflLogo extends Application {
+public class MyEpflLogoTest extends Application {
     public static void main(String[] args) { launch(args); }
 
     @Override

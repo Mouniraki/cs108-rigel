@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 
-public final class DrawSky extends Application {
+public final class MyDrawSkyTest extends Application {
     public static void main(String[] args) { launch(args); }
 
     private InputStream resourceStream(String resourceName) {
