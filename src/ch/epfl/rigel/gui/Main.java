@@ -39,7 +39,7 @@ import java.util.function.UnaryOperator;
 import static javafx.beans.binding.Bindings.when;
 
 /**
- * Main class of the Rigel project. It is responsible of displaying sky graphical user interface.
+ * Main class of the Rigel project. It is responsible of displaying sky as a graphical user interface.
  *
  * @author Mounir Raki (310287)
  * @author Nicolas Szwajcok (315213)
@@ -58,7 +58,7 @@ public class Main extends Application {
      * Redefinition of the start() method of Application where the scene graph is defined.
      *
      * @param stage
-     *          the stage to where we want to draw our graphical elements
+     *          the stage to where we want to draw the graphical elements
      * @throws Exception
      *          anytime there is an exception thrown in the application
      */

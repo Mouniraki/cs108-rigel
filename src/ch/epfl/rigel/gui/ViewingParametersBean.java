@@ -4,7 +4,7 @@ import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.beans.property.*;
 
 /**
- * The bean containing the part of sky visible on the generated image.
+ * The bean containing the part of sky displayed on the generated image.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -13,7 +13,7 @@ public class ViewingParametersBean {
     private final ObjectProperty<HorizontalCoordinates> center;
 
     /**
-     * Creates an instance of the viewing parameters bean by initializing its internal parameters.
+     * Creates an instance of the viewing parameters bean.
      */
     public ViewingParametersBean(){
         this.fieldOfViewDeg = new SimpleDoubleProperty();
@@ -41,7 +41,7 @@ public class ViewingParametersBean {
     /**
      * Sets the value of the field of view (in degrees).
      *
-     * @param fieldOfViewDeg The field of view value (in degrees) to be set
+     * @param fieldOfViewDeg The field of view value to be set (in degrees)
      */
     public void setFieldOfViewDeg(double fieldOfViewDeg){
         this.fieldOfViewDeg.set(fieldOfViewDeg);

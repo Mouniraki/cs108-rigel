@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 @FunctionalInterface
 public interface TimeAccelerator {
     /**
-     * Calculates the actual simulated time from a initial simulated time and a duration.
+     * Calculates the actual simulated time from the initial simulation time and the elapsed time.
      *
      * @param simulatedInitTime
      *          the time at the beginning of the simulation (ZonedDateTime)
@@ -27,6 +27,7 @@ public interface TimeAccelerator {
      *
      * @param speedFactor
      *          the speed factor by which the simulation has to be sped up to
+     *
      * @return a continuous time accelerator
      */
     static TimeAccelerator continuous(int speedFactor) {
@@ -41,6 +42,7 @@ public interface TimeAccelerator {
      *          the frequency of of progression of the simulated time (in Hz)
      * @param step
      *          the discrete time step of the simulated time (Duration)
+     *
      * @return a discrete time accelerator
      */
     static TimeAccelerator discrete(int runningFrequency, Duration step) {

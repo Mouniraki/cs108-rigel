@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.time.ZonedDateTime;
 
 /**
- * The time animator that uses the time elapsed in real world
+ * The time animator that uses the elapsed time in the real world
  * to change the time in the simulation.
  *
  * @author Nicolas Szwajcok (315213)
@@ -21,7 +21,7 @@ public final class TimeAnimator extends AnimationTimer {
     private long firstTime;
 
     /**
-     * Creates an instance of a time animator by initializing some of it's parameters.
+     * Creates an instance of a time animator.
      *
      * @param dateTimeBean The date time bean at the moment of creation of the time animator
      */
@@ -33,9 +33,9 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     /**
-     * Updates the DateTime bean by a real world time. The real world time can be accelerated by the class' animator.
+     * Updates the DateTime bean by the real world time. The real world time can be accelerated by the class' animator.
      *
-     * @param l The number of nanoseconds since an unspecified starting instance
+     * @param l The number of nanoseconds that have elapsed since an unspecified starting instance
      */
     @Override
     public void handle(long l) {
@@ -67,9 +67,9 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     /**
-     * Returns the object property of a time accelerator.
+     * Returns the object property of the time accelerator.
      *
-     * @return The object property of a time accelerator
+     * @return The object property of the time accelerator
      */
     public ObjectProperty<TimeAccelerator> acceleratorProperty(){
         return accelerator;
@@ -85,32 +85,32 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     /**
-     * Sets the value of a time accelerator.
+     * Sets the value of the time accelerator.
      */
     public void setAccelerator(TimeAccelerator accelerator){
         this.accelerator.setValue(accelerator);
     }
 
     /**
-     * Returns the read-only boolean property telling if the time animator is currently running.
+     * Returns the read-only boolean property informing if the time animator is currently running.
      *
-     * @return The read-only boolean object telling if the time animator is currently running
+     * @return The read-only boolean object informing if the time animator is currently running
      */
     public ReadOnlyBooleanProperty runningProperty(){
         return running;
     }
 
     /**
-     * Returns the read-only boolean property telling if the time animator is currently running.
+     * Returns the read-only boolean property informing if the time animator is currently running.
      *
-     * @return The read-only boolean object telling if the time animator is currently running
+     * @return The read-only boolean object informing if the time animator is currently running
      */
     public boolean getRunning(){
         return running.get();
     }
 
     /**
-     * Sets the read-only boolean property telling if the time animator is currently running.
+     * Sets the read-only boolean property informing if the time animator is currently running.
      */
     private void setRunning(Boolean running){
         this.running.setValue(running);

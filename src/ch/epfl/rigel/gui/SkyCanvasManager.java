@@ -48,16 +48,16 @@ public class SkyCanvasManager {
     private double scaleFactor;
 
     /**
-     * Constructs a canvas manager from a star catalogue and beans containing time, location and viewing informations.
+     * Constructs a canvas manager from a star catalogue and beans containing the time, location and viewing information.
      *
      * @param catalogue
      *          the catalogue of stars and asterisms
      * @param dateTimeBean
      *          the bean containing the ZonedDateTime of the observation
      * @param observerLocationBean
-     *          the bean containing the informations in regard to the location of the observation
+     *          the bean containing the information in regard to the location of the observation
      * @param viewingParametersBean
-     *          the bean containing the informations in regard to the field of view and center of projection
+     *          the bean containing the information in regard to the field of view and center of projection
      */
     public SkyCanvasManager(StarCatalogue catalogue,
                             DateTimeBean dateTimeBean,
@@ -184,9 +184,9 @@ public class SkyCanvasManager {
     }
 
     /**
-     * Getter for the canvas where the elements are drawn to.
+     * Getter for the canvas on which the elements are drawn.
      *
-     * @return the canvas
+     * @return the canvas on which the elements are drawn
      */
     public Canvas canvas(){
         return canvas;
