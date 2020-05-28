@@ -26,6 +26,11 @@ import java.util.Iterator;
 public class SkyCanvasPainter {
     final private Canvas canvas;
     final private GraphicsContext ctx;
+    private final int OCTANT_VALUE = 45;
+    private final static String NORTH = "N";
+    private final static String EAST = "E";
+    private final static String SOUTH = "S";
+    private final static String WEST = "O";
 
     /**
      * Initializes the process of generating an image of the sky.
@@ -88,16 +93,12 @@ public class SkyCanvasPainter {
         ctx.strokeOval(transformedCenterCoord.getX() - moveFactor/2, transformedCenterCoord.getY() - moveFactor/2,
                 moveFactor, moveFactor);
 
-        String n = "N";
-        String e = "E";
-        String s = "S";
-        String o = "O";
         for(int i = 0; i < 8; ++i){
-            HorizontalCoordinates cardinalHorCoord = HorizontalCoordinates.ofDeg(i * 45, -0.5);
+            HorizontalCoordinates cardinalHorCoord = HorizontalCoordinates.ofDeg(i * OCTANT_VALUE, -0.5);
             CartesianCoordinates projectedCoord = projection.apply(cardinalHorCoord);
             Point2D transformedCardinalPoint = transform.transform(projectedCoord.x(), projectedCoord.y());
 
-            String cardinalPointName = cardinalHorCoord.azOctantName(n, e, s, o);
+            String cardinalPointName = cardinalHorCoord.azOctantName(NORTH, EAST, SOUTH, WEST);
             ctx.fillText(cardinalPointName, transformedCardinalPoint.getX(), transformedCardinalPoint.getY());
         }
     }

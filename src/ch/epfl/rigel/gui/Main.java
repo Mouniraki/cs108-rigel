@@ -179,7 +179,6 @@ public class Main extends Application {
 
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>(accelerators);
-//        timeChoice.setItems(accelerators);
         timeChoice.setValue(NamedTimeAccelerator.TIMES_300);
         timeAnimator.acceleratorProperty().bind(Bindings.select(timeChoice.valueProperty(), "accelerator"));
 

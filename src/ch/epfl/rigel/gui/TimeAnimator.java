@@ -18,11 +18,11 @@ import java.util.List;
  * @author Nicolas Szwajcok (315213)
  */
 public final class TimeAnimator extends AnimationTimer {
-    private DateTimeBean dateTimeBean;
-    private ObjectProperty<TimeAccelerator> accelerator;
-    private SimpleBooleanProperty running;
+    private final DateTimeBean dateTimeBean;
+    private final ObjectProperty<TimeAccelerator> accelerator;
+    private final SimpleBooleanProperty running;
     private int counter;
-    private List<Long> times;
+    private final List<Long> times;
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.
@@ -58,8 +58,6 @@ public final class TimeAnimator extends AnimationTimer {
         }
 
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
-//        System.out.println(getAccelerator() == null);
-//        System.out.println(accelerator);
         dateTimeBean.setZonedDateTime(newZonedDateTime);
 
         ++counter;

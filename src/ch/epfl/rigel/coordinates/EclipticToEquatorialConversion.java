@@ -62,7 +62,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     @Override
     final public boolean equals(Object obj){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in EclipticToEquatorialConversion.");
     }
 
     /**
@@ -72,6 +72,6 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     @Override
     final public int hashCode(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in EclipticToEquatorialConversion.");
     }
 }

@@ -54,7 +54,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @throws UnsupportedOperationException The use of the equals() method is not supported.
      */
     @Override
-    public final boolean equals(Object obj){ throw new UnsupportedOperationException(); }
+    public final boolean equals(Object obj){ throw new UnsupportedOperationException("You are not allowed to use the equals method in EquatorialToHorizontalConversion."); }
 
     /**
      * Throws an error. This is defined to prevent the programmer from using the hashCode() method.
@@ -63,6 +63,6 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      */
     @Override
     public final int hashCode(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in EquatorialToHorizontalConversion.");
     }
 }

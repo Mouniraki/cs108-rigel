@@ -85,7 +85,7 @@ public final class Polynomial {
      */
     @Override
     public boolean equals(Object obj) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in Polynomial.");
     }
 
     /**
@@ -96,6 +96,6 @@ public final class Polynomial {
      */
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in Polynomial.");
     }
 }

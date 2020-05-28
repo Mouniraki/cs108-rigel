@@ -48,12 +48,12 @@ public final class CartesianCoordinates {
 
 
     /**
-     * Calculates the squared distance between two points in Cartesian Coordinates.
+     * Calculates the distance between two points in Cartesian Coordinates.
      *
      * @param c
-     *          the point to which the squared distance must be calculated.
+     *          the point to which the distance must be calculated.
      *
-     * @return the calculated squared distance
+     * @return the calculated distance
      */
     public double distanceTo(CartesianCoordinates c){
         double xTerm = (c.x()-this.x()) * (c.x()-this.x());
@@ -69,7 +69,7 @@ public final class CartesianCoordinates {
      */
     @Override
     public final boolean equals(Object obj){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in CartesianCoordinates.");
     }
 
     /**
@@ -79,7 +79,7 @@ public final class CartesianCoordinates {
      */
     @Override
     public final int hashCode(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the hashCode method in CartesianCoordinates.");
     }
 
     /**
