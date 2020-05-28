@@ -236,10 +236,9 @@ public class ObservedSky {
             CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
             map.put(object, objectCartPos);
 
-            int xIndex = 2 * i;
-            int yIndex = 2*i + 1;
-            objectCoords[xIndex] = objectCartPos.x();
-            objectCoords[yIndex] = objectCartPos.y();
+            int index = 2*i;
+            objectCoords[index] = objectCartPos.x();
+            objectCoords[index + 1] = objectCartPos.y();
         }
         return objectCoords;
     }

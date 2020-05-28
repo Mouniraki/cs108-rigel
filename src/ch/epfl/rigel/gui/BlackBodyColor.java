@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class BlackBodyColor {
     private final static Map<Integer, Color> TEMPERATURE_COLOR = initTable();
+    private final static ClosedInterval TEMPERATURE_INTERVAL = ClosedInterval.of(1000, 40000);
 
     private BlackBodyColor(){}
 
@@ -24,11 +25,18 @@ public class BlackBodyColor {
             String line;
             Map<Integer, Color> map = new HashMap<>();
 
+            int tempStartIndex = 1;
+            int tempEndIndex = 6;
+            int unitStartIndex = 10;
+            int unitEndIndex = 15;
+            int rgbStartIndex = 80;
+            int rgbEndIndex = 87;
+
             while((line = r.readLine()) != null){
                 if(line.charAt(0) != '#'){
-                    if(line.substring(10, 15).contains("10deg")){
-                        int colorTemperature = Integer.parseInt(line.substring(1, 6).trim());
-                        Color color = Color.web(line.substring(80, 87).trim());
+                    if(line.substring(unitStartIndex, unitEndIndex).contains("10deg")){
+                        int colorTemperature = Integer.parseInt(line.substring(tempStartIndex, tempEndIndex).trim());
+                        Color color = Color.web(line.substring(rgbStartIndex, rgbEndIndex).trim());
                         map.put(colorTemperature, color);
                     }
                 }
@@ -51,10 +59,11 @@ public class BlackBodyColor {
      * @return the color representation of a color temperature
      */
     public static Color colorForTemperature(int colorTemperature) {
-        Preconditions.checkInInterval(ClosedInterval.of(1000, 40000), colorTemperature);
+        Preconditions.checkInInterval(TEMPERATURE_INTERVAL, colorTemperature);
         Preconditions.checkArgument(!TEMPERATURE_COLOR.isEmpty());
-        double index = Math.round(colorTemperature / 100.0);
-        int approachedTemp = (int) (index * 100);
+        double factor = 100.0;
+        double index = Math.round(colorTemperature / factor);
+        int approachedTemp = (int) (index * factor);
         return TEMPERATURE_COLOR.get(approachedTemp);
     }
 }
