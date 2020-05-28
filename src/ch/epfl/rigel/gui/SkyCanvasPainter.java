@@ -145,8 +145,8 @@ public class SkyCanvasPainter {
         }
 
         int starIndex = 0;
-        int baseIndex = 2*starIndex;
         for(Star star : sky.stars()) {
+            int baseIndex = 2*starIndex;
             double x = transformedPoints[baseIndex];
             double y = transformedPoints[baseIndex + 1];
             Point2D diameterVector = transformedSizeBasedOnMagnitude(star.magnitude(), projection, transform);
@@ -174,6 +174,7 @@ public class SkyCanvasPainter {
 
         double diameter = projection.applyToAngle(Angle.ofDeg(0.5));
         Point2D diameterVector = transform.deltaTransform(0, diameter);
+
         double magnitudeHalved = diameterVector.magnitude()/2;
         double magnitudeMultiplied = diameterVector.magnitude() * 2.2;
         double magnitudeMultipliedAndHalved = (diameterVector.magnitude() * 2.2)/2;
