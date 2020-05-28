@@ -33,7 +33,7 @@ public final class TimeAnimator extends AnimationTimer {
     }
 
     /**
-     * Updates the date time bean by a real world time. The real world time can be accelerated by the class' animator.
+     * Updates the DateTime bean by a real world time. The real world time can be accelerated by the class' animator.
      *
      * @param l The number of nanoseconds since an unspecified starting instance
      */
