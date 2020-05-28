@@ -60,6 +60,7 @@ public class Main extends Application {
      * @param stage
      *          the stage to where we want to draw our graphical elements
      * @throws Exception
+     *          anytime there is an exception thrown in the application
      */
     @Override
     public void start(Stage stage) throws Exception {
