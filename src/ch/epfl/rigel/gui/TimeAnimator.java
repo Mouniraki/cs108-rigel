@@ -21,8 +21,8 @@ public final class TimeAnimator extends AnimationTimer {
     private final DateTimeBean dateTimeBean;
     private final ObjectProperty<TimeAccelerator> accelerator;
     private final SimpleBooleanProperty running;
-    private final List<Long> times;
     private int counter;
+    private long firstTime;
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.
@@ -34,7 +34,6 @@ public final class TimeAnimator extends AnimationTimer {
         accelerator = new SimpleObjectProperty<>();
         running = new SimpleBooleanProperty();
         counter = 0;
-        times = new ArrayList<>(Arrays.asList(0L, 0L));
     }
 
     /**
@@ -44,23 +43,11 @@ public final class TimeAnimator extends AnimationTimer {
      */
     @Override
     public void handle(long l) {
-        int cValue = counter % 2;
-
-        long deltaTime = 0;
-        times.set(cValue, l);
-
-        if(counter != 0){
-            if (cValue == 0) {
-                deltaTime = l - times.get(1);
-            } else {
-                deltaTime = l - times.get(0);
-            }
-        }
-
+        long deltaTime = counter == 0 ? 0 : l - firstTime;
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
         dateTimeBean.setZonedDateTime(newZonedDateTime);
-
-        ++counter;
+        firstTime = l;
+        counter += 1;
     }
 
     /**
@@ -78,6 +65,7 @@ public final class TimeAnimator extends AnimationTimer {
     @Override
     public void stop(){
         super.stop();
+        counter = 0;
         setRunning(false);
     }
 
