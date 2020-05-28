@@ -21,8 +21,8 @@ public final class TimeAnimator extends AnimationTimer {
     private final DateTimeBean dateTimeBean;
     private final ObjectProperty<TimeAccelerator> accelerator;
     private final SimpleBooleanProperty running;
-    private int counter;
     private final List<Long> times;
+    private int counter;
 
     /**
      * Creates an instance of a time animator by initializing some of it's parameters.

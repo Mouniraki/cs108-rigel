@@ -24,9 +24,10 @@ import java.util.Iterator;
  * @author Mounir Raki (310287)
  */
 public class SkyCanvasPainter {
-    final private Canvas canvas;
-    final private GraphicsContext ctx;
-    private final int OCTANT_VALUE = 45;
+    private final Canvas canvas;
+    private final GraphicsContext ctx;
+    private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
+    private final static int OCTANT_VALUE = 45;
     private final static String NORTH = "N";
     private final static String EAST = "E";
     private final static String SOUTH = "S";
@@ -225,8 +226,7 @@ public class SkyCanvasPainter {
     }
 
     private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){
-        ClosedInterval interval = ClosedInterval.of(-2, 5);
-        double planetSize = interval.clip(celestialObjectMagnitude);
+        double planetSize = MAGNITUDE_INTERVAL.clip(celestialObjectMagnitude);
         double sizeFactor = (99 - 17*planetSize) / 140;
         double diameter = sizeFactor * projection.applyToAngle(Angle.ofDeg(0.5));
         return transform.deltaTransform(0, diameter);
