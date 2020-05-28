@@ -45,6 +45,7 @@ public final class TimeAnimator extends AnimationTimer {
     public void handle(long l) {
         long deltaTime = counter == 0 ? 0 : l - firstTime;
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
+
         dateTimeBean.setZonedDateTime(newZonedDateTime);
         firstTime = l;
         counter += 1;
