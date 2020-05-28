@@ -27,12 +27,7 @@ public class SkyCanvasPainter {
     private final Canvas canvas;
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
-    private final static int OCTANT_VALUE = 45;
-    private final static String NORTH = "N";
-    private final static String EAST = "E";
-    private final static String SOUTH = "S";
-    private final static String WEST = "O";
-
+    private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
     /**
      * Initializes the process of generating an image of the sky.
      *
@@ -87,7 +82,7 @@ public class SkyCanvasPainter {
         double circleRadius = projection.circleRadiusForParallel(horizonCoord);
         Point2D transformedCircleRadius = transform.deltaTransform(circleRadius, 0);
         double moveFactor = Math.abs(transformedCircleRadius.getX())*2;
-        double moveFactorHalved = moveFactor/2;
+        double moveFactorHalved = Math.abs(transformedCircleRadius.getX());
 
         ctx.setLineWidth(2.0);
         ctx.setStroke(Color.RED);
@@ -96,12 +91,19 @@ public class SkyCanvasPainter {
         ctx.strokeOval(transformedCenterCoord.getX() - moveFactorHalved, transformedCenterCoord.getY() - moveFactorHalved,
                 moveFactor, moveFactor);
 
+        double textVerticalPosDeg = -0.5;
+        int octantValue = 45;
+        String north = "N";
+        String east = "E";
+        String south = "S";
+        String west = "O";
+
         for(int i = 0; i < 8; ++i){
-            HorizontalCoordinates cardinalHorCoord = HorizontalCoordinates.ofDeg(i * OCTANT_VALUE, -0.5);
+            HorizontalCoordinates cardinalHorCoord = HorizontalCoordinates.ofDeg(i * octantValue, textVerticalPosDeg);
             CartesianCoordinates projectedCoord = projection.apply(cardinalHorCoord);
             Point2D transformedCardinalPoint = transform.transform(projectedCoord.x(), projectedCoord.y());
 
-            String cardinalPointName = cardinalHorCoord.azOctantName(NORTH, EAST, SOUTH, WEST);
+            String cardinalPointName = cardinalHorCoord.azOctantName(north, east, south, west);
             ctx.fillText(cardinalPointName, transformedCardinalPoint.getX(), transformedCardinalPoint.getY());
         }
     }
@@ -172,7 +174,7 @@ public class SkyCanvasPainter {
         CartesianCoordinates sunCoords = sky.sunPosition();
         Point2D transformedCoord = transform.transform(sunCoords.x(), sunCoords.y());
 
-        double diameter = projection.applyToAngle(Angle.ofDeg(0.5));
+        double diameter = projection.applyToAngle(RAD_DIAMETER);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
 
         double magnitudeHalved = diameterVector.magnitude()/2;
@@ -211,8 +213,8 @@ public class SkyCanvasPainter {
         transform.transform2DPoints(sky.planetPositions(), 0, transformedPoints, 0, transformedPoints.length/2);
 
         int planetIndex = 0;
-        int baseIndex = 2*planetIndex;
         for(Planet planet : sky.planets()){
+            int baseIndex = 2*planetIndex;
             double x = transformedPoints[baseIndex];
             double y = transformedPoints[baseIndex + 1];
             Point2D diameterVector = transformedSizeBasedOnMagnitude(planet.magnitude(), projection, transform);
@@ -242,7 +244,7 @@ public class SkyCanvasPainter {
     private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){
         double planetSize = MAGNITUDE_INTERVAL.clip(celestialObjectMagnitude);
         double sizeFactor = (99 - 17*planetSize) / 140;
-        double diameter = sizeFactor * projection.applyToAngle(Angle.ofDeg(0.5));
+        double diameter = sizeFactor * projection.applyToAngle(RAD_DIAMETER);
         return transform.deltaTransform(0, diameter);
     }
 }
