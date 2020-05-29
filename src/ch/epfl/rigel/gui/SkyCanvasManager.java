@@ -45,6 +45,7 @@ public class SkyCanvasManager {
     private final static RightOpenInterval AZDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
     private final static ClosedInterval FOV_INTERVAL = ClosedInterval.of(30, 150);
+
     private double scaleFactor;
 
     /**

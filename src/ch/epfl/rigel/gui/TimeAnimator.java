@@ -18,7 +18,7 @@ public final class TimeAnimator extends AnimationTimer {
     private final ObjectProperty<TimeAccelerator> accelerator;
     private final SimpleBooleanProperty running;
     private int counter;
-    private long firstTime;
+    private long time;
 
     /**
      * Creates an instance of a time animator.
@@ -39,11 +39,11 @@ public final class TimeAnimator extends AnimationTimer {
      */
     @Override
     public void handle(long l) {
-        long deltaTime = counter == 0 ? 0 : l - firstTime;
+        long deltaTime = counter == 0 ? 0 : l - time;
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
 
         dateTimeBean.setZonedDateTime(newZonedDateTime);
-        firstTime = l;
+        time = l;
         counter += 1;
     }
 

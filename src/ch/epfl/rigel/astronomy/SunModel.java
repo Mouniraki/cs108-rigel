@@ -33,12 +33,12 @@ public enum SunModel implements CelestialObjectModel<Sun> {
     public Sun at(double daysSinceJ2010, EclipticToEquatorialConversion eclipticToEquatorialConversion) {
         double meanAngularSpeed = Angle.TAU / DAYS_IN_TROPICAL_YEAR;
         double meanAnomaly = meanAngularSpeed*daysSinceJ2010 + SUN_LON_AT_J2010 - SUN_LON_AT_PERIGEE;
-        double trueAnomaly = meanAnomaly + 2*ORBITAL_ECCENTRICITY* sin(meanAnomaly);
+        double trueAnomaly = meanAnomaly + 2*ORBITAL_ECCENTRICITY*sin(meanAnomaly);
         double eclipticLon = trueAnomaly + SUN_LON_AT_PERIGEE;
 
         EclipticCoordinates eclCoords = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), 0);
 
-        double angularSize = THETA_ZERO * ((1 + ORBITAL_ECCENTRICITY* cos(trueAnomaly)) / (1 - ORBITAL_ECCENTRICITY*ORBITAL_ECCENTRICITY));
+        double angularSize = THETA_ZERO * ((1 + ORBITAL_ECCENTRICITY*cos(trueAnomaly)) / (1 - ORBITAL_ECCENTRICITY*ORBITAL_ECCENTRICITY));
 
         return new Sun(eclCoords, eclipticToEquatorialConversion.apply(eclCoords), (float) angularSize, (float) meanAnomaly);
     }
