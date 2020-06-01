@@ -28,7 +28,8 @@ public class SkyCanvasPainter {
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
-    private static double starMagnitudeDisplayCondition;
+
+    public static double starMagnitudeDisplayCondition = 3.5;
     /**
      * Initializes the process of generating an image of the sky.
      *
@@ -37,7 +38,6 @@ public class SkyCanvasPainter {
     public SkyCanvasPainter(Canvas canvas){
         this.canvas = canvas;
         this.ctx = canvas.getGraphicsContext2D();
-        this.starMagnitudeDisplayCondition = 3.5;
     }
 
     /**
@@ -240,9 +240,7 @@ public class SkyCanvasPainter {
             planetIndex += 1;
 
             ctx.setTextBaseline(VPos.BOTTOM);
-            ctx.fillText(planet.name(),
-                    x,
-                    y);
+            ctx.fillText(planet.name(), x, y);
         }
     }
 
@@ -264,12 +262,10 @@ public class SkyCanvasPainter {
 
     public static void seeMoreStars(){
         starMagnitudeDisplayCondition += 0.5;
-        System.out.println(starMagnitudeDisplayCondition);
     }
 
     public static void seeLessStars(){
         starMagnitudeDisplayCondition -= 0.5;
-        System.out.println(starMagnitudeDisplayCondition);
     }
 
     private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){

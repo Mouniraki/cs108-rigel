@@ -13,6 +13,7 @@ import javafx.beans.binding.StringExpression;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -22,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
@@ -35,6 +37,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.function.DoublePredicate;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 import static javafx.beans.binding.Bindings.when;
 
@@ -95,9 +98,11 @@ public class Main extends Application {
             HBox controlBar = new HBox(
                     observationPos(observerLocationBean), new Separator(Orientation.VERTICAL),
                     observationInstant(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
-                    timeAnimation(dateTimeBean, timeAnimator)
+                    timeAnimation(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
+                    searchCelestialObject(canvasManager)
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
+            controlBar.setAlignment(Pos.CENTER);
 
             Canvas sky = canvasManager.canvas();
             Pane canvasPane = new Pane(sky);
@@ -177,8 +182,6 @@ public class Main extends Application {
         String playString = "\uf04b";
         String pauseString = "\uf04c";
         String resetString = "\uf0e2";
-        String plusString = "\uf067";
-        String minusString = "\uf068";
 
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>(accelerators);
@@ -187,12 +190,6 @@ public class Main extends Application {
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             Font buttonFont = Font.loadFont(fontStream, 15);
-
-            Button seeMoreButton = new Button(plusString);
-            Button seeLessButton = new Button(minusString);
-
-            seeMoreButton.setOnAction(e -> SkyCanvasPainter.seeMoreStars());
-            seeLessButton.setOnAction(e -> SkyCanvasPainter.seeLessStars());
 
             Button resetButton = new Button(resetString);
             Button playPauseButton = new Button(playString);
@@ -217,10 +214,20 @@ public class Main extends Application {
             timeChoice.disableProperty().bind(timeAnimator.runningProperty());
             resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
-            HBox timeAnimation = new HBox(timeChoice, seeMoreButton, seeLessButton, resetButton, playPauseButton);
+            HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
             timeAnimation.setStyle("-fx-spacing: inherit;");
             return timeAnimation;
         }
+    }
+
+    private HBox searchCelestialObject(SkyCanvasManager manager){
+        Label objectNameLabel = new Label("Rechercher un objet céleste : ");
+        TextField objectNameField = new TextField();
+        manager.objectNameProperty().bind(objectNameField.textProperty());
+        objectNameField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        HBox searchCelestialObject = new HBox(objectNameLabel, objectNameField);
+        searchCelestialObject.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        return searchCelestialObject;
     }
 
     private BorderPane informationBar(SkyCanvasManager manager, ViewingParametersBean viewingParametersBean){
@@ -244,11 +251,7 @@ public class Main extends Application {
         );
         mousePositionText.textProperty().bind(mousePositionExpression);
 
-        //TODO : CHECK IF THE PROCESS IS MADE CORRECTLY
-        TextField objectName = new TextField();
-        objectName.textProperty().bindBidirectional(manager.objectNameProperty());
-
-        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, objectName, fovText);
+        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;
     }

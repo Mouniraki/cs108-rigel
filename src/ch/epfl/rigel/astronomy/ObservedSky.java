@@ -77,7 +77,7 @@ public class ObservedSky {
      *         with a distance to the point that is closer than the maximal distance
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(maxDistance >= 0 && c != null);
+        Preconditions.checkArgument(maxDistance > 0 && c != null);
         CelestialObject closestObject = null;
 
         if(maxDistance > 0){
