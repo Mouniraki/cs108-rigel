@@ -236,6 +236,10 @@ public class Main extends Application {
         );
         mousePositionText.textProperty().bind(mousePositionExpression);
 
+        //TODO : CHECK IF THE PROCESS IS MADE CORRECTLY
+        TextField objectName = new TextField();
+        objectName.textProperty().bindBidirectional(manager.objectNameProperty());
+
         BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;

@@ -12,8 +12,11 @@ import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -30,9 +33,12 @@ public class SkyCanvasManager {
     private final ObjectBinding<StereographicProjection> projection;
     private final ObjectBinding<Transform> planeToCanvas;
     private final ObjectBinding<ObservedSky> observedSky;
+    private final ObjectBinding<CelestialObject> searchedObject;
+
     private final ObjectProperty<CartesianCoordinates> mousePosition;
     private final ObjectBinding<HorizontalCoordinates> mouseHorizontalPosition;
 
+    private final StringProperty objectName;
     private final DoubleBinding mouseAzDeg;
     private final DoubleBinding mouseAltDeg;
     private final ObjectBinding<CelestialObject> objectUnderMouse;
@@ -70,6 +76,8 @@ public class SkyCanvasManager {
 
         mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
 
+        objectName = new SimpleStringProperty();
+
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
                 viewingParametersBean.centerProperty()
@@ -88,6 +96,14 @@ public class SkyCanvasManager {
                         catalogue),
                 dateTimeBean.dateProperty(), dateTimeBean.timeProperty(), dateTimeBean.zoneProperty(),
                 observerLocationBean.coordinatesProperty(), projection
+        );
+
+        searchedObject = Bindings.createObjectBinding(
+                () -> {
+                    Optional<CelestialObject> object = observedSky.get().findObject(objectName.get());
+                    return object.orElse(null);
+                },
+                observedSky, objectName
         );
 
         mouseHorizontalPosition = Bindings.createObjectBinding(
@@ -153,6 +169,7 @@ public class SkyCanvasManager {
             }
         });
 
+
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
@@ -182,6 +199,14 @@ public class SkyCanvasManager {
      */
     public DoubleBinding mouseAltDegProperty(){
         return mouseAltDeg;
+    }
+
+    /**
+     * TODO : COMMENT THE METHOD WHEN FINISHED
+     * @return
+     */
+    public StringProperty objectNameProperty(){
+        return objectName;
     }
 
     /**

@@ -112,6 +112,21 @@ public class ObservedSky {
     }
 
     /**
+     * Finds a celestial object by its name.
+     *
+     * @param objectName
+     *          the name of the celestial object to be found
+     * @return the found celestial object
+     */
+    public Optional<CelestialObject> findObject(String objectName){
+        for(CelestialObject o : map.keySet()){
+            if(o.name().contains(objectName))
+                return Optional.of(o);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Getter for the generated Sun.
      *
      * @return the generated Sun in the constructor
