@@ -23,7 +23,8 @@ public class ObservedSky {
     private final double[] planetPositions, starPositions;
 
     private final StarCatalogue catalogue;
-    private final Map<CelestialObject, CartesianCoordinates> map;
+    private final Map<CelestialObject, CartesianCoordinates> object_cartesian;
+    private final Map<CelestialObject, HorizontalCoordinates> object_horizontal;
 
     /**
      * Builds a sky of celestial objects at a specific time and observation point.
@@ -46,20 +47,21 @@ public class ObservedSky {
         EquatorialToHorizontalConversion equToHor = new EquatorialToHorizontalConversion(observationInstant, observationPos);
         this.catalogue = catalogue;
 
-        Map<CelestialObject, CartesianCoordinates> object_position = new HashMap<>();
+        Map<CelestialObject, CartesianCoordinates> objectCartesianPos = new HashMap<>();
+        Map<CelestialObject, HorizontalCoordinates> objectHorizontalPos = new HashMap<>();
 
         sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
         moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
         planets = fillPlanets(daysUntilJ2010, eclToEqu);
         stars = List.copyOf(catalogue.stars());
 
-        sunPosition = projectedObject(sun, equToHor, projection, object_position);
-        moonPosition = projectedObject(moon, equToHor, projection, object_position);
-        planetPositions = projectedCelestialObjects(planets, equToHor, projection, object_position);
-        starPositions = projectedCelestialObjects(stars, equToHor, projection, object_position);
+        sunPosition = projectedObject(sun, equToHor, projection, objectCartesianPos, objectHorizontalPos);
+        moonPosition = projectedObject(moon, equToHor, projection, objectCartesianPos, objectHorizontalPos);
+        planetPositions = projectedCelestialObjects(planets, equToHor, projection, objectCartesianPos, objectHorizontalPos);
+        starPositions = projectedCelestialObjects(stars, equToHor, projection, objectCartesianPos, objectHorizontalPos);
 
-        System.out.println(equToHor.apply(moon.equatorialPos()));
-        map = Map.copyOf(object_position);
+        object_cartesian = Map.copyOf(objectCartesianPos);
+        object_horizontal = Map.copyOf(objectHorizontalPos);
     }
 
     /**
@@ -83,8 +85,8 @@ public class ObservedSky {
             ClosedInterval xInterval = ClosedInterval.of(c.x() - maxDistance, c.x() + maxDistance);
             ClosedInterval yInterval = ClosedInterval.of(c.y() - maxDistance, c.y() + maxDistance);
 
-            for(CelestialObject o : map.keySet()){
-                CartesianCoordinates cartCoords = map.get(o);
+            for(CelestialObject o : object_cartesian.keySet()){
+                CartesianCoordinates cartCoords = object_cartesian.get(o);
                 if(xInterval.contains(cartCoords.x()) && yInterval.contains(cartCoords.y())){
                     double distance = c.distanceTo(cartCoords);
                     if(distance < minDistance) {
@@ -98,8 +100,8 @@ public class ObservedSky {
         }
 
         else {
-            for(CelestialObject o : map.keySet()){
-                CartesianCoordinates cartCoords = map.get(o);
+            for(CelestialObject o : object_cartesian.keySet()){
+                CartesianCoordinates cartCoords = object_cartesian.get(o);
                 if(c.x() == cartCoords.x() && c.y() == cartCoords.y())
                     closestObject = o;
             }
@@ -118,12 +120,12 @@ public class ObservedSky {
      *          the name of the celestial object to be found
      * @return the found celestial object
      */
-    public Optional<CelestialObject> findObject(String objectName){
-        for(CelestialObject o : map.keySet()){
+    public HorizontalCoordinates findObject(String objectName){
+        for(CelestialObject o : object_horizontal.keySet()){
             if(o.name().contains(objectName))
-                return Optional.of(o);
+                return object_horizontal.get(o);
         }
-        return Optional.empty();
+        return null;
     }
 
     /**
@@ -233,10 +235,12 @@ public class ObservedSky {
     private CartesianCoordinates projectedObject(CelestialObject object,
                                                  EquatorialToHorizontalConversion equToHor,
                                                  StereographicProjection projection,
-                                                 Map<CelestialObject, CartesianCoordinates> map){
-        HorizontalCoordinates objectHorPor = equToHor.apply(object.equatorialPos());
-        CartesianCoordinates projectedCoordinates = projection.apply(objectHorPor);
-        map.put(object, projectedCoordinates);
+                                                 Map<CelestialObject, CartesianCoordinates> cartesianMap,
+                                                 Map<CelestialObject, HorizontalCoordinates> horizontalMap){
+        HorizontalCoordinates objectHorPos = equToHor.apply(object.equatorialPos());
+        horizontalMap.put(object, objectHorPos);
+        CartesianCoordinates projectedCoordinates = projection.apply(objectHorPos);
+        cartesianMap.put(object, projectedCoordinates);
 
         return projectedCoordinates;
     }
@@ -244,13 +248,15 @@ public class ObservedSky {
     private <O extends CelestialObject> double[] projectedCelestialObjects(List<O> objects,
                                                    EquatorialToHorizontalConversion equToHor,
                                                    StereographicProjection projection,
-                                                   Map<CelestialObject, CartesianCoordinates> map){
+                                                   Map<CelestialObject, CartesianCoordinates> cartesianMap,
+                                                   Map<CelestialObject, HorizontalCoordinates> horizontalMap){
         double[] objectCoords = new double[objects.size() * 2];
         for (int i = 0; i < objects.size(); i++) {
             O object = objects.get(i);
             HorizontalCoordinates objectHorPos = equToHor.apply(object.equatorialPos());
+            horizontalMap.put(object, objectHorPos);
             CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
-            map.put(object, objectCartPos);
+            cartesianMap.put(object, objectCartPos);
 
             int index = 2*i;
             objectCoords[index] = objectCartPos.x();

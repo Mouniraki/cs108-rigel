@@ -33,7 +33,7 @@ public class SkyCanvasManager {
     private final ObjectBinding<StereographicProjection> projection;
     private final ObjectBinding<Transform> planeToCanvas;
     private final ObjectBinding<ObservedSky> observedSky;
-    private final ObjectBinding<CelestialObject> searchedObject;
+    private final ObjectBinding<HorizontalCoordinates> searchedObjectCoordinates;
 
     private final ObjectProperty<CartesianCoordinates> mousePosition;
     private final ObjectBinding<HorizontalCoordinates> mouseHorizontalPosition;
@@ -98,11 +98,8 @@ public class SkyCanvasManager {
                 observerLocationBean.coordinatesProperty(), projection
         );
 
-        searchedObject = Bindings.createObjectBinding(
-                () -> {
-                    Optional<CelestialObject> object = observedSky.get().findObject(objectName.get());
-                    return object.orElse(null);
-                },
+        searchedObjectCoordinates = Bindings.createObjectBinding(
+                () -> observedSky.get().findObject(objectName.get()),
                 observedSky, objectName
         );
 
