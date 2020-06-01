@@ -28,8 +28,6 @@ public class SkyCanvasPainter {
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
-
-    public static double starMagnitudeDisplayCondition = 3.5;
     /**
      * Initializes the process of generating an image of the sky.
      *
@@ -172,7 +170,11 @@ public class SkyCanvasPainter {
                     diameterVector.magnitude());
             starIndex += 1;
 
-            if(star.magnitude() < starMagnitudeDisplayCondition){
+            /**
+             * TODO : CALIBRATE THE CONDITION TO SHOW ALL CELESTIAL OBJECTS WHEN THE ZOOM IS MAXIMUM
+             *        AND ONLY THE BRIGHTEST OBJECTS WHEN THE ZOOM IS MINIMAL
+             */
+            if(diameterVector.magnitude() > 1){
                 ctx.fillText(star.name(),
                         x - halfMagnitude,
                         y - halfMagnitude);
