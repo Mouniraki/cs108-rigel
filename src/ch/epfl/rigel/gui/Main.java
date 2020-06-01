@@ -23,10 +23,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -37,7 +35,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.function.DoublePredicate;
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 import static javafx.beans.binding.Bindings.when;
 

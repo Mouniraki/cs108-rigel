@@ -260,14 +260,6 @@ public class SkyCanvasPainter {
         drawHorizon(projection, transform);
     }
 
-    public static void seeMoreStars(){
-        starMagnitudeDisplayCondition += 0.5;
-    }
-
-    public static void seeLessStars(){
-        starMagnitudeDisplayCondition -= 0.5;
-    }
-
     private Point2D transformedSizeBasedOnMagnitude(double celestialObjectMagnitude, StereographicProjection projection, Transform transform){
         double planetSize = MAGNITUDE_INTERVAL.clip(celestialObjectMagnitude);
         double sizeFactor = (99 - 17*planetSize) / 140;
