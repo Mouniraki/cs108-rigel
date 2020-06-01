@@ -166,7 +166,7 @@ public class SkyCanvasManager {
             }
         });
 
-
+        searchedObjectCoordinates.addListener((p, o, n) -> viewingParametersBean.setCenter(n));
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
