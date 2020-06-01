@@ -240,7 +240,7 @@ public class Main extends Application {
         TextField objectName = new TextField();
         objectName.textProperty().bindBidirectional(manager.objectNameProperty());
 
-        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
+        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, objectName, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;
     }

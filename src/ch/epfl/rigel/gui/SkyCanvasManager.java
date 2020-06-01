@@ -76,7 +76,7 @@ public class SkyCanvasManager {
 
         mousePosition = new SimpleObjectProperty<>(CartesianCoordinates.of(0, 0));
 
-        objectName = new SimpleStringProperty();
+        objectName = new SimpleStringProperty("");
 
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParametersBean.getCenter()),
@@ -166,7 +166,7 @@ public class SkyCanvasManager {
             }
         });
 
-        searchedObjectCoordinates.addListener((p, o, n) -> viewingParametersBean.setCenter(n));
+        objectName.addListener((p, o, n) -> viewingParametersBean.setCenter(searchedObjectCoordinates.get()));
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
