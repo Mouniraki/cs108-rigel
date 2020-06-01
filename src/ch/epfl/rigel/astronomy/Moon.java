@@ -30,6 +30,15 @@ public final class Moon extends CelestialObject {
     }
 
     /**
+     * Getter for the moon phase.
+     *
+     * @return the moon phase
+     */
+    public float getPhase(){
+        return this.phase;
+    }
+
+    /**
      * Redefines the toString method in java.lang.Object to construct the textual representation of the Moon.
      *
      * @return the textual representation of the Moon

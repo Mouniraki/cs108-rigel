@@ -58,6 +58,7 @@ public class ObservedSky {
         planetPositions = projectedCelestialObjects(planets, equToHor, projection, object_position);
         starPositions = projectedCelestialObjects(stars, equToHor, projection, object_position);
 
+        System.out.println(equToHor.apply(moon.equatorialPos()));
         map = Map.copyOf(object_position);
     }
 

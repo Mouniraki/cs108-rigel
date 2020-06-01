@@ -12,6 +12,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Transform;
 
@@ -59,12 +60,19 @@ public class SkyCanvasPainter {
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
+        float maskAmount = sky.moon().getPhase() * 10;
         double magnitudeHalved = diameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
         ctx.fillOval(transformedCoord.getX() - magnitudeHalved,
                 transformedCoord.getY() - magnitudeHalved,
                 diameterVector.magnitude(),
+                diameterVector.magnitude());
+
+        ctx.setFill(Color.BLACK);
+        ctx.fillOval((transformedCoord.getX() - magnitudeHalved) + maskAmount,
+                transformedCoord.getY() - magnitudeHalved,
+                diameterVector.magnitude() - maskAmount, //TODO : Find when the mask should be to the left of the Moon
                 diameterVector.magnitude());
     }
 
