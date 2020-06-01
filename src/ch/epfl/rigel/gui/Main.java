@@ -177,6 +177,8 @@ public class Main extends Application {
         String playString = "\uf04b";
         String pauseString = "\uf04c";
         String resetString = "\uf0e2";
+        String plusString = "\uf067";
+        String minusString = "\uf068";
 
         ObservableList<NamedTimeAccelerator> accelerators = FXCollections.observableArrayList(NamedTimeAccelerator.values());
         ChoiceBox<NamedTimeAccelerator> timeChoice = new ChoiceBox<>(accelerators);
@@ -185,6 +187,12 @@ public class Main extends Application {
 
         try(InputStream fontStream = getClass().getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             Font buttonFont = Font.loadFont(fontStream, 15);
+
+            Button seeMoreButton = new Button(plusString);
+            Button seeLessButton = new Button(minusString);
+
+            seeMoreButton.setOnAction(e -> SkyCanvasPainter.seeMoreStars());
+            seeLessButton.setOnAction(e -> SkyCanvasPainter.seeLessStars());
 
             Button resetButton = new Button(resetString);
             Button playPauseButton = new Button(playString);
@@ -209,7 +217,7 @@ public class Main extends Application {
             timeChoice.disableProperty().bind(timeAnimator.runningProperty());
             resetButton.disableProperty().bind(timeAnimator.runningProperty());
 
-            HBox timeAnimation = new HBox(timeChoice, resetButton, playPauseButton);
+            HBox timeAnimation = new HBox(timeChoice, seeMoreButton, seeLessButton, resetButton, playPauseButton);
             timeAnimation.setStyle("-fx-spacing: inherit;");
             return timeAnimation;
         }
