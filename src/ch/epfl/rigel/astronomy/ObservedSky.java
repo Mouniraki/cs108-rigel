@@ -114,13 +114,13 @@ public class ObservedSky {
     }
 
     /**
-     * Finds a celestial object by its name.
+     * Finds the horizontal coordinates of a celestial object given its name.
      *
      * @param objectName
-     *          the name of the celestial object to be found
-     * @return the found celestial object
+     *          the name of the celestial object searched
+     * @return the horizontal coordinates of the searched object if it is registered, null otherwise
      */
-    public HorizontalCoordinates findObject(String objectName){
+    public HorizontalCoordinates searchObjectCoordinates(String objectName){
         for(CelestialObject o : object_horizontal.keySet()){
             if(o.name().contains(objectName))
                 return object_horizontal.get(o);

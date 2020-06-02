@@ -93,7 +93,7 @@ public class SkyCanvasManager {
         );
 
         searchedObjectCoordinates = Bindings.createObjectBinding(
-                () -> observedSky.get().findObject(objectName.get()),
+                () -> observedSky.get().searchObjectCoordinates(objectName.get()),
                 observedSky, objectName
         );
 

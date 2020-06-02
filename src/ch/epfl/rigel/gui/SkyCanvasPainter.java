@@ -54,27 +54,39 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
+        float fillAmount = sky.moon().getPhase();
         CartesianCoordinates moonCoords = sky.moonPosition();
-        Point2D transformedCoord = transform.transform(moonCoords.x(), moonCoords.y());
+        Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
+        Point2D transformedMaskCoord = transform.transform(moonCoords.x() - moonCoords.x()*fillAmount, moonCoords.y());
 
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
-        Point2D diameterVector = transform.deltaTransform(0, diameter);
-        float fillAmount = sky.moon().getPhase();
-        double magnitudeHalved = diameterVector.magnitude()/2;
+        double diameterSizeRatio = diameter * fillAmount;
+
+        Point2D moonDiameterVector = transform.deltaTransform(0, diameter);
+
+        Point2D maskCurvature = transform.deltaTransform(0, Math.abs((diameter/2) - diameterSizeRatio));
+        Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
+
+        double magnitudeHalved = moonDiameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
-        ctx.fillArc(transformedCoord.getX() - magnitudeHalved,
-                transformedCoord.getY() - magnitudeHalved,
-                diameterVector.magnitude(),
-                diameterVector.magnitude(),
-                180 - 180*fillAmount,
-                360 * fillAmount,
-                ArcType.OPEN);
+        ctx.fillOval(transformedMoonCoord.getX() - magnitudeHalved,
+                transformedMoonCoord.getY() - magnitudeHalved,
+                moonDiameterVector.magnitude(),
+                moonDiameterVector.magnitude());
         ctx.setTextBaseline(VPos.BOTTOM);
         ctx.fillText(sky.moon().name(),
-                transformedCoord.getX() - magnitudeHalved,
-                transformedCoord.getY() - magnitudeHalved);
+                transformedMoonCoord.getX() - magnitudeHalved,
+                transformedMoonCoord.getY() - magnitudeHalved);
+
+        ctx.setFill(Color.BLACK);
+        ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
+                transformedMaskCoord.getY() - magnitudeHalved,
+                maskDiameterVector.magnitude(),
+                moonDiameterVector.magnitude(),
+                maskCurvature.magnitude(),
+                moonDiameterVector.magnitude());
     }
 
     /**
