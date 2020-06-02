@@ -78,6 +78,7 @@ public class SkyCanvasPainter {
         Point2D transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
         Point2D maskCurvature = transform.deltaTransform(0, curvature);
         Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
+
         ctx.setFill(Color.BLACK);
         ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
                 transformedMaskCoord.getY() - magnitudeHalved,
