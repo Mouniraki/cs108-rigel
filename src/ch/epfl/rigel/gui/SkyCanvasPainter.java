@@ -12,7 +12,6 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Transform;
 
@@ -29,6 +28,7 @@ public class SkyCanvasPainter {
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
+
     /**
      * Initializes the process of generating an image of the sky.
      *
