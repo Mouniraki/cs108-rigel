@@ -54,20 +54,11 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
-        float fillAmount = sky.moon().getPhase();
-        CartesianCoordinates moonCoords = sky.moonPosition();
-        Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
-        Point2D transformedMaskCoord = transform.transform(moonCoords.x() - moonCoords.x()*fillAmount, moonCoords.y());
-
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
-        double diameterSizeRatio = diameter * fillAmount;
-
+        CartesianCoordinates moonCoords = sky.moonPosition();
+        Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
         Point2D moonDiameterVector = transform.deltaTransform(0, diameter);
-
-        Point2D maskCurvature = transform.deltaTransform(0, Math.abs((diameter/2) - diameterSizeRatio));
-        Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
-
         double magnitudeHalved = moonDiameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
@@ -80,6 +71,12 @@ public class SkyCanvasPainter {
                 transformedMoonCoord.getX() - magnitudeHalved,
                 transformedMoonCoord.getY() - magnitudeHalved);
 
+
+        float fillAmount = sky.moon().getPhase();
+        double diameterSizeRatio = diameter * fillAmount;
+        Point2D transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
+        Point2D maskCurvature = transform.deltaTransform(0, Math.abs((diameter/2) - diameterSizeRatio));
+        Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
         ctx.setFill(Color.BLACK);
         ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
                 transformedMaskCoord.getY() - magnitudeHalved,
