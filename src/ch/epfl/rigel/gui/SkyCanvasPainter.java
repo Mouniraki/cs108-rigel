@@ -12,6 +12,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Transform;
 
@@ -59,20 +60,21 @@ public class SkyCanvasPainter {
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
         Point2D diameterVector = transform.deltaTransform(0, diameter);
-        float maskAmount = sky.moon().getPhase() * 10;
+        float fillAmount = sky.moon().getPhase();
         double magnitudeHalved = diameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedCoord.getX() - magnitudeHalved,
+        ctx.fillArc(transformedCoord.getX() - magnitudeHalved,
                 transformedCoord.getY() - magnitudeHalved,
                 diameterVector.magnitude(),
-                diameterVector.magnitude());
-
-        ctx.setFill(Color.BLACK);
-        ctx.fillOval((transformedCoord.getX() - magnitudeHalved) + maskAmount,
-                transformedCoord.getY() - magnitudeHalved,
-                diameterVector.magnitude() - maskAmount, //TODO : Find when the mask should be to the left of the Moon
-                diameterVector.magnitude());
+                diameterVector.magnitude(),
+                180 - 180*fillAmount,
+                360 * fillAmount,
+                ArcType.OPEN);
+        ctx.setTextBaseline(VPos.BOTTOM);
+        ctx.fillText(sky.moon().name(),
+                transformedCoord.getX() - magnitudeHalved,
+                transformedCoord.getY() - magnitudeHalved);
     }
 
     /**
@@ -170,11 +172,8 @@ public class SkyCanvasPainter {
                     diameterVector.magnitude());
             starIndex += 1;
 
-            /**
-             * TODO : CALIBRATE THE CONDITION TO SHOW ALL CELESTIAL OBJECTS WHEN THE ZOOM IS MAXIMUM
-             *        AND ONLY THE BRIGHTEST OBJECTS WHEN THE ZOOM IS MINIMAL
-             */
-            if(diameterVector.magnitude() > 1){
+            if(diameterVector.magnitude() > 1.5){
+                ctx.setTextBaseline(VPos.TOP);
                 ctx.fillText(star.name(),
                         x - halfMagnitude,
                         y - halfMagnitude);
@@ -206,6 +205,10 @@ public class SkyCanvasPainter {
                 transformedCoord.getY() - magnitudePlusTwoHalved,
                 magnitudePlusTwo,
                 magnitudePlusTwo);
+        ctx.setTextBaseline(VPos.BOTTOM);
+        ctx.fillText(sky.sun().name(),
+                transformedCoord.getX() - magnitudeHalved,
+                transformedCoord.getY() - magnitudeHalved);
 
         ctx.setFill(Color.YELLOW.deriveColor(1, 1, 1, 0.25));
         ctx.fillOval(transformedCoord.getX() - magnitudeMultipliedAndHalved,
