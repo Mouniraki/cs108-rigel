@@ -27,7 +27,8 @@ public class SkyCanvasPainter {
     private final Canvas canvas;
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
-    private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
+    private final static double RAD_DIAMETER = Angle.ofDeg(0.5);
+    private final static double HALF_MOON_PHASE = 0.5;
 
     /**
      * Initializes the process of generating an image of the sky.
@@ -54,61 +55,40 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
+        float fillAmount = sky.moon().getPhase();
+
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
         CartesianCoordinates moonCoords = sky.moonPosition();
+
         Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
         Point2D moonDiameterVector = transform.deltaTransform(0, diameter);
-        double moonRadius = moonDiameterVector.magnitude()/2;
+        double moonOffset = moonDiameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedMoonCoord.getX() - moonRadius,
-                transformedMoonCoord.getY() - moonRadius,
+        ctx.fillOval(transformedMoonCoord.getX() - moonOffset,
+                transformedMoonCoord.getY() - moonOffset,
                 moonDiameterVector.magnitude(),
                 moonDiameterVector.magnitude());
         ctx.setTextBaseline(VPos.BOTTOM);
         ctx.fillText(sky.moon().name(),
-                transformedMoonCoord.getX() - moonRadius,
-                transformedMoonCoord.getY() - moonRadius);
+                transformedMoonCoord.getX() - moonOffset,
+                transformedMoonCoord.getY() - moonOffset);
 
+        applyMoonMask(diameter,
+                    fillAmount,
+                    moonOffset,
+                    moonCoords,
+                    moonDiameterVector,
+                    transform);
 
-        float fillAmount = sky.moon().getPhase();
-        double diameterSizeRatio = diameter * fillAmount;
-        double rectangleBordersCurvature = (diameter/2) - diameterSizeRatio;
-        Point2D maskCurveRadius = transform.deltaTransform(0, rectangleBordersCurvature);
-
-        Point2D transformedMaskCoord;
-        Point2D maskWidth;
-
-        if(fillAmount <= 0.5) {
-            transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
-            maskWidth = transform.deltaTransform(0, diameter - diameterSizeRatio);
-        }
-        else {
-            transformedMaskCoord = transform.transform(moonCoords.x() + diameter * 0.5, moonCoords.y());
-            maskWidth = transform.deltaTransform(0, diameter);
-        }
-        //Here the mask that hides portions of the Moon for percentages lower or equal to 50% is described
-        ctx.setFill(Color.BLACK);
-        ctx.fillRoundRect(transformedMaskCoord.getX() - moonRadius,
-                transformedMaskCoord.getY() - moonRadius,
-                maskWidth.magnitude(),
-                moonDiameterVector.magnitude(),
-                maskCurveRadius.magnitude(),
-                moonDiameterVector.magnitude());
-
-        if(fillAmount > 0.5){
-            //Here the moon extension for percentages greater than 50% is described
-            double circleThickness = (diameter / 0.5) * fillAmount - diameter;
-            Point2D moonExtensionDiameter = transform.deltaTransform(0, circleThickness);
-            double moonExtensionRadius = moonExtensionDiameter.magnitude()/2;
-
-            ctx.setFill(Color.WHITE);
-            ctx.fillOval(transformedMoonCoord.getX() - moonExtensionRadius,
-                    transformedMoonCoord.getY() - moonRadius,
-                    moonExtensionDiameter.magnitude(),
-                    moonDiameterVector.magnitude());
-        }
+        if(fillAmount > HALF_MOON_PHASE)
+            correctMoonMasking(diameter,
+                            fillAmount,
+                            moonOffset,
+                            transformedMoonCoord,
+                            moonDiameterVector,
+                            transform);
     }
 
     /**
@@ -304,5 +284,54 @@ public class SkyCanvasPainter {
         double sizeFactor = (99 - 17*planetSize) / 140;
         double diameter = sizeFactor * projection.applyToAngle(RAD_DIAMETER);
         return transform.deltaTransform(0, diameter);
+    }
+
+    private void applyMoonMask(double diameter,
+                               double fillAmount,
+                               double maskHorizontalOffset,
+                               CartesianCoordinates moonCoords,
+                               Point2D maskHeight,
+                               Transform transform){
+
+        double diameterSizeRatio = diameter * fillAmount;
+        double rectangleBordersCurvature = (diameter/2) - diameterSizeRatio;
+        Point2D maskCurveRadius = transform.deltaTransform(0, rectangleBordersCurvature);
+
+        Point2D transformedMaskCoord;
+        Point2D maskWidth;
+
+        if(fillAmount <= HALF_MOON_PHASE) {
+            transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
+            maskWidth = transform.deltaTransform(0, diameter - diameterSizeRatio);
+        }
+        else {
+            transformedMaskCoord = transform.transform(moonCoords.x() + diameter * HALF_MOON_PHASE, moonCoords.y());
+            maskWidth = new Point2D(maskHeight.getX(), maskHeight.getY());
+        }
+        ctx.setFill(Color.BLACK);
+        ctx.fillRoundRect(transformedMaskCoord.getX() - maskHorizontalOffset,
+                transformedMaskCoord.getY() - maskHorizontalOffset,
+                maskWidth.magnitude(),
+                maskHeight.magnitude(),
+                maskCurveRadius.magnitude(),
+                maskHeight.magnitude());
+    }
+
+    private void correctMoonMasking(double diameter,
+                                    double fillAmount,
+                                    double moonCorrectionVerticalOffset,
+                                    Point2D transformedMoonCoord,
+                                    Point2D moonDiameterVector,
+                                    Transform transform){
+        double circleThickness = (diameter / HALF_MOON_PHASE) * fillAmount - diameter;
+
+        Point2D moonCorrectionDiameter = transform.deltaTransform(0, circleThickness);
+        double moonCorrectionHorizontalOffset = moonCorrectionDiameter.magnitude()/2;
+
+        ctx.setFill(Color.WHITE);
+        ctx.fillOval(transformedMoonCoord.getX() - moonCorrectionHorizontalOffset,
+                    transformedMoonCoord.getY() - moonCorrectionVerticalOffset,
+                    moonCorrectionDiameter.magnitude(),
+                    moonDiameterVector.magnitude());
     }
 }
