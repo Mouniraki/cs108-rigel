@@ -59,57 +59,55 @@ public class SkyCanvasPainter {
         CartesianCoordinates moonCoords = sky.moonPosition();
         Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
         Point2D moonDiameterVector = transform.deltaTransform(0, diameter);
-        double magnitudeHalved = moonDiameterVector.magnitude()/2;
+        double moonRadius = moonDiameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedMoonCoord.getX() - magnitudeHalved,
-                transformedMoonCoord.getY() - magnitudeHalved,
+        ctx.fillOval(transformedMoonCoord.getX() - moonRadius,
+                transformedMoonCoord.getY() - moonRadius,
                 moonDiameterVector.magnitude(),
                 moonDiameterVector.magnitude());
         ctx.setTextBaseline(VPos.BOTTOM);
         ctx.fillText(sky.moon().name(),
-                transformedMoonCoord.getX() - magnitudeHalved,
-                transformedMoonCoord.getY() - magnitudeHalved);
+                transformedMoonCoord.getX() - moonRadius,
+                transformedMoonCoord.getY() - moonRadius);
 
 
         float fillAmount = sky.moon().getPhase();
         double diameterSizeRatio = diameter * fillAmount;
         double rectangleBordersCurvature = (diameter/2) - diameterSizeRatio;
-        Point2D maskCurvature = transform.deltaTransform(0, rectangleBordersCurvature);
+        Point2D maskCurveRadius = transform.deltaTransform(0, rectangleBordersCurvature);
 
         Point2D transformedMaskCoord;
-        if(fillAmount <= 0.5)
+        Point2D maskWidth;
+
+        if(fillAmount <= 0.5) {
             transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
-        else
-            transformedMaskCoord = transform.transform(moonCoords.x() + diameter*0.5, moonCoords.y());
+            maskWidth = transform.deltaTransform(0, diameter - diameterSizeRatio);
+        }
+        else {
+            transformedMaskCoord = transform.transform(moonCoords.x() + diameter * 0.5, moonCoords.y());
+            maskWidth = transform.deltaTransform(0, diameter);
 
-        Point2D maskDiameterVector;
-        if(fillAmount <= 0.5)
-            maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
-        else
-            maskDiameterVector = transform.deltaTransform(0, diameter);
-
-
-
-        ctx.setFill(Color.BLACK);
-        ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
-                transformedMaskCoord.getY() - magnitudeHalved,
-                maskDiameterVector.magnitude(),
-                moonDiameterVector.magnitude(),
-                maskCurvature.magnitude(),
-                moonDiameterVector.magnitude());
-
-
-        if(fillAmount > 0.5) {
+            //Here the moon extension for percentages greater than 50% is described
             double circleThickness = (diameter / 0.5) * fillAmount - diameter;
-            Point2D maskDiameterVector2 = transform.deltaTransform(0, circleThickness);
+            Point2D moonExtensionDiameter = transform.deltaTransform(0, circleThickness);
+            double moonExtensionRadius = moonExtensionDiameter.magnitude()/2;
 
             ctx.setFill(Color.WHITE);
-            ctx.fillOval(transformedMoonCoord.getX() - maskDiameterVector2.magnitude() / 2,
-                    transformedMoonCoord.getY() - magnitudeHalved,
-                    maskDiameterVector2.magnitude(),
+            ctx.fillOval(transformedMoonCoord.getX() - moonExtensionRadius,
+                    transformedMoonCoord.getY() - moonRadius,
+                    moonExtensionDiameter.magnitude(),
                     moonDiameterVector.magnitude());
         }
+
+        //Here the mask that hides portions of the Moon for percentages lower or equal to 50% is described
+        ctx.setFill(Color.BLACK);
+        ctx.fillRoundRect(transformedMaskCoord.getX() - moonRadius,
+                transformedMaskCoord.getY() - moonRadius,
+                maskWidth.magnitude(),
+                moonDiameterVector.magnitude(),
+                maskCurveRadius.magnitude(),
+                moonDiameterVector.magnitude());
     }
 
     /**
