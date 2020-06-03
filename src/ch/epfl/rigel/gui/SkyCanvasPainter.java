@@ -87,7 +87,17 @@ public class SkyCanvasPainter {
         else {
             transformedMaskCoord = transform.transform(moonCoords.x() + diameter * 0.5, moonCoords.y());
             maskWidth = transform.deltaTransform(0, diameter);
+        }
+        //Here the mask that hides portions of the Moon for percentages lower or equal to 50% is described
+        ctx.setFill(Color.BLACK);
+        ctx.fillRoundRect(transformedMaskCoord.getX() - moonRadius,
+                transformedMaskCoord.getY() - moonRadius,
+                maskWidth.magnitude(),
+                moonDiameterVector.magnitude(),
+                maskCurveRadius.magnitude(),
+                moonDiameterVector.magnitude());
 
+        if(fillAmount > 0.5){
             //Here the moon extension for percentages greater than 50% is described
             double circleThickness = (diameter / 0.5) * fillAmount - diameter;
             Point2D moonExtensionDiameter = transform.deltaTransform(0, circleThickness);
@@ -99,15 +109,6 @@ public class SkyCanvasPainter {
                     moonExtensionDiameter.magnitude(),
                     moonDiameterVector.magnitude());
         }
-
-        //Here the mask that hides portions of the Moon for percentages lower or equal to 50% is described
-        ctx.setFill(Color.BLACK);
-        ctx.fillRoundRect(transformedMaskCoord.getX() - moonRadius,
-                transformedMaskCoord.getY() - moonRadius,
-                maskWidth.magnitude(),
-                moonDiameterVector.magnitude(),
-                maskCurveRadius.magnitude(),
-                moonDiameterVector.magnitude());
     }
 
     /**
