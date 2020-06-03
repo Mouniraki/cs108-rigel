@@ -13,6 +13,7 @@ import javafx.beans.binding.StringExpression;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -24,7 +25,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -95,9 +95,11 @@ public class Main extends Application {
             HBox controlBar = new HBox(
                     observationPos(observerLocationBean), new Separator(Orientation.VERTICAL),
                     observationInstant(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
-                    timeAnimation(dateTimeBean, timeAnimator)
+                    timeAnimation(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
+                    searchCelestialObject(canvasManager)
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
+            controlBar.setAlignment(Pos.CENTER);
 
             Canvas sky = canvasManager.canvas();
             Pane canvasPane = new Pane(sky);
@@ -215,6 +217,16 @@ public class Main extends Application {
         }
     }
 
+    private HBox searchCelestialObject(SkyCanvasManager manager){
+        Label objectNameLabel = new Label("Rechercher un objet céleste : ");
+        TextField objectNameField = new TextField();
+        manager.objectNameProperty().bind(objectNameField.textProperty());
+        objectNameField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        HBox searchCelestialObject = new HBox(objectNameLabel, objectNameField);
+        searchCelestialObject.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        return searchCelestialObject;
+    }
+
     private BorderPane informationBar(SkyCanvasManager manager, ViewingParametersBean viewingParametersBean){
         Text fovText = new Text();
         Text objectClosestText = new Text();
@@ -236,11 +248,7 @@ public class Main extends Application {
         );
         mousePositionText.textProperty().bind(mousePositionExpression);
 
-        //TODO : CHECK IF THE PROCESS IS MADE CORRECTLY
-        TextField objectName = new TextField();
-        objectName.textProperty().bindBidirectional(manager.objectNameProperty());
-
-        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, objectName, fovText);
+        BorderPane informationBar = new BorderPane(objectClosestText, null, mousePositionText, null, fovText);
         informationBar.setStyle("-fx-padding: 4; -fx-background-color: white;");
         return informationBar;
     }

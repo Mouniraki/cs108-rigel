@@ -28,6 +28,7 @@ public class SkyCanvasPainter {
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);
     private static final double RAD_DIAMETER = Angle.ofDeg(0.5);
+
     /**
      * Initializes the process of generating an image of the sky.
      *
@@ -53,26 +54,38 @@ public class SkyCanvasPainter {
      * @param transform The transformation used to convert the two-dimensional plane into a plane used by the images.
      */
     public void drawMoon(ObservedSky sky, StereographicProjection projection, Transform transform){
-        CartesianCoordinates moonCoords = sky.moonPosition();
-        Point2D transformedCoord = transform.transform(moonCoords.x(), moonCoords.y());
-
         double moonAngularSize = sky.moon().angularSize();
         double diameter = projection.applyToAngle(moonAngularSize);
-        Point2D diameterVector = transform.deltaTransform(0, diameter);
-        float maskAmount = sky.moon().getPhase() * 10;
-        double magnitudeHalved = diameterVector.magnitude()/2;
+        CartesianCoordinates moonCoords = sky.moonPosition();
+        Point2D transformedMoonCoord = transform.transform(moonCoords.x(), moonCoords.y());
+        Point2D moonDiameterVector = transform.deltaTransform(0, diameter);
+        double magnitudeHalved = moonDiameterVector.magnitude()/2;
 
         ctx.setFill(Color.WHITE);
-        ctx.fillOval(transformedCoord.getX() - magnitudeHalved,
-                transformedCoord.getY() - magnitudeHalved,
-                diameterVector.magnitude(),
-                diameterVector.magnitude());
+        ctx.fillOval(transformedMoonCoord.getX() - magnitudeHalved,
+                transformedMoonCoord.getY() - magnitudeHalved,
+                moonDiameterVector.magnitude(),
+                moonDiameterVector.magnitude());
+        ctx.setTextBaseline(VPos.BOTTOM);
+        ctx.fillText(sky.moon().name(),
+                transformedMoonCoord.getX() - magnitudeHalved,
+                transformedMoonCoord.getY() - magnitudeHalved);
+
+
+        float fillAmount = sky.moon().getPhase();
+        double diameterSizeRatio = diameter * fillAmount;
+        double curvature = (diameter/2) - diameterSizeRatio;
+        Point2D transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
+        Point2D maskCurvature = transform.deltaTransform(0, curvature);
+        Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
 
         ctx.setFill(Color.BLACK);
-        ctx.fillOval((transformedCoord.getX() - magnitudeHalved) + maskAmount,
-                transformedCoord.getY() - magnitudeHalved,
-                diameterVector.magnitude() - maskAmount, //TODO : Find when the mask should be to the left of the Moon
-                diameterVector.magnitude());
+        ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
+                transformedMaskCoord.getY() - magnitudeHalved,
+                maskDiameterVector.magnitude(),
+                moonDiameterVector.magnitude(),
+                maskCurvature.magnitude(),
+                moonDiameterVector.magnitude());
     }
 
     /**
@@ -170,7 +183,8 @@ public class SkyCanvasPainter {
                     diameterVector.magnitude());
             starIndex += 1;
 
-            if(diameterVector.magnitude() > 1.9){
+            if(diameterVector.magnitude() > 1.5){
+                ctx.setTextBaseline(VPos.TOP);
                 ctx.fillText(star.name(),
                         x - halfMagnitude,
                         y - halfMagnitude);
@@ -202,6 +216,10 @@ public class SkyCanvasPainter {
                 transformedCoord.getY() - magnitudePlusTwoHalved,
                 magnitudePlusTwo,
                 magnitudePlusTwo);
+        ctx.setTextBaseline(VPos.BOTTOM);
+        ctx.fillText(sky.sun().name(),
+                transformedCoord.getX() - magnitudeHalved,
+                transformedCoord.getY() - magnitudeHalved);
 
         ctx.setFill(Color.YELLOW.deriveColor(1, 1, 1, 0.25));
         ctx.fillOval(transformedCoord.getX() - magnitudeMultipliedAndHalved,
@@ -238,9 +256,7 @@ public class SkyCanvasPainter {
             planetIndex += 1;
 
             ctx.setTextBaseline(VPos.BOTTOM);
-            ctx.fillText(planet.name(),
-                    x,
-                    y);
+            ctx.fillText(planet.name(), x, y);
         }
     }
 

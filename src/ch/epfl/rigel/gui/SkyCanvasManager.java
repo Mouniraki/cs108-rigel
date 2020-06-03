@@ -9,14 +9,8 @@ import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -99,7 +93,7 @@ public class SkyCanvasManager {
         );
 
         searchedObjectCoordinates = Bindings.createObjectBinding(
-                () -> observedSky.get().findObject(objectName.get()),
+                () -> observedSky.get().searchObjectCoordinates(objectName.get()),
                 observedSky, objectName
         );
 
@@ -170,6 +164,7 @@ public class SkyCanvasManager {
             if(searchedObjectCoordinates.get() != null)
                 viewingParametersBean.setCenter(searchedObjectCoordinates.get());
         });
+
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
         planeToCanvas.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
     }
@@ -202,8 +197,9 @@ public class SkyCanvasManager {
     }
 
     /**
-     * TODO : COMMENT THE METHOD WHEN FINISHED
-     * @return
+     * Getter for the property containing the name of the found CelestialObject.
+     *
+     * @return the property holding the name of the found CelestialObject
      */
     public StringProperty objectNameProperty(){
         return objectName;
