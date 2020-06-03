@@ -96,7 +96,7 @@ public class Main extends Application {
                     observationPos(observerLocationBean), new Separator(Orientation.VERTICAL),
                     observationInstant(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
                     timeAnimation(dateTimeBean, timeAnimator), new Separator(Orientation.VERTICAL),
-                    searchCelestialObject(canvasManager)
+                    searchCelestialObject(canvasManager, dateTimeBean)
             );
             controlBar.setStyle("-fx-spacing: 4; -fx-padding: 4;");
             controlBar.setAlignment(Pos.CENTER);
@@ -217,11 +217,12 @@ public class Main extends Application {
         }
     }
 
-    private HBox searchCelestialObject(SkyCanvasManager manager){
+    private HBox searchCelestialObject(SkyCanvasManager manager, DateTimeBean dateTimeBean){
         Label objectNameLabel = new Label("Rechercher un objet céleste : ");
         TextField objectNameField = new TextField();
         manager.objectNameProperty().bind(objectNameField.textProperty());
         objectNameField.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
+        if(objectNameField.getText().trim().isEmpty()) dateTimeBean.setZonedDateTime(ACTUAL_TIME);
         HBox searchCelestialObject = new HBox(objectNameLabel, objectNameField);
         searchCelestialObject.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         return searchCelestialObject;
