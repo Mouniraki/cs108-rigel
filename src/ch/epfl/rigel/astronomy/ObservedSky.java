@@ -122,7 +122,7 @@ public class ObservedSky {
      */
     public HorizontalCoordinates searchObjectCoordinates(String objectName){
         for(CelestialObject o : object_horizontal.keySet()){
-            if(o.name().contains(objectName))
+            if(o.name().toLowerCase().contains(objectName.toLowerCase()))
                 return object_horizontal.get(o);
         }
         return null;

@@ -74,10 +74,22 @@ public class SkyCanvasPainter {
 
         float fillAmount = sky.moon().getPhase();
         double diameterSizeRatio = diameter * fillAmount;
-        double curvature = (diameter/2) - diameterSizeRatio;
-        Point2D transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
-        Point2D maskCurvature = transform.deltaTransform(0, curvature);
-        Point2D maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
+        double rectangleBordersCurvature = (diameter/2) - diameterSizeRatio;
+        Point2D maskCurvature = transform.deltaTransform(0, rectangleBordersCurvature);
+
+        Point2D transformedMaskCoord;
+        if(fillAmount <= 0.5)
+            transformedMaskCoord = transform.transform(moonCoords.x() + diameterSizeRatio, moonCoords.y());
+        else
+            transformedMaskCoord = transform.transform(moonCoords.x() + diameter*0.5, moonCoords.y());
+
+        Point2D maskDiameterVector;
+        if(fillAmount <= 0.5)
+            maskDiameterVector = transform.deltaTransform(0, diameter - diameterSizeRatio);
+        else
+            maskDiameterVector = transform.deltaTransform(0, diameter);
+
+
 
         ctx.setFill(Color.BLACK);
         ctx.fillRoundRect(transformedMaskCoord.getX() - magnitudeHalved,
@@ -86,6 +98,18 @@ public class SkyCanvasPainter {
                 moonDiameterVector.magnitude(),
                 maskCurvature.magnitude(),
                 moonDiameterVector.magnitude());
+
+
+        if(fillAmount > 0.5) {
+            double circleThickness = (diameter / 0.5) * fillAmount - diameter;
+            Point2D maskDiameterVector2 = transform.deltaTransform(0, circleThickness);
+
+            ctx.setFill(Color.WHITE);
+            ctx.fillOval(transformedMoonCoord.getX() - maskDiameterVector2.magnitude() / 2,
+                    transformedMoonCoord.getY() - magnitudeHalved,
+                    maskDiameterVector2.magnitude(),
+                    moonDiameterVector.magnitude());
+        }
     }
 
     /**
