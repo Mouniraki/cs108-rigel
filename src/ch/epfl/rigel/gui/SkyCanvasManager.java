@@ -163,6 +163,7 @@ public class SkyCanvasManager {
         objectName.addListener((p, o, n) -> {
             if(searchedObjectCoordinates.get() != null)
                 viewingParametersBean.setCenter(searchedObjectCoordinates.get());
+            else viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180.000000000001, 15));
         });
 
         observedSky.addListener((p, o, n) -> painter.paint(observedSky.get(), projection.get(), planeToCanvas.get()));
