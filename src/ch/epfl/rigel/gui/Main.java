@@ -45,11 +45,6 @@ import static javafx.beans.binding.Bindings.when;
  * @author Nicolas Szwajcok (315213)
  */
 public class Main extends Application {
-    private final static ZonedDateTime ACTUAL_TIME = ZonedDateTime.of(
-            LocalDate.now(),
-            LocalTime.now(),
-            ZoneId.systemDefault()
-    );
     public static void main(String[] args){
         launch(args);
     }
@@ -72,8 +67,13 @@ public class Main extends Application {
                     .loadFrom(asterismStream, AsterismLoader.INSTANCE)
                     .build();
 
+            ZonedDateTime actualTime = ZonedDateTime.of(
+                    LocalDate.now(),
+                    LocalTime.now(),
+                    ZoneId.systemDefault()
+            );
             DateTimeBean dateTimeBean = new DateTimeBean();
-            dateTimeBean.setZonedDateTime(ACTUAL_TIME);
+            dateTimeBean.setZonedDateTime(actualTime);
 
             ObserverLocationBean observerLocationBean = new ObserverLocationBean();
             GeographicCoordinates observerLocation = GeographicCoordinates.ofDeg(6.57, 46.52);
@@ -109,8 +109,8 @@ public class Main extends Application {
                     informationBar(canvasManager, viewingParametersBean),
                     null
             );
-            sky.widthProperty().bind(mainPane.widthProperty());
-            sky.heightProperty().bind(mainPane.heightProperty());
+            sky.widthProperty().bind(canvasPane.widthProperty());
+            sky.heightProperty().bind(canvasPane.heightProperty());
 
             stage.setTitle("Rigel");
             stage.setMinWidth(800);
@@ -193,7 +193,15 @@ public class Main extends Application {
             resetButton.setFont(buttonFont);
             playPauseButton.setFont(buttonFont);
 
-            resetButton.setOnAction(e -> dateTimeBean.setZonedDateTime(ACTUAL_TIME));
+
+            resetButton.setOnAction(e -> {
+                ZonedDateTime actualTime = ZonedDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.now(),
+                        ZoneId.systemDefault()
+                );
+                dateTimeBean.setZonedDateTime(actualTime);
+            });
 
             playPauseButton.setOnAction(e -> {
                 if(!timeAnimator.getRunning())

@@ -5,6 +5,10 @@ import ch.epfl.rigel.math.ClosedInterval;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,15 +17,15 @@ import java.util.Map;
  *
  * @author Mounir Raki (310287)
  */
-public class BlackBodyColor {
+public final class BlackBodyColor {
     private final static Map<Integer, Color> TEMPERATURE_COLOR = initTable();
     private final static ClosedInterval TEMPERATURE_INTERVAL = ClosedInterval.of(1000, 40000);
 
     private BlackBodyColor(){}
 
     private static Map<Integer, Color> initTable(){
-        try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt")){
-            BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+        try(InputStream stream = BlackBodyColor.class.getResourceAsStream("/bbr_color.txt");
+            BufferedReader r = new BufferedReader(new InputStreamReader(stream, StandardCharsets.US_ASCII))){
             String line;
             Map<Integer, Color> map = new HashMap<>();
 
@@ -41,7 +45,7 @@ public class BlackBodyColor {
                     }
                 }
             }
-        return Map.copyOf(map);
+        return Collections.unmodifiableMap(map);
         } catch(IOException e) {
             throw new UncheckedIOException(e);
         }

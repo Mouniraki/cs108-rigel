@@ -114,7 +114,8 @@ public class SkyCanvasManager {
 
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    double maxDistanceInPlane = Math.abs(MAX_DISTANCE_IN_CANVAS / scaleFactor);
+                    double maxDistanceInPlane = //planeToCanvas.get().inverseDeltaTransform(new Point2D(scaleFactor));
+                            Math.abs(MAX_DISTANCE_IN_CANVAS / scaleFactor);
                     Optional<CelestialObject> object = observedSky.get()
                                 .objectClosestTo(cartMousePos(), maxDistanceInPlane);
                     return object.orElse(null); },
@@ -125,12 +126,15 @@ public class SkyCanvasManager {
         canvas.setOnMouseMoved(m -> mousePosition.setValue(CartesianCoordinates.of(m.getX(), m.getY())));
 
         canvas.setOnScroll(m -> {
-            double deltaFOV;
             double fov = viewingParametersBean.getfieldOfViewDeg();
-            if(Math.abs(m.getDeltaX()) > Math.abs(m.getDeltaY()))
+            /*
+            if())
                 deltaFOV = m.getDeltaX();
             else
                 deltaFOV = m.getDeltaY();
+
+             */
+            double deltaFOV = Math.abs(m.getDeltaX()) > Math.abs(m.getDeltaY()) ? m.getDeltaX() : m.getDeltaY();
             fov += deltaFOV;
             viewingParametersBean.setFieldOfViewDeg(FOV_INTERVAL.clip(fov));
         });

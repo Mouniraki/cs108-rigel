@@ -179,7 +179,7 @@ public class ObservedSky {
      * @return the array containing the positions of the seven planets
      */
     public double[] planetPositions(){
-        return planetPositions;
+        return Arrays.copyOf(planetPositions, planetPositions.length);
     }
 
     /**
@@ -197,7 +197,7 @@ public class ObservedSky {
      * @return the array containing the positions of the stars
      */
     public double[] starPositions(){
-        return starPositions;
+        return Arrays.copyOf(starPositions, starPositions.length);
     }
 
     /**
