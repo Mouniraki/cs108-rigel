@@ -17,8 +17,15 @@ public final class TimeAnimator extends AnimationTimer {
     private final DateTimeBean dateTimeBean;
     private final ObjectProperty<TimeAccelerator> accelerator;
     private final SimpleBooleanProperty running;
+    /*
     private int counter;
     private long time;
+
+     */
+
+    //CORRECTION
+    private long realStart;
+    private ZonedDateTime simulatedStart;
 
     /**
      * Creates an instance of a time animator.
@@ -27,24 +34,37 @@ public final class TimeAnimator extends AnimationTimer {
      */
     public TimeAnimator(DateTimeBean dateTimeBean){
         this.dateTimeBean = dateTimeBean;
-        accelerator = new SimpleObjectProperty<>();
-        running = new SimpleBooleanProperty();
-        counter = 0;
+        this.accelerator = new SimpleObjectProperty<>();
+        this.running = new SimpleBooleanProperty(false);
+        //counter = 0;
     }
 
     /**
      * Updates the DateTime bean by the real world time. The real world time can be accelerated by the class' animator.
      *
-     * @param l The number of nanoseconds that have elapsed since an unspecified starting instance
+     * @param realNow The number of nanoseconds that have elapsed since an unspecified starting instance
      */
     @Override
-    public void handle(long l) {
-        long deltaTime = counter == 0 ? 0 : l - time;
+    public void handle(long realNow) { //APPELEE 60 FOIS/SECONDE
+        if(simulatedStart == null){ //SI LE TEMPS SIMULE EST NUL => ON L'INITIALISE AVEC LA VALEUR DU TEMPS ACTUEL
+            realStart = realNow;
+            simulatedStart = dateTimeBean.getZonedDateTime();
+        } else { //SINON, ON CALCULE LA DIFFERENCE DU TEMPS REEL ET DU TEMPS AU DEMARRAGE
+                // (MESURE LE TEMPS DEPUIS LE PREMIER APPEL A HANDLE)
+            long elapsedRealNs = realNow - realStart;
+            //ET ON SET LE ZONEDDATETIME DE SORTE A LUI RAJOUTER PETIT A PETIT LA DIFFERENCE DE TEMPS
+            //POUR FAIRE PROGRESSER L'ANIMATION
+            dateTimeBean.setZonedDateTime(accelerator.get().adjust(simulatedStart, elapsedRealNs));
+        }
+        /*
+        long deltaTime = counter == 0 ? 0 : realNow - time;
         ZonedDateTime newZonedDateTime = getAccelerator().adjust(dateTimeBean.getZonedDateTime(), deltaTime);
 
         dateTimeBean.setZonedDateTime(newZonedDateTime);
-        time = l;
+        time = realNow;
         counter += 1;
+
+         */
     }
 
     /**
@@ -52,8 +72,14 @@ public final class TimeAnimator extends AnimationTimer {
      */
     @Override
     public void start(){
+        realStart = 0;
+        simulatedStart = null;
+        setRunning(true);
+        super.start();
+        /*
         super.start();
         setRunning(true);
+         */
     }
 
     /**
@@ -62,8 +88,8 @@ public final class TimeAnimator extends AnimationTimer {
     @Override
     public void stop(){
         super.stop();
-        counter = 0;
         setRunning(false);
+        //counter = 0;
     }
 
     /**

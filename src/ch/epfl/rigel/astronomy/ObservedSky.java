@@ -13,11 +13,10 @@ import java.util.*;
  *
  * @author Mounir Raki (310287)
  */
-public class ObservedSky {
+public final class ObservedSky {
     private final Sun sun;
     private final Moon moon;
     private final List<Planet> planets;
-    private final List<Star> stars;
 
     private final CartesianCoordinates sunPosition, moonPosition;
     private final double[] planetPositions, starPositions;
@@ -53,12 +52,11 @@ public class ObservedSky {
         sun = SunModel.SUN.at(daysUntilJ2010, eclToEqu);
         moon = MoonModel.MOON.at(daysUntilJ2010, eclToEqu);
         planets = fillPlanets(daysUntilJ2010, eclToEqu);
-        stars = List.copyOf(catalogue.stars());
 
         sunPosition = projectedObject(sun, equToHor, projection, objectCartesianPos, objectHorizontalPos);
         moonPosition = projectedObject(moon, equToHor, projection, objectCartesianPos, objectHorizontalPos);
         planetPositions = projectedCelestialObjects(planets, equToHor, projection, objectCartesianPos, objectHorizontalPos);
-        starPositions = projectedCelestialObjects(stars, equToHor, projection, objectCartesianPos, objectHorizontalPos);
+        starPositions = projectedCelestialObjects(catalogue.stars(), equToHor, projection, objectCartesianPos, objectHorizontalPos);
 
         object_cartesian = Map.copyOf(objectCartesianPos);
         object_horizontal = Map.copyOf(objectHorizontalPos);
@@ -77,7 +75,7 @@ public class ObservedSky {
      *         with a distance to the point that is closer than the maximal distance
      */
     public Optional<CelestialObject> objectClosestTo(CartesianCoordinates c, double maxDistance){
-        Preconditions.checkArgument(maxDistance > 0 && c != null);
+        Preconditions.checkArgument(maxDistance >= 0 && c != null);
         CelestialObject closestObject = null;
 
         if(maxDistance > 0){
@@ -188,7 +186,7 @@ public class ObservedSky {
      * @return the list of stars
      */
     public List<Star> stars(){
-        return stars;
+        return catalogue.stars();
     }
 
     /**

@@ -25,11 +25,8 @@ public final class StarCatalogue {
         Map<Asterism, List<Integer>> tempMap = new HashMap<>();
         Map<Star, Integer> starIndexMap = new HashMap<>();
 
-        int i=0;
-        for(Star s : stars){
-            starIndexMap.put(s, i);
-            ++i;
-        }
+        for(Star s : stars)
+            starIndexMap.put(s, starIndexMap.size());
 
         for(Asterism asterism : asterisms){
             List<Integer> starIndexes = new ArrayList<>();
@@ -173,6 +170,6 @@ public final class StarCatalogue {
          *
          * @throws IOException In case of an input or output error, the IOException will be thrown
          */
-        public abstract void load(InputStream inputStream, Builder builder) throws IOException;
+        void load(InputStream inputStream, Builder builder) throws IOException;
     }
 }

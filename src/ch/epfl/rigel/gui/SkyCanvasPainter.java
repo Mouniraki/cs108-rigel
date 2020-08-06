@@ -23,7 +23,7 @@ import java.util.Iterator;
  * @author Nicolas Szwajcok (315213)
  * @author Mounir Raki (310287)
  */
-public class SkyCanvasPainter {
+public final class SkyCanvasPainter {
     private final Canvas canvas;
     private final GraphicsContext ctx;
     private final static ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval.of(-2, 5);

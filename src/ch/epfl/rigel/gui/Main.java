@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -44,7 +45,7 @@ import static javafx.beans.binding.Bindings.when;
  * @author Mounir Raki (310287)
  * @author Nicolas Szwajcok (315213)
  */
-public class Main extends Application {
+public final class Main extends Application {
     public static void main(String[] args){
         launch(args);
     }
@@ -121,22 +122,21 @@ public class Main extends Application {
         }
     }
 
+    private HBox lonLat(String label, DoublePredicate formatter, DoubleProperty fieldProperty){
+        Label thisLabel = new Label(label);
+        TextField field = new TextField();
+        TextFormatter<Number> thisFormatter = coordFormatter(formatter);
+        field.setTextFormatter(thisFormatter);
+        thisFormatter.valueProperty().bindBidirectional(fieldProperty);
+        field.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        return new HBox(thisLabel, field);
+    }
+
     private HBox observationPos(ObserverLocationBean observerLocationBean){
-        Label lonLabel = new Label("Longitude (°) :");
-        TextField lonField = new TextField();
-        TextFormatter<Number> lonFormatter = coordFormatter(GeographicCoordinates::isValidLonDeg);
-        lonField.setTextFormatter(lonFormatter);
-        lonFormatter.valueProperty().bindBidirectional(observerLocationBean.lonDegProperty());
-        lonField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
+        HBox lonBox = lonLat("Longitude (°) : ", GeographicCoordinates::isValidLonDeg, observerLocationBean.lonDegProperty());
+        HBox latBox = lonLat("Latitude (°) : ", GeographicCoordinates::isValidLatDeg, observerLocationBean.latDegProperty());
 
-        Label latLabel = new Label("Latitude (°) :");
-        TextField latField = new TextField();
-        TextFormatter<Number> latFormatter = coordFormatter(GeographicCoordinates::isValidLatDeg);
-        latField.setTextFormatter(latFormatter);
-        latFormatter.valueProperty().bindBidirectional(observerLocationBean.latDegProperty());
-        latField.setStyle("-fx-pref-width: 60; -fx-alignment: baseline-right;");
-
-        HBox observationPos = new HBox(lonLabel, lonField, latLabel, latField);
+        HBox observationPos = new HBox(lonBox, latBox);
         observationPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         return observationPos;
     }

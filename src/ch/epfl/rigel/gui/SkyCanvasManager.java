@@ -23,7 +23,7 @@ import java.util.Optional;
  *
  * @author Mounir Raki (310287)
  */
-public class SkyCanvasManager {
+public final class SkyCanvasManager {
     private final ObjectBinding<StereographicProjection> projection;
     private final ObjectBinding<Transform> planeToCanvas;
     private final ObjectBinding<ObservedSky> observedSky;
@@ -46,7 +46,7 @@ public class SkyCanvasManager {
     private final static ClosedInterval ALTDEG_INTERVAL = ClosedInterval.of(5, 90);
     private final static ClosedInterval FOV_INTERVAL = ClosedInterval.of(30, 150);
 
-    private double scaleFactor;
+    //private double scaleFactor;
 
     /**
      * Constructs a canvas manager from a star catalogue and beans containing the time, location and viewing information.
@@ -64,7 +64,7 @@ public class SkyCanvasManager {
                             DateTimeBean dateTimeBean,
                             ObserverLocationBean observerLocationBean,
                             ViewingParametersBean viewingParametersBean){
-        scaleFactor = 0;
+        //scaleFactor = 0;
         canvas = new Canvas();
         SkyCanvasPainter painter = new SkyCanvasPainter(canvas);
 
@@ -114,8 +114,10 @@ public class SkyCanvasManager {
 
         objectUnderMouse = Bindings.createObjectBinding(
                 () -> {
-                    double maxDistanceInPlane = //planeToCanvas.get().inverseDeltaTransform(new Point2D(scaleFactor));
-                            Math.abs(MAX_DISTANCE_IN_CANVAS / scaleFactor);
+                    double maxDistanceInPlane = planeToCanvas.get().getTx() == 0
+                            ? 0
+                            : planeToCanvas.get().inverseDeltaTransform(MAX_DISTANCE_IN_CANVAS, 0).getX();
+                    //Math.abs(MAX_DISTANCE_IN_CANVAS / scaleFactor);
                     Optional<CelestialObject> object = observedSky.get()
                                 .objectClosestTo(cartMousePos(), maxDistanceInPlane);
                     return object.orElse(null); },
@@ -232,7 +234,7 @@ public class SkyCanvasManager {
     private Transform setTransform(ViewingParametersBean viewingParametersBean){
         double imageWidth = projection.get()
                 .applyToAngle(Angle.ofDeg(viewingParametersBean.getfieldOfViewDeg()));
-        scaleFactor = canvas.getWidth() / imageWidth;
+        double scaleFactor = canvas.getWidth() / imageWidth;
         double translationXFactor = canvas.getWidth() / 2;
         double translationYFactor = canvas.getHeight() / 2;
         Transform translation = Transform.translate(translationXFactor, translationYFactor);

@@ -36,9 +36,8 @@ public enum AsterismLoader implements StarCatalogue.Loader{
             String line;
             Map<Integer, Star> hipparcosStarMap = new HashMap<>();
 
-            for(Star s : builder.stars()){
+            for(Star s : builder.stars())
                 hipparcosStarMap.put(s.hipparcosId(), s);
-            }
 
             while((line = r.readLine()) != null) {
                 String[] strArray = line.split(",");
