@@ -7,7 +7,7 @@ import java.time.Duration;
  *
  * @author Mounir Raki (310287)
  */
-public enum NamedTimeAccelerator { //ajouter une methode donnante une liste de tout
+public enum NamedTimeAccelerator {
     TIMES_1("1×", TimeAccelerator.continuous(1)),
     TIMES_30("30×", TimeAccelerator.continuous(30)),
     TIMES_300("300×", TimeAccelerator.continuous(300)),

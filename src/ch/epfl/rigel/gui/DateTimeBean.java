@@ -7,7 +7,7 @@ import java.time.*;
 
 /**
  * The date time bean, a class with a similar behavior
- * to ZonedDateTime but with observable properties.
+ * to ZonedDateTime, but with observable properties.
  *
  * @author Nicolas Szwajcok (315213)
  */
@@ -17,7 +17,7 @@ public final class DateTimeBean {
     private final ObjectProperty<ZoneId> zone;
 
     /**
-     * Creates an instance of a time animator by initializing it's parameters.
+     * Creates an instance of a time animator.
      */
     public DateTimeBean(){
         this.date = new SimpleObjectProperty<>();
@@ -53,9 +53,9 @@ public final class DateTimeBean {
     }
 
     /**
-     * Returns the object property of a local time.
+     * Returns the object property of the local time.
      *
-     * @return The object property of a local time
+     * @return The object property of the local time
      */
     public ObjectProperty<LocalTime> timeProperty(){
         return time;
@@ -80,9 +80,9 @@ public final class DateTimeBean {
     }
 
     /**
-     * Returns the object property of a zone id.
+     * Returns the object property of the zone id.
      *
-     * @return The object property of a zone id
+     * @return The object property of the zone id
      */
     public ObjectProperty<ZoneId> zoneProperty(){
         return zone;
@@ -108,9 +108,9 @@ public final class DateTimeBean {
 
     /**
      * Returns all the information about date, time and zone id
-     * contained in the data time bean in a format of zoned data time.
+     * contained in a date time bean in the format of zoned date time.
      *
-     * @return Zoned date time containing all the information about the data time bean
+     * @return Zoned date time containing all the information concerning the given date time bean
      */
     public ZonedDateTime getZonedDateTime(){
         LocalDateTime ldt = LocalDateTime.of(getDate(), getTime());

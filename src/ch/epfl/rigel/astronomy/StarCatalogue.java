@@ -82,8 +82,8 @@ public final class StarCatalogue {
      * @author Nicolas Szwajcok (315213)
      */
     public final static class Builder {
-        private List<Star> stars;
-        private List<Asterism> asterisms;
+        private final List<Star> stars;
+        private final List<Asterism> asterisms;
 
         /**
          * Constructor of the builder that initializes its internal parameters.

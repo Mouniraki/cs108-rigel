@@ -20,7 +20,7 @@ public final class Preconditions {
      */
     public static void checkArgument(boolean isTrue){
         if(!isTrue){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The condition in parameters is false.");
         }
     }
 
@@ -37,7 +37,8 @@ public final class Preconditions {
      * @return the value if it is contained in the interval
      */
     public static double checkInInterval(Interval interval, double value){
-        checkArgument(interval.contains(value));
+        if(!interval.contains(value))
+            throw new IllegalArgumentException("The value is not contained in the given interval.");
         return value;
     }
 }

@@ -16,7 +16,7 @@ public class ObserverLocationBean {
     private final ObjectBinding<GeographicCoordinates> coordinates;
 
     /**
-     * Creates an instance of observation location bean by initializing its internal parameters.
+     * Creates an instance of an observation location bean by initializing its internal parameters.
      */
     public ObserverLocationBean(){
         this.lonDeg = new SimpleDoubleProperty();
@@ -37,9 +37,9 @@ public class ObserverLocationBean {
     }
 
     /**
-     * Returns the longitude in degrees.
+     * Returns the longitude (in degrees).
      *
-     * @return The longitude in degrees
+     * @return The longitude (in degrees)
      */
     public double getLonDeg(){
         return lonDeg.get();
@@ -48,7 +48,7 @@ public class ObserverLocationBean {
     /**
      * Sets the value of the longitude (in degrees).
      *
-     * @param lonDeg The longitude in degrees to be set
+     * @param lonDeg The longitude to be set (in degrees)
      */
     public void setLonDeg(double lonDeg){
         this.lonDeg.set(lonDeg);
@@ -75,7 +75,7 @@ public class ObserverLocationBean {
     /**
      * Sets the value of the latitude (in degrees).
      *
-     * @param latDeg The latitude in degrees to be set
+     * @param latDeg The latitude to be set (in degrees)
      */
     public void setLatDeg(double latDeg){
         this.latDeg.set(latDeg);
@@ -102,7 +102,7 @@ public class ObserverLocationBean {
     /**
      * Sets the geographic coordinates of the observation.
      *
-     * @param coordinates The geographic coordinates of the observation to be set
+     * @param coordinates The geographic coordinates of the observation to set
      */
     public void setCoordinates(GeographicCoordinates coordinates){
         setLonDeg(coordinates.lonDeg());

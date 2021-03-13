@@ -122,7 +122,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     final public boolean equals(Object obj){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in StereographicProjection.");
     }
 
     /**
@@ -132,7 +132,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     @Override
     final public int hashCode(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in StereographicProjection.");
     }
 
     /**

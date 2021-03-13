@@ -8,8 +8,8 @@ import ch.epfl.rigel.math.Angle;
  * @author Nicolas Szwajcok (315213)
  */
 abstract class SphericalCoordinates {
-    private double lon;
-    private double lat;
+    private final double lon;
+    private final double lat;
 
     SphericalCoordinates(double longitude, double latitude) {
         this.lon = longitude;
@@ -59,7 +59,7 @@ abstract class SphericalCoordinates {
      */
     @Override
     public final boolean equals(Object obj){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in SphericalCoordinates.");
     }
 
     /**
@@ -69,6 +69,6 @@ abstract class SphericalCoordinates {
      */
     @Override
     public final int hashCode(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in SphericalCoordinates.");
     }
 }

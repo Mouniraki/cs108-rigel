@@ -32,7 +32,7 @@ public abstract class Interval {
      */
     @Override
     public final boolean equals(Object obj) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the equals method in Interval.");
     }
 
     /**
@@ -43,7 +43,7 @@ public abstract class Interval {
      */
     @Override
     public final int hashCode() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("You are not allowed to use the hashCode method in Interval.");
     }
 
     /**

@@ -15,6 +15,8 @@ import java.util.Locale;
 public final class HorizontalCoordinates extends SphericalCoordinates {
     private final static RightOpenInterval LONDEG_INTERVAL = RightOpenInterval.of(0, 360);
     private final static ClosedInterval LATDEG_INTERVAL = ClosedInterval.symmetric(180);
+    private final static int OCTANT_VALUE = 45;
+    private final static float OCTANT_OFFSET = 22.5f;
 
     private HorizontalCoordinates(double az, double alt){
         super(az, alt);
@@ -110,15 +112,26 @@ public final class HorizontalCoordinates extends SphericalCoordinates {
      *
      * @return the textual representation of the octant in which the azimuth value is localized.
      */
-    public String azOctantName(String n, String e, String s, String w) { //TO MODIFY SEEMINGLY
-        if(RightOpenInterval.of(22.5, 67.5).contains(azDeg())) return n+e;
-        else if(RightOpenInterval.of(67.5, 112.5).contains(azDeg())) return e;
-        else if(RightOpenInterval.of(112.5, 157.5).contains(azDeg())) return s+e;
-        else if(RightOpenInterval.of(157.5, 202.5).contains(azDeg())) return s;
-        else if(RightOpenInterval.of(202.5, 247.5).contains(azDeg())) return s+w;
-        else if(RightOpenInterval.of(247.5, 292.5).contains(azDeg())) return w;
-        else if(RightOpenInterval.of(292.5, 337.5).contains(azDeg())) return n+w;
-        else return n;
+    public String azOctantName(String n, String e, String s, String w) {
+        int index = azDeg() >= OCTANT_OFFSET ? (int) ((azDeg() - OCTANT_OFFSET) / OCTANT_VALUE) : 7;
+        switch(index){
+            case 0:
+                return n+e;
+            case 1:
+                return e;
+            case 2:
+                return s+e;
+            case 3:
+                return s;
+            case 4:
+                return s+w;
+            case 5 :
+                return w;
+            case 6 :
+                return n+w;
+            default:
+                return n;
+        }
     }
 
     /**

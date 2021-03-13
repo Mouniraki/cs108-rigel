@@ -225,21 +225,20 @@ public class ObservedSky {
         return projectedCoordinates;
     }
 
-    private <T> double[] projectedCelestialObjects(List<T> objects,
+    private <O extends CelestialObject> double[] projectedCelestialObjects(List<O> objects,
                                                    EquatorialToHorizontalConversion equToHor,
                                                    StereographicProjection projection,
                                                    Map<CelestialObject, CartesianCoordinates> map){
         double[] objectCoords = new double[objects.size() * 2];
         for (int i = 0; i < objects.size(); i++) {
-            T object = objects.get(i);
-            HorizontalCoordinates objectHorPos = equToHor.apply(((CelestialObject) object).equatorialPos());
+            O object = objects.get(i);
+            HorizontalCoordinates objectHorPos = equToHor.apply(object.equatorialPos());
             CartesianCoordinates objectCartPos = projection.apply(objectHorPos);
-            map.put((CelestialObject) object, objectCartPos);
+            map.put(object, objectCartPos);
 
-            int xIndex = 2 * i;
-            int yIndex = 2*i + 1;
-            objectCoords[xIndex] = objectCartPos.x();
-            objectCoords[yIndex] = objectCartPos.y();
+            int index = 2*i;
+            objectCoords[index] = objectCartPos.x();
+            objectCoords[index + 1] = objectCartPos.y();
         }
         return objectCoords;
     }
